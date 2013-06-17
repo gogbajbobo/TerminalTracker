@@ -25,6 +25,7 @@
 		2CE3268C176F29E800BAA1D4 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2CE3268A176F29E800BAA1D4 /* InfoPlist.strings */; };
 		2CE3268F176F29E800BAA1D4 /* TerminalTrackerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CE3268E176F29E800BAA1D4 /* TerminalTrackerTests.m */; };
 		2CE3269B176F2BE000BAA1D4 /* STTTSettingsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CE3269A176F2BE000BAA1D4 /* STTTSettingsController.m */; };
+		2CE3269E176F2CAA00BAA1D4 /* STTTAuthBasic.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CE3269D176F2CAA00BAA1D4 /* STTTAuthBasic.m */; };
 		9E0575B8127B4EE5B37A6DF5 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F26E7DA269E4C8AB402C081 /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -64,6 +65,8 @@
 		2CE3268E176F29E800BAA1D4 /* TerminalTrackerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TerminalTrackerTests.m; sourceTree = "<group>"; };
 		2CE32699176F2BE000BAA1D4 /* STTTSettingsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTSettingsController.h; sourceTree = "<group>"; };
 		2CE3269A176F2BE000BAA1D4 /* STTTSettingsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTSettingsController.m; sourceTree = "<group>"; };
+		2CE3269C176F2CAA00BAA1D4 /* STTTAuthBasic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTAuthBasic.h; sourceTree = "<group>"; };
+		2CE3269D176F2CAA00BAA1D4 /* STTTAuthBasic.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTAuthBasic.m; sourceTree = "<group>"; };
 		3F26E7DA269E4C8AB402C081 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD3C601463AF4A6E80FEF924 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -178,6 +181,8 @@
 			children = (
 				2CE32699176F2BE000BAA1D4 /* STTTSettingsController.h */,
 				2CE3269A176F2BE000BAA1D4 /* STTTSettingsController.m */,
+				2CE3269C176F2CAA00BAA1D4 /* STTTAuthBasic.h */,
+				2CE3269D176F2CAA00BAA1D4 /* STTTAuthBasic.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -328,6 +333,7 @@
 				2CE3266B176F29E800BAA1D4 /* STAppDelegate.m in Sources */,
 				2CE3267A176F29E800BAA1D4 /* STViewController.m in Sources */,
 				2CE3269B176F2BE000BAA1D4 /* STTTSettingsController.m in Sources */,
+				2CE3269E176F2CAA00BAA1D4 /* STTTAuthBasic.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
