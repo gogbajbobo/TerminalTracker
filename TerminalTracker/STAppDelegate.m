@@ -9,6 +9,7 @@
 #import "STAppDelegate.h"
 #import "STSessionManager.h"
 #import "STTTAuthBasic.h"
+#import "STTTSettingsController.h"
 #import <UDPushAuth/UDAuthTokenRetriever.h>
 #import <STManagedTracker/STBatteryTracker.h>
 
@@ -36,6 +37,7 @@
                                      nil];
     
     NSDictionary *trackers = [NSDictionary dictionaryWithObjectsAndKeys:
+                              [[STTTSettingsController alloc] init], @"settingsController",
                               nil];
     
     [[STSessionManager sharedManager] startSessionForUID:@"1" authDelegate:[STTTAuthBasic sharedOAuth] trackers:trackers settings:sessionSettings];

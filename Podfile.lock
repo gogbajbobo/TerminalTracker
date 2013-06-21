@@ -36,14 +36,14 @@ PODS:
 
 DEPENDENCIES:
   - STManagedTracker (from `https://github.com/sys-team/STManagedTracker.git`, branch `settings`)
-  - UDPushAuth (from `https://github.com/Unact/UDPushAuth.git`, branch `master`)
+  - UDPushAuth (from `https://github.com/Unact/UDPushAuth.git`, branch `dev`)
 
 EXTERNAL SOURCES:
   STManagedTracker:
     :branch: settings
     :git: https://github.com/sys-team/STManagedTracker.git
   UDPushAuth:
-    :branch: master
+    :branch: dev
     :git: https://github.com/Unact/UDPushAuth.git
 
 SPEC CHECKSUMS:
