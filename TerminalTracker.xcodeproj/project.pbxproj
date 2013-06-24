@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2C93A53817783CC00014001B /* STTTMainVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A53717783CC00014001B /* STTTMainVC.m */; };
 		2CE3265B176F29E800BAA1D4 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE3265A176F29E800BAA1D4 /* UIKit.framework */; };
 		2CE3265D176F29E800BAA1D4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE3265C176F29E800BAA1D4 /* Foundation.framework */; };
 		2CE3265F176F29E800BAA1D4 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE3265E176F29E800BAA1D4 /* CoreGraphics.framework */; };
@@ -44,6 +45,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2C93A53617783CC00014001B /* STTTMainVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTMainVC.h; sourceTree = "<group>"; };
+		2C93A53717783CC00014001B /* STTTMainVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTMainVC.m; sourceTree = "<group>"; };
 		2CE32657176F29E800BAA1D4 /* TerminalTracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TerminalTracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CE3265A176F29E800BAA1D4 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		2CE3265C176F29E800BAA1D4 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -194,6 +197,8 @@
 		2CE32698176F2BB600BAA1D4 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				2C93A53617783CC00014001B /* STTTMainVC.h */,
+				2C93A53717783CC00014001B /* STTTMainVC.m */,
 				2CE32699176F2BE000BAA1D4 /* STTTSettingsController.h */,
 				2CE3269A176F2BE000BAA1D4 /* STTTSettingsController.m */,
 				2CE3269C176F2CAA00BAA1D4 /* STTTAuthBasic.h */,
@@ -358,6 +363,7 @@
 				2CE3269B176F2BE000BAA1D4 /* STTTSettingsController.m in Sources */,
 				2CE3269E176F2CAA00BAA1D4 /* STTTAuthBasic.m in Sources */,
 				2CE326A7176F302B00BAA1D4 /* STTTDataModel.xcdatamodel in Sources */,
+				2C93A53817783CC00014001B /* STTTMainVC.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
