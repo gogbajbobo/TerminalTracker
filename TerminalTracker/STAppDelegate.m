@@ -12,6 +12,7 @@
 #import "STTTSettingsController.h"
 #import <UDPushAuth/UDAuthTokenRetriever.h>
 #import <STManagedTracker/STBatteryTracker.h>
+#import "STTTSyncer.h"
 
 @implementation STAppDelegate
 
@@ -36,12 +37,13 @@
                                      @"50", @"fetchLimit",
                                      nil];
     
-    NSDictionary *trackers = [NSDictionary dictionaryWithObjectsAndKeys:
+    NSDictionary *controllers = [NSDictionary dictionaryWithObjectsAndKeys:
                               [[STTTSettingsController alloc] init], @"settingsController",
+                              [[STTTSyncer alloc] init], @"syncer",
                               nil];
     
-    [[STSessionManager sharedManager] startSessionForUID:@"1" authDelegate:[STTTAuthBasic sharedOAuth] trackers:trackers settings:sessionSettings];
-    
+    [[STSessionManager sharedManager] startSessionForUID:@"1" authDelegate:[STTTAuthBasic sharedOAuth] controllers:controllers settings:sessionSettings documentPrefix:@"STTT"];
+
     return YES;
 }
 

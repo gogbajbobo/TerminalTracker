@@ -35,12 +35,12 @@ PODS:
     - Reachability (~> 3.1.0)
 
 DEPENDENCIES:
-  - STManagedTracker (from `https://github.com/sys-team/STManagedTracker.git`, branch `settings`)
+  - STManagedTracker (from `https://github.com/sys-team/STManagedTracker.git`, branch `terminals`)
   - UDPushAuth (from `https://github.com/Unact/UDPushAuth.git`, branch `dev`)
 
 EXTERNAL SOURCES:
   STManagedTracker:
-    :branch: settings
+    :branch: terminals
     :git: https://github.com/sys-team/STManagedTracker.git
   UDPushAuth:
     :branch: dev

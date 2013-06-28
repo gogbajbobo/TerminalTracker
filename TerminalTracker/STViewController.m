@@ -10,6 +10,7 @@
 #import <STManagedTracker/STRequestAuthenticatable.h>
 #import <STManagedTracker/STSessionManager.h>
 #import <STManagedTracker/STSession.h>
+#import "STTTSyncer.h"
 
 @interface STViewController ()
 
@@ -42,38 +43,44 @@
 }
 
 - (void)sync {
+    
 //    NSString *serverUrlString = @"https://system.unact.ru/iproxy/rest/test/megaport.iAgentTerminal";
-    NSString *serverUrlString = @"https://system.unact.ru/iproxy/rest/test/megaport.iAgentTask";
-    NSURL *requestURL = [NSURL URLWithString:serverUrlString];
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:requestURL];
-    [request setHTTPMethod:@"POST"];
+//    NSString *serverUrlString = @"https://system.unact.ru/iproxy/rest/test/megaport.iAgentTask";
+//    NSURL *requestURL = [NSURL URLWithString:serverUrlString];
+//    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:requestURL];
+//    [request setHTTPMethod:@"POST"];
     
     
-    NSString *postData = @"@shift=-7";
-    [request setValue:@"application/x-www-form-urlencoded; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-    [request setHTTPBody:[postData dataUsingEncoding:NSUTF8StringEncoding]];
+//    NSString *postData = @"@shift=-13&page-size:=20&page-number:=1";
+//    NSString *postData = @"";
+//    [request setValue:@"application/x-www-form-urlencoded; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
+//    [request setHTTPBody:[postData dataUsingEncoding:NSUTF8StringEncoding]];
 
 //    [request setValue:@"application/json" forHTTPHeaderField:@"Content-type"];
+    
+//    [(STTTSyncer *)self.currentSession.syncer setRequestType:@"megaport.iAgentTerminal"];
+//    [self.currentSession.syncer syncData];
 
+//    [self.currentSession.syncer sendData:nil toServer:serverUrlString withParameters:postData];
     
     
-    request = [[self.authDelegate authenticateRequest:(NSURLRequest *) request] mutableCopy];
-    
-    NSLog(@"request %@", request);
-    
-    NSLog(@"valueForHTTPHeaderField:Authorization %@", [request valueForHTTPHeaderField:@"Authorization"]);
-    if ([request valueForHTTPHeaderField:@"Authorization"]) {
-        NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
-        if (!connection) {
-            [[self.currentSession logger] saveLogMessageWithText:@"Syncer no connection" type:@"error"];
-//            self.syncing = NO;
-        } else {
-            [[self.currentSession logger] saveLogMessageWithText:@"Syncer send data" type:@""];
-        }
-    } else {
-        [[self.currentSession logger] saveLogMessageWithText:@"Syncer no authorization header" type:@"error"];
-//        self.syncing = NO;
-    }
+//    request = [[self.authDelegate authenticateRequest:(NSURLRequest *) request] mutableCopy];
+//    
+//    NSLog(@"request %@", request);
+//    
+//    NSLog(@"valueForHTTPHeaderField:Authorization %@", [request valueForHTTPHeaderField:@"Authorization"]);
+//    if ([request valueForHTTPHeaderField:@"Authorization"]) {
+//        NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+//        if (!connection) {
+//            [[self.currentSession logger] saveLogMessageWithText:@"Syncer no connection" type:@"error"];
+////            self.syncing = NO;
+//        } else {
+//            [[self.currentSession logger] saveLogMessageWithText:@"Syncer send data" type:@""];
+//        }
+//    } else {
+//        [[self.currentSession logger] saveLogMessageWithText:@"Syncer no authorization header" type:@"error"];
+////        self.syncing = NO;
+//    }
 
 }
 
