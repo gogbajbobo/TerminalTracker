@@ -8,3 +8,9 @@
 *.xcscheme
 
 *.plist
+
+*.xcbkptlist
+
+*.xcsettings
+
+*.pbxproj

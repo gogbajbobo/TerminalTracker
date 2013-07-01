@@ -11,6 +11,14 @@
 #import "STTTAgentTerminal.h"
 #import "STTTAgentTask.h"
 
+@interface STTTSyncer()
+
+@property (nonatomic, strong) NSManagedObject *syncObject;
+
+
+@end
+
+
 @implementation STTTSyncer
 
 - (NSString *)requestParameters {
@@ -18,7 +26,7 @@
 }
 
 - (void)onTimerTick:(NSTimer *)timer {
-    [self setRequestType:@"megaport.iAgentTask"];
+    [self setRequestType:@"megaport.iAgentTerminal"];
     [super onTimerTick:timer];
 }
 
@@ -37,8 +45,8 @@
 - (void)parseResponse:(NSData *)responseData fromConnection:(NSURLConnection *)connection {
         
     NSLog(@"parseResponse");
-    NSString *responseString = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
-    NSLog(@"responseData %@", responseString);
+//    NSString *responseString = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
+//    NSLog(@"responseData %@", responseString);
     
     NSError *error;
     id responseJSON = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingMutableContainers error:&error];
@@ -119,107 +127,48 @@
     
     if ([name isEqualToString:@"megaport.iAgentTerminal"]) {
 
-        STTTAgentTerminal *terminal = (STTTAgentTerminal *)[NSEntityDescription insertNewObjectForEntityForName:@"STTTAgentTerminal" inManagedObjectContext:[[(STSession *)self.session document] managedObjectContext]];
-
         NSString *xidString = [xid stringByReplacingOccurrencesOfString:@"-" withString:@""];
         NSData *xidData = [self dataFromString:xidString];
-        terminal.xid = xidData;
+//        terminal.xid = xidData;
         
-        NSEntityDescription *entityDescription = [NSEntityDescription entityForName:terminal.entity.name inManagedObjectContext:[[(STSession *)self.session document] managedObjectContext]];
-        NSArray *entityProperties = [entityDescription.propertiesByName allKeys];
-        for (NSString *propertyName in entityProperties) {
-            NSString *value = [properties valueForKey:propertyName];
-            if (value) {
-                if ([propertyName isEqualToString:@"id"]) {
-                    [terminal setValue:[NSNumber numberWithInt:[value intValue]] forKey:propertyName];
-                } else {
-                    [terminal setValue:value forKey:propertyName];
-                }
-            }
+        
+        NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"STTTAgentTerminal"];
+        request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"ts" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
+        request.predicate = [NSPredicate predicateWithFormat:@"SELF.xid == %@", xidData];
+        
+        NSError *error;
+        NSArray *fetchResult = [self.session.document.managedObjectContext executeFetchRequest:request error:&error];
+        
+        if ([fetchResult lastObject]) {
             
-        }
-        
-        [terminal setValue:[NSDate date] forKey:@"lts"];
-
-    }
-    
-/*
-    
-    if (result && ![result isEqualToString:@"ok"]) {
-        
-        [[(STSession *)self.session logger] saveLogMessageWithText:[NSString stringWithFormat:@"Sync result not ok xid: %@", xid] type:@"error"];
-        
-    } else {
-        
-        if (!properties) {
-            
-            NSString *xidString = [xid stringByReplacingOccurrencesOfString:@"-" withString:@""];
-            NSData *xidData = [self dataFromString:xidString];
- 
-            NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:name];
-            request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"ts" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
-            request.predicate = [NSPredicate predicateWithFormat:@"SELF.xid == %@", xidData];
-            
-            NSError *error;
-            NSArray *fetchResult = [self.document.managedObjectContext executeFetchRequest:request error:&error];
-            
-            if ([fetchResult lastObject]) {
-                
-                self.syncObject = [fetchResult lastObject];
-                [self.syncObject setValue:[self.syncObject valueForKey:@"sts"] forKey:@"lts"];
-                //                NSLog(@"xid %@", xid);
-                //                NSLog(@"ts %@", [self.syncObject valueForKey:@"ts"]);
-                //                NSLog(@"lts %@", [self.syncObject valueForKey:@"lts"]);
-                
-            } else {
-                
-                [[(STSession *)self.session logger] saveLogMessageWithText:[NSString stringWithFormat:@"Sync: object wrong xid: %@", xid] type:@"error"];
-                
-            }
+            self.syncObject = [fetchResult lastObject];
             
         } else {
             
-            if ([name isEqualToString:@"STSettings"]) {
-                
-                NSString *settingGroup = [properties valueForKey:@"group"];
-                NSString *settingName = [properties valueForKey:@"name"];
-                NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:name];
-                request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"ts" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
-                request.predicate = [NSPredicate predicateWithFormat:@"SELF.group == %@ && SELF.name == %@", settingGroup, settingName];
-                
-                NSError *error;
-                NSArray *fetchResult = [self.document.managedObjectContext executeFetchRequest:request error:&error];
-                
-                if ([fetchResult lastObject]) {
-                    
-                    self.syncObject = [fetchResult lastObject];
-                    
-                    NSString *oldValue = [self.syncObject valueForKey:@"value"];
-                    NSString *newValue = [properties valueForKey:@"value"];
-                    
-                    if (![newValue isEqualToString:oldValue]) {
-                        
-                        NSString *newValue = [[(STSession *)self.session settingsController] normalizeValue:[properties valueForKey:@"value"] forKey:settingName];
-                        
-                        if (newValue) {
-                            
-                            [self.syncObject setValue:newValue forKey:@"value"];
-                            
-                        }
-                        
-                    }
-                    
-                }
-                
-            } else {
-                
-            }
-            
+            STTTAgentTerminal *terminal = (STTTAgentTerminal *)[NSEntityDescription insertNewObjectForEntityForName:@"STTTAgentTerminal" inManagedObjectContext:self.session.document.managedObjectContext];
+            terminal.xid = xidData;
+            self.syncObject = terminal;
+
         }
         
+        [self.syncObject setValue:[NSDate date] forKey:@"lts"];
+        
+        [self.syncObject setValue:[properties valueForKey:@"code"] forKey:@"code"];
+        [self.syncObject setValue:[properties valueForKey:@"errortext"] forKey:@"errorText"];
+        [self.syncObject setValue:[properties valueForKey:@"src_system_name"] forKey:@"srcSystemName"];
+        
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss.SSS"];
+        NSDate *lastActivityTime = [dateFormatter dateFromString:[properties valueForKey:@"lastactivitytime"]];
+        NSLog(@"lastactivitytime %@", [properties valueForKey:@"lastactivitytime"]);
+        NSLog(@"lastActivityTime %@", lastActivityTime);
+        
+        [self.syncObject setValue:lastActivityTime forKey:@"lastActivityTime"];
+        [self.syncObject setValue:[properties valueForKey:@"address"] forKey:@"address"];
+        
+        NSLog(@"self.syncObject %@", self.syncObject);
+        
     }
-
-*/
 
 }
 

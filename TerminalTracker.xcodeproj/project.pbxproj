@@ -240,12 +240,12 @@
 				2C93A590178174900014001B /* STDataModel.xcdatamodel */,
 				2C93A5A717817AAE0014001B /* STTTAgentTerminal.h */,
 				2C93A5A817817AAE0014001B /* STTTAgentTerminal.m */,
+				2C93A59E17817AAE0014001B /* STTTAgentTask.h */,
+				2C93A59F17817AAE0014001B /* STTTAgentTask.m */,
 				2C93A5A417817AAE0014001B /* STTTTaskLocation.h */,
 				2C93A5A517817AAE0014001B /* STTTTaskLocation.m */,
 				2C93A5A117817AAE0014001B /* STTTTerminalLocation.h */,
 				2C93A5A217817AAE0014001B /* STTTTerminalLocation.m */,
-				2C93A59E17817AAE0014001B /* STTTAgentTask.h */,
-				2C93A59F17817AAE0014001B /* STTTAgentTask.m */,
 			);
 			path = "Data Model";
 			sourceTree = "<group>";
