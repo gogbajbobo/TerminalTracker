@@ -2,29 +2,24 @@
 //  STTTAgentTerminal.h
 //  TerminalTracker
 //
-//  Created by Maxim Grigoriev on 6/28/13.
+//  Created by Maxim Grigoriev on 7/1/13.
 //  Copyright (c) 2013 Maxim Grigoriev. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
-#import "STDatum.h"
+#import "STComment.h"
 
-@class STTTAgentTask;
+@class STTTAgentTask, STTTTerminalLocation;
 
-@interface STTTAgentTerminal : STDatum
+@interface STTTAgentTerminal : STComment
 
-@property (nonatomic, retain) NSString * lastpaymenttime;
-@property (nonatomic, retain) NSString * last_check_ts;
-@property (nonatomic, retain) NSString * address;
-@property (nonatomic, retain) NSString * name;
-@property (nonatomic, retain) NSString * lastactivitytime;
-@property (nonatomic, retain) NSString * errortext;
-@property (nonatomic, retain) NSString * terminalid;
-@property (nonatomic, retain) NSString * src_system;
 @property (nonatomic, retain) NSString * code;
-@property (nonatomic, retain) NSString * noteerrorid;
-@property (nonatomic, retain) NSString * printererrorid;
+@property (nonatomic, retain) NSString * address;
+@property (nonatomic, retain) NSString * errorText;
+@property (nonatomic, retain) NSDate * lastActivityTime;
+@property (nonatomic, retain) NSString * srcSystemName;
 @property (nonatomic, retain) STTTAgentTask *task;
+@property (nonatomic, retain) STTTTerminalLocation *location;
 
 @end

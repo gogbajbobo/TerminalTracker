@@ -8,12 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		2C93A53817783CC00014001B /* STTTMainVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A53717783CC00014001B /* STTTMainVC.m */; };
-		2C93A559177D791B0014001B /* STTTAgentTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A558177D791B0014001B /* STTTAgentTask.m */; };
-		2C93A55F177D791B0014001B /* STTTLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A55E177D791B0014001B /* STTTLocation.m */; };
 		2C93A562177D795E0014001B /* STTTTerminalController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A561177D795E0014001B /* STTTTerminalController.m */; };
 		2C93A565177D79790014001B /* STTTTaskController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A564177D79790014001B /* STTTTaskController.m */; };
 		2C93A568177D79C10014001B /* STTTSyncer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A567177D79C10014001B /* STTTSyncer.m */; };
-		2C93A56B177D9B240014001B /* STTTAgentTerminal.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A56A177D9B240014001B /* STTTAgentTerminal.m */; };
+		2C93A591178174900014001B /* STDataModel.xcdatamodel in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A590178174900014001B /* STDataModel.xcdatamodel */; };
+		2C93A5A017817AAE0014001B /* STTTAgentTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A59F17817AAE0014001B /* STTTAgentTask.m */; };
+		2C93A5A317817AAE0014001B /* STTTTerminalLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A5A217817AAE0014001B /* STTTTerminalLocation.m */; };
+		2C93A5A617817AAE0014001B /* STTTTaskLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A5A517817AAE0014001B /* STTTTaskLocation.m */; };
+		2C93A5A917817AAE0014001B /* STTTAgentTerminal.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A5A817817AAE0014001B /* STTTAgentTerminal.m */; };
 		2CE3265B176F29E800BAA1D4 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE3265A176F29E800BAA1D4 /* UIKit.framework */; };
 		2CE3265D176F29E800BAA1D4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE3265C176F29E800BAA1D4 /* Foundation.framework */; };
 		2CE3265F176F29E800BAA1D4 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE3265E176F29E800BAA1D4 /* CoreGraphics.framework */; };
@@ -36,7 +38,6 @@
 		2CE326A0176F2F2C00BAA1D4 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE3269F176F2F2C00BAA1D4 /* CoreData.framework */; };
 		2CE326A2176F2F3500BAA1D4 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE326A1176F2F3500BAA1D4 /* CoreLocation.framework */; };
 		2CE326A4176F2F3E00BAA1D4 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE326A3176F2F3E00BAA1D4 /* MapKit.framework */; };
-		2CE326A7176F302B00BAA1D4 /* STTTDataModel.xcdatamodel in Sources */ = {isa = PBXBuildFile; fileRef = 2CE326A6176F302B00BAA1D4 /* STTTDataModel.xcdatamodel */; };
 		9E0575B8127B4EE5B37A6DF5 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F26E7DA269E4C8AB402C081 /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -53,18 +54,21 @@
 /* Begin PBXFileReference section */
 		2C93A53617783CC00014001B /* STTTMainVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTMainVC.h; sourceTree = "<group>"; };
 		2C93A53717783CC00014001B /* STTTMainVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTMainVC.m; sourceTree = "<group>"; };
-		2C93A557177D791B0014001B /* STTTAgentTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTAgentTask.h; sourceTree = "<group>"; };
-		2C93A558177D791B0014001B /* STTTAgentTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTAgentTask.m; sourceTree = "<group>"; };
-		2C93A55D177D791B0014001B /* STTTLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTLocation.h; sourceTree = "<group>"; };
-		2C93A55E177D791B0014001B /* STTTLocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTLocation.m; sourceTree = "<group>"; };
 		2C93A560177D795E0014001B /* STTTTerminalController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTTerminalController.h; sourceTree = "<group>"; };
 		2C93A561177D795E0014001B /* STTTTerminalController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTTerminalController.m; sourceTree = "<group>"; };
 		2C93A563177D79790014001B /* STTTTaskController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTTaskController.h; sourceTree = "<group>"; };
 		2C93A564177D79790014001B /* STTTTaskController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTTaskController.m; sourceTree = "<group>"; };
 		2C93A566177D79C10014001B /* STTTSyncer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTSyncer.h; sourceTree = "<group>"; };
 		2C93A567177D79C10014001B /* STTTSyncer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTSyncer.m; sourceTree = "<group>"; };
-		2C93A569177D9B240014001B /* STTTAgentTerminal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTAgentTerminal.h; sourceTree = "<group>"; };
-		2C93A56A177D9B240014001B /* STTTAgentTerminal.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTAgentTerminal.m; sourceTree = "<group>"; };
+		2C93A590178174900014001B /* STDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = STDataModel.xcdatamodel; sourceTree = "<group>"; };
+		2C93A59E17817AAE0014001B /* STTTAgentTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTAgentTask.h; sourceTree = "<group>"; };
+		2C93A59F17817AAE0014001B /* STTTAgentTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTAgentTask.m; sourceTree = "<group>"; };
+		2C93A5A117817AAE0014001B /* STTTTerminalLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTTerminalLocation.h; sourceTree = "<group>"; };
+		2C93A5A217817AAE0014001B /* STTTTerminalLocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTTerminalLocation.m; sourceTree = "<group>"; };
+		2C93A5A417817AAE0014001B /* STTTTaskLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTTaskLocation.h; sourceTree = "<group>"; };
+		2C93A5A517817AAE0014001B /* STTTTaskLocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTTaskLocation.m; sourceTree = "<group>"; };
+		2C93A5A717817AAE0014001B /* STTTAgentTerminal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTAgentTerminal.h; sourceTree = "<group>"; };
+		2C93A5A817817AAE0014001B /* STTTAgentTerminal.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTAgentTerminal.m; sourceTree = "<group>"; };
 		2CE32657176F29E800BAA1D4 /* TerminalTracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TerminalTracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CE3265A176F29E800BAA1D4 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		2CE3265C176F29E800BAA1D4 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -95,7 +99,6 @@
 		2CE3269F176F2F2C00BAA1D4 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		2CE326A1176F2F3500BAA1D4 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		2CE326A3176F2F3E00BAA1D4 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
-		2CE326A6176F302B00BAA1D4 /* STTTDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = STTTDataModel.xcdatamodel; sourceTree = "<group>"; };
 		3F26E7DA269E4C8AB402C081 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD3C601463AF4A6E80FEF924 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -234,13 +237,15 @@
 		2CE326A5176F2FED00BAA1D4 /* Data Model */ = {
 			isa = PBXGroup;
 			children = (
-				2CE326A6176F302B00BAA1D4 /* STTTDataModel.xcdatamodel */,
-				2C93A569177D9B240014001B /* STTTAgentTerminal.h */,
-				2C93A56A177D9B240014001B /* STTTAgentTerminal.m */,
-				2C93A55D177D791B0014001B /* STTTLocation.h */,
-				2C93A55E177D791B0014001B /* STTTLocation.m */,
-				2C93A557177D791B0014001B /* STTTAgentTask.h */,
-				2C93A558177D791B0014001B /* STTTAgentTask.m */,
+				2C93A590178174900014001B /* STDataModel.xcdatamodel */,
+				2C93A5A717817AAE0014001B /* STTTAgentTerminal.h */,
+				2C93A5A817817AAE0014001B /* STTTAgentTerminal.m */,
+				2C93A5A417817AAE0014001B /* STTTTaskLocation.h */,
+				2C93A5A517817AAE0014001B /* STTTTaskLocation.m */,
+				2C93A5A117817AAE0014001B /* STTTTerminalLocation.h */,
+				2C93A5A217817AAE0014001B /* STTTTerminalLocation.m */,
+				2C93A59E17817AAE0014001B /* STTTAgentTask.h */,
+				2C93A59F17817AAE0014001B /* STTTAgentTask.m */,
 			);
 			path = "Data Model";
 			sourceTree = "<group>";
@@ -392,14 +397,15 @@
 				2CE3267A176F29E800BAA1D4 /* STViewController.m in Sources */,
 				2CE3269B176F2BE000BAA1D4 /* STTTSettingsController.m in Sources */,
 				2CE3269E176F2CAA00BAA1D4 /* STTTAuthBasic.m in Sources */,
-				2CE326A7176F302B00BAA1D4 /* STTTDataModel.xcdatamodel in Sources */,
 				2C93A53817783CC00014001B /* STTTMainVC.m in Sources */,
-				2C93A559177D791B0014001B /* STTTAgentTask.m in Sources */,
-				2C93A55F177D791B0014001B /* STTTLocation.m in Sources */,
 				2C93A562177D795E0014001B /* STTTTerminalController.m in Sources */,
 				2C93A565177D79790014001B /* STTTTaskController.m in Sources */,
 				2C93A568177D79C10014001B /* STTTSyncer.m in Sources */,
-				2C93A56B177D9B240014001B /* STTTAgentTerminal.m in Sources */,
+				2C93A591178174900014001B /* STDataModel.xcdatamodel in Sources */,
+				2C93A5A017817AAE0014001B /* STTTAgentTask.m in Sources */,
+				2C93A5A317817AAE0014001B /* STTTTerminalLocation.m in Sources */,
+				2C93A5A617817AAE0014001B /* STTTTaskLocation.m in Sources */,
+				2C93A5A917817AAE0014001B /* STTTAgentTerminal.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

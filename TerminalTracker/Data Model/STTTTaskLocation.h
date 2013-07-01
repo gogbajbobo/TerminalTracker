@@ -1,8 +1,8 @@
 //
-//  STTTLocation.h
+//  STTTTaskLocation.h
 //  TerminalTracker
 //
-//  Created by Maxim Grigoriev on 6/28/13.
+//  Created by Maxim Grigoriev on 7/1/13.
 //  Copyright (c) 2013 Maxim Grigoriev. All rights reserved.
 //
 
@@ -12,7 +12,7 @@
 
 @class STTTAgentTask;
 
-@interface STTTLocation : STLocation
+@interface STTTTaskLocation : STLocation
 
 @property (nonatomic, retain) STTTAgentTask *task;
 

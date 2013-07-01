@@ -1,16 +1,16 @@
 //
-//  STTTLocation.m
+//  STTTTaskLocation.m
 //  TerminalTracker
 //
-//  Created by Maxim Grigoriev on 6/28/13.
+//  Created by Maxim Grigoriev on 7/1/13.
 //  Copyright (c) 2013 Maxim Grigoriev. All rights reserved.
 //
 
-#import "STTTLocation.h"
+#import "STTTTaskLocation.h"
 #import "STTTAgentTask.h"
 
 
-@implementation STTTLocation
+@implementation STTTTaskLocation
 
 @dynamic task;
 
