@@ -16,6 +16,7 @@
 		2C93A5A317817AAE0014001B /* STTTTerminalLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A5A217817AAE0014001B /* STTTTerminalLocation.m */; };
 		2C93A5A617817AAE0014001B /* STTTTaskLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A5A517817AAE0014001B /* STTTTaskLocation.m */; };
 		2C93A5A917817AAE0014001B /* STTTAgentTerminal.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A5A817817AAE0014001B /* STTTAgentTerminal.m */; };
+		2C93A5AC1781BA800014001B /* STTTLocationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A5AB1781BA800014001B /* STTTLocationController.m */; };
 		2CE3265B176F29E800BAA1D4 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE3265A176F29E800BAA1D4 /* UIKit.framework */; };
 		2CE3265D176F29E800BAA1D4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE3265C176F29E800BAA1D4 /* Foundation.framework */; };
 		2CE3265F176F29E800BAA1D4 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE3265E176F29E800BAA1D4 /* CoreGraphics.framework */; };
@@ -27,7 +28,6 @@
 		2CE32671176F29E800BAA1D4 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2CE32670176F29E800BAA1D4 /* Default-568h@2x.png */; };
 		2CE32674176F29E800BAA1D4 /* MainStoryboard_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2CE32672176F29E800BAA1D4 /* MainStoryboard_iPhone.storyboard */; };
 		2CE32677176F29E800BAA1D4 /* MainStoryboard_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2CE32675176F29E800BAA1D4 /* MainStoryboard_iPad.storyboard */; };
-		2CE3267A176F29E800BAA1D4 /* STViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CE32679176F29E800BAA1D4 /* STViewController.m */; };
 		2CE32682176F29E800BAA1D4 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE32681176F29E800BAA1D4 /* SenTestingKit.framework */; };
 		2CE32683176F29E800BAA1D4 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE3265A176F29E800BAA1D4 /* UIKit.framework */; };
 		2CE32684176F29E800BAA1D4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE3265C176F29E800BAA1D4 /* Foundation.framework */; };
@@ -69,6 +69,8 @@
 		2C93A5A517817AAE0014001B /* STTTTaskLocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTTaskLocation.m; sourceTree = "<group>"; };
 		2C93A5A717817AAE0014001B /* STTTAgentTerminal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTAgentTerminal.h; sourceTree = "<group>"; };
 		2C93A5A817817AAE0014001B /* STTTAgentTerminal.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTAgentTerminal.m; sourceTree = "<group>"; };
+		2C93A5AA1781BA800014001B /* STTTLocationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTLocationController.h; sourceTree = "<group>"; };
+		2C93A5AB1781BA800014001B /* STTTLocationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTLocationController.m; sourceTree = "<group>"; };
 		2CE32657176F29E800BAA1D4 /* TerminalTracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TerminalTracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CE3265A176F29E800BAA1D4 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		2CE3265C176F29E800BAA1D4 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -84,8 +86,6 @@
 		2CE32670176F29E800BAA1D4 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		2CE32673176F29E800BAA1D4 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard_iPhone.storyboard; sourceTree = "<group>"; };
 		2CE32676176F29E800BAA1D4 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard_iPad.storyboard; sourceTree = "<group>"; };
-		2CE32678176F29E800BAA1D4 /* STViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STViewController.h; sourceTree = "<group>"; };
-		2CE32679176F29E800BAA1D4 /* STViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STViewController.m; sourceTree = "<group>"; };
 		2CE32680176F29E800BAA1D4 /* TerminalTrackerTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TerminalTrackerTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CE32681176F29E800BAA1D4 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
 		2CE32689176F29E800BAA1D4 /* TerminalTrackerTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TerminalTrackerTests-Info.plist"; sourceTree = "<group>"; };
@@ -175,8 +175,6 @@
 				2CE3266A176F29E800BAA1D4 /* STAppDelegate.m */,
 				2CE32672176F29E800BAA1D4 /* MainStoryboard_iPhone.storyboard */,
 				2CE32675176F29E800BAA1D4 /* MainStoryboard_iPad.storyboard */,
-				2CE32678176F29E800BAA1D4 /* STViewController.h */,
-				2CE32679176F29E800BAA1D4 /* STViewController.m */,
 				2CE32661176F29E800BAA1D4 /* Supporting Files */,
 			);
 			path = TerminalTracker;
@@ -220,6 +218,8 @@
 			children = (
 				2C93A560177D795E0014001B /* STTTTerminalController.h */,
 				2C93A561177D795E0014001B /* STTTTerminalController.m */,
+				2C93A5AA1781BA800014001B /* STTTLocationController.h */,
+				2C93A5AB1781BA800014001B /* STTTLocationController.m */,
 				2C93A563177D79790014001B /* STTTTaskController.h */,
 				2C93A564177D79790014001B /* STTTTaskController.m */,
 				2C93A53617783CC00014001B /* STTTMainVC.h */,
@@ -394,7 +394,6 @@
 			files = (
 				2CE32667176F29E800BAA1D4 /* main.m in Sources */,
 				2CE3266B176F29E800BAA1D4 /* STAppDelegate.m in Sources */,
-				2CE3267A176F29E800BAA1D4 /* STViewController.m in Sources */,
 				2CE3269B176F2BE000BAA1D4 /* STTTSettingsController.m in Sources */,
 				2CE3269E176F2CAA00BAA1D4 /* STTTAuthBasic.m in Sources */,
 				2C93A53817783CC00014001B /* STTTMainVC.m in Sources */,
@@ -406,6 +405,7 @@
 				2C93A5A317817AAE0014001B /* STTTTerminalLocation.m in Sources */,
 				2C93A5A617817AAE0014001B /* STTTTaskLocation.m in Sources */,
 				2C93A5A917817AAE0014001B /* STTTAgentTerminal.m in Sources */,
+				2C93A5AC1781BA800014001B /* STTTLocationController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

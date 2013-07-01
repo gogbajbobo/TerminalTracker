@@ -7,6 +7,7 @@
 //
 
 #import "STTTMainVC.h"
+#import <STManagedTracker/STSessionManager.h>
 
 @interface STTTMainVC () <UITableViewDelegate, UITableViewDataSource>
 
@@ -89,8 +90,8 @@
 
 
 - (void)viewInit {
-    NSLog(@"self.view %@", self.view);
-    NSLog(@"self.navigationController.navigationBar %@", self.navigationController.navigationBar);
+//    NSLog(@"self.view %@", self.view);
+//    NSLog(@"self.navigationController.navigationBar %@", self.navigationController.navigationBar);
     
     CGFloat halfHeight = (self.view.bounds.size.height - self.navigationController.navigationBar.bounds.size.height) / 2;
 
@@ -116,6 +117,11 @@
     
     [self.view addSubview:self.taskView];
     [self.view addSubview:self.terminalView];
+    
+    self.terminalController = [[STTTTerminalController alloc] init];
+    self.terminalController.session = [[STSessionManager sharedManager] currentSession];
+    
+    self.locationController = [[STTTLocationController alloc] init];
     
 }
 

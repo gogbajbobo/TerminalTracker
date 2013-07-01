@@ -7,7 +7,10 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <STManagedTracker/STSession.h>
 
 @interface STTTTerminalController : NSObject
+
+@property (nonatomic, strong) STSession *session;
 
 @end

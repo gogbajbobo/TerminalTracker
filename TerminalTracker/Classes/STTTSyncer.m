@@ -10,10 +10,11 @@
 #import <STManagedTracker/STSession.h>
 #import "STTTAgentTerminal.h"
 #import "STTTAgentTask.h"
+#import "STTTTerminalLocation.h"
 
 @interface STTTSyncer()
 
-@property (nonatomic, strong) NSManagedObject *syncObject;
+//@property (nonatomic, strong) NSManagedObject *syncObject;
 
 
 @end
@@ -44,7 +45,7 @@
 
 - (void)parseResponse:(NSData *)responseData fromConnection:(NSURLConnection *)connection {
         
-    NSLog(@"parseResponse");
+//    NSLog(@"parseResponse");
 //    NSString *responseString = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
 //    NSLog(@"responseData %@", responseString);
     
@@ -73,7 +74,7 @@
                         break;
                         
                     } else {
-                        NSLog(@"object %@", object);
+//                        NSLog(@"object %@", object);
                         [self syncObject:(NSDictionary *)object];
                     }
                     
@@ -132,41 +133,70 @@
 //        terminal.xid = xidData;
         
         
-        NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"STTTAgentTerminal"];
+        NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:NSStringFromClass([STTTAgentTerminal class])];
         request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"ts" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
         request.predicate = [NSPredicate predicateWithFormat:@"SELF.xid == %@", xidData];
         
         NSError *error;
         NSArray *fetchResult = [self.session.document.managedObjectContext executeFetchRequest:request error:&error];
         
+        STTTAgentTerminal *terminal;
+        
         if ([fetchResult lastObject]) {
-            
-            self.syncObject = [fetchResult lastObject];
-            
+            terminal = [fetchResult lastObject];
         } else {
-            
-            STTTAgentTerminal *terminal = (STTTAgentTerminal *)[NSEntityDescription insertNewObjectForEntityForName:@"STTTAgentTerminal" inManagedObjectContext:self.session.document.managedObjectContext];
+            terminal = (STTTAgentTerminal *)[NSEntityDescription insertNewObjectForEntityForName:NSStringFromClass([STTTAgentTerminal class]) inManagedObjectContext:self.session.document.managedObjectContext];
             terminal.xid = xidData;
-            self.syncObject = terminal;
-
         }
         
-        [self.syncObject setValue:[NSDate date] forKey:@"lts"];
+        if (!terminal.location) {
+            STTTTerminalLocation *location = (STTTTerminalLocation *)[NSEntityDescription insertNewObjectForEntityForName:NSStringFromClass([STTTTerminalLocation class]) inManagedObjectContext:self.session.document.managedObjectContext];
+            terminal.location = location;
+        }
         
-        [self.syncObject setValue:[properties valueForKey:@"code"] forKey:@"code"];
-        [self.syncObject setValue:[properties valueForKey:@"errortext"] forKey:@"errorText"];
-        [self.syncObject setValue:[properties valueForKey:@"src_system_name"] forKey:@"srcSystemName"];
+        terminal.code = [properties valueForKey:@"code"];
+        terminal.errorText = [properties valueForKey:@"errortext"];
+        terminal.srcSystemName = [properties valueForKey:@"src_system_name"];
         
         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
         [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss.SSS"];
         NSDate *lastActivityTime = [dateFormatter dateFromString:[properties valueForKey:@"lastactivitytime"]];
-        NSLog(@"lastactivitytime %@", [properties valueForKey:@"lastactivitytime"]);
-        NSLog(@"lastActivityTime %@", lastActivityTime);
+//        NSLog(@"lastactivitytime %@", [properties valueForKey:@"lastactivitytime"]);
+//        NSLog(@"lastActivityTime %@", lastActivityTime);
         
-        [self.syncObject setValue:lastActivityTime forKey:@"lastActivityTime"];
-        [self.syncObject setValue:[properties valueForKey:@"address"] forKey:@"address"];
+        terminal.lastActivityTime = lastActivityTime;
+        terminal.address = [NSString stringWithUTF8String:[[properties valueForKey:@"address"] UTF8String]];
         
-        NSLog(@"self.syncObject %@", self.syncObject);
+        terminal.lts = [NSDate date];
+        terminal.location.latitude = [NSNumber numberWithDouble:[[properties valueForKey:@"latitude"] doubleValue]];
+        terminal.location.longitude = [NSNumber numberWithDouble:[[properties valueForKey:@"longitude"] doubleValue]];
+        
+//        NSLog(@"self.syncObject %@", self.syncObject);
+//        NSLog(@"address %@", [NSString stringWithUTF8String:[[properties valueForKey:@"address"] UTF8String]]);
+
+        if (!terminal.location.latitude || !terminal.location.longitude) {
+            CLGeocoder *geoCoder = [[CLGeocoder alloc] init];
+            [geoCoder geocodeAddressString:terminal.address completionHandler:^(NSArray *placemarks, NSError *error) {
+                NSLog(@"address %@", terminal.address);
+                if (error) {
+                    NSLog(@"error %@", error.localizedDescription);
+                    terminal.location = nil;
+                } else {
+//                    NSLog(@"id %@", [properties valueForKey:@"id"]);
+//                    NSLog(@"placemarks %@", placemarks);
+                    CLPlacemark *place = [placemarks lastObject];
+                    terminal.location.latitude = [NSNumber numberWithDouble:place.location.coordinate.latitude];
+                    terminal.location.longitude = [NSNumber numberWithDouble:place.location.coordinate.longitude];
+                }
+                
+            }];
+
+        }
+        
+        NSLog(@"latitude %@", [properties valueForKey:@"latitude"]);
+        NSLog(@"longitude %@", [properties valueForKey:@"longitude"]);
+        NSLog(@"terminal.location %@", terminal.location);
+        
         
     }
 
