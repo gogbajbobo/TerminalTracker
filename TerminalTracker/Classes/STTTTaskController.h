@@ -7,7 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <STManagedTracker/STSession.h>
 
 @interface STTTTaskController : NSObject <UITableViewDataSource>
+
+@property (nonatomic, strong) STSession *session;
+@property (nonatomic, strong) NSFetchedResultsController *resultsController;
 
 @end

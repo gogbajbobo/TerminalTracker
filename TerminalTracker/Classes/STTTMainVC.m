@@ -172,7 +172,7 @@
 
 - (void)currentLocationUpdated:(NSNotification *)notification {
     NSLog(@"currentLocation %@", notification.object);
-    [self.terminalController performFetch];
+    [self.terminalController calculateDistance ];
 }
 
 
