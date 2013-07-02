@@ -22,11 +22,25 @@
 
 @implementation STTTLocationController
 
-- (void)getLocation:(void (^)(BOOL))completionHandler {
-    
-    completionHandler(YES);
++ (STTTLocationController *)sharedLC {
+    static dispatch_once_t pred = 0;
+    __strong static id _sharedLC = nil;
+    dispatch_once(&pred, ^{
+        _sharedLC = [[self alloc] init];
+    });
+    return _sharedLC;
 }
 
+
+
+- (void)getLocation {
+    [self.locationManager startUpdatingLocation];
+//    NSLog(@"startUpdatingLocation");
+}
+
+//- (CLLocation *)currentLocation {
+//    return [[CLLocation alloc] initWithLatitude:55.732829 longitude:38.951328];
+//}
 
 - (NSMutableDictionary *)settings {
     return [self.session.settingsController currentSettingsForGroup:@"location"];
@@ -45,6 +59,32 @@
     return [[self.settings valueForKey:@"distanceFilter"] doubleValue];
 }
 
+- (CLLocationManager *)locationManager {
+    if (!_locationManager) {
+        _locationManager = [[CLLocationManager alloc] init];
+        _locationManager.delegate = self;
+        _locationManager.distanceFilter = self.distanceFilter;
+        _locationManager.desiredAccuracy = self.desiredAccuracy;
+        self.locationManager.pausesLocationUpdatesAutomatically = NO;
+    }
+    return _locationManager;
+}
+
+- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
+    
+    CLLocation *newLocation = [locations lastObject];
+    NSTimeInterval locationAge = -[newLocation.timestamp timeIntervalSinceNow];
+    if (locationAge < 5.0 &&
+        newLocation.horizontalAccuracy > 0 &&
+        newLocation.horizontalAccuracy <= self.requiredAccuracy) {
+            self.currentLocation = newLocation;
+            [self.locationManager stopUpdatingLocation];
+//            NSLog(@"stopUpdatingLocation");
+            self.locationManager = nil;
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"currentLocationUpdated" object:self.currentLocation];
+    }
+    
+}
 
 
 

@@ -8,8 +8,9 @@
 
 #import "STTTMainVC.h"
 #import <STManagedTracker/STSessionManager.h>
+#import "STTTAgentTerminal.h"
 
-@interface STTTMainVC () <UITableViewDelegate, UITableViewDataSource>
+@interface STTTMainVC () <UITableViewDelegate>
 
 @property (nonatomic, strong) UIView *terminalView;
 @property (nonatomic, strong) UIView *taskView;
@@ -17,11 +18,15 @@
 @property (nonatomic) BOOL tableViewIsShown;
 @property (nonatomic) BOOL tasksIsShown;
 @property (nonatomic) BOOL terminalsIsShown;
+@property (nonatomic, strong) STSession *session;
 
 @end
 
 @implementation STTTMainVC
 
+- (STSession *)session {
+    return [[STSessionManager sharedManager] currentSession];
+}
 
 - (void)taskViewTap {
     NSLog(@"taskViewTap");
@@ -29,6 +34,8 @@
         [self shrinkInfoViews];
         self.tasksIsShown = YES;
         [self showTableView];
+        self.tableView.dataSource = self.taskController;
+        [self.tableView reloadData];
         
     } else {
         if (self.tasksIsShown) {
@@ -41,6 +48,7 @@
             NSLog(@"show tasks table");
             self.terminalsIsShown = NO;
             self.tasksIsShown = YES;
+            self.tableView.dataSource = self.taskController;
             [self.tableView reloadData];
         }
     }
@@ -52,6 +60,8 @@
         [self shrinkInfoViews];
         self.terminalsIsShown = YES;
         [self showTableView];
+        self.tableView.dataSource = self.terminalController;
+        [self.tableView reloadData];
         
     } else {
         if (self.terminalsIsShown) {
@@ -64,6 +74,7 @@
             NSLog(@"show terminals table");
             self.tasksIsShown = NO;
             self.terminalsIsShown = YES;
+            self.tableView.dataSource = self.terminalController;
             [self.tableView reloadData];
         }
     }
@@ -83,11 +94,32 @@
 - (void)showTableView {
     self.tableViewIsShown = YES;
     self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 54, self.view.bounds.size.width, self.view.bounds.size.height - 108) style:UITableViewStylePlain];
-    self.tableView.dataSource = self;
     self.tableView.delegate = self;
     [self.view addSubview:self.tableView];
 }
 
+- (void)showTerminalInfo {
+    
+    UILabel *numberOfTerminalsLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.terminalView.bounds.size.width * 0.1, self.terminalView.bounds.size.height * 0.05, self.terminalView.bounds.size.width * 0.8, 44)];
+    numberOfTerminalsLabel.text = [NSString stringWithFormat:@"Терминалов: %d", self.terminalController.resultsController.fetchedObjects.count];
+    numberOfTerminalsLabel.textAlignment = NSTextAlignmentCenter;
+    numberOfTerminalsLabel.font = [UIFont boldSystemFontOfSize:28];
+    [self.terminalView addSubview:numberOfTerminalsLabel];
+
+    UILabel *nearestLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.terminalView.bounds.size.width * 0.1, self.terminalView.bounds.size.height * 0.1 + 44, self.terminalView.bounds.size.width * 0.8, 44)];
+    nearestLabel.text = @"Ближайший:";
+    nearestLabel.font = [UIFont boldSystemFontOfSize:24];
+    [self.terminalView addSubview:nearestLabel];
+
+    UILabel *nearestAddressLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.terminalView.bounds.size.width * 0.1, self.terminalView.bounds.size.height * 0.1 + 88, self.terminalView.bounds.size.width * 0.8, 88)];
+    nearestAddressLabel.text = [(STTTAgentTerminal *)[self.terminalController.resultsController.fetchedObjects objectAtIndex:1] address];
+    nearestAddressLabel.textAlignment = NSTextAlignmentRight;
+    nearestAddressLabel.font = [UIFont systemFontOfSize:20];
+    nearestAddressLabel.lineBreakMode = NSLineBreakByWordWrapping;
+    nearestAddressLabel.numberOfLines = 3;
+    [self.terminalView addSubview:nearestAddressLabel];
+
+}
 
 - (void)viewInit {
 //    NSLog(@"self.view %@", self.view);
@@ -110,96 +142,38 @@
     
     UIGestureRecognizer *terminalViewTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(terminalViewTap)];
     [self.terminalView addGestureRecognizer:terminalViewTap];
-    
-//    UILabel *terminalLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.view.bounds.size.height / 2, 0, self.view.bounds.size.width, self.view.bounds.size.height / 2)];
-//    terminalLabel.text = @"TERMINAL";
-//    [self.terminalView addSubview:terminalLabel];
-    
+        
     [self.view addSubview:self.taskView];
     [self.view addSubview:self.terminalView];
     
-    self.terminalController = [[STTTTerminalController alloc] init];
-    self.terminalController.session = [[STSessionManager sharedManager] currentSession];
     
-    self.locationController = [[STTTLocationController alloc] init];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sessionStatusChanged:) name:@"sessionStatusChanged" object:self.session];
     
 }
 
+- (void)sessionStatusChanged:(NSNotification *)notification {
 
-#pragma mark - Table view data source
+    if ([self.session.status isEqualToString:@"running"]) {
+        
+        self.terminalController = [[STTTTerminalController alloc] init];
+        self.terminalController.session = self.session;
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
-    return 1;
+        self.taskController = [[STTTTaskController alloc] init];
+
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(currentLocationUpdated:) name:@"currentLocationUpdated" object:nil];
+        [STTTLocationController sharedLC].session = [[STSessionManager sharedManager] currentSession];
+        [[STTTLocationController sharedLC] getLocation];
+        [self showTerminalInfo];
+
+    }
+
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    return 15;
+- (void)currentLocationUpdated:(NSNotification *)notification {
+    NSLog(@"currentLocation %@", notification.object);
+    [self.terminalController performFetch];
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    static NSString *cellIdentifier = @"checkCell";
-//    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    
-    UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-    
-    UIFont *font = [UIFont systemFontOfSize:14];
-    
-    UILabel *firstLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 10, 140, 24)];
-    
-    NSString *text = self.terminalsIsShown ? @"terminal" : @"task";
-    
-    firstLabel.text = text;
-    
-    firstLabel.font = font;
-    [cell.contentView addSubview:firstLabel];
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    
-    return cell;
-}
-
-
-
-/*
- // Override to support conditional editing of the table view.
- - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
- {
- // Return NO if you do not want the specified item to be editable.
- return YES;
- }
- */
-
-/*
- // Override to support editing the table view.
- - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
- {
- if (editingStyle == UITableViewCellEditingStyleDelete) {
- // Delete the row from the data source
- [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
- }
- else if (editingStyle == UITableViewCellEditingStyleInsert) {
- // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
- }
- }
- */
-
-/*
- // Override to support rearranging the table view.
- - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
- {
- }
- */
-
-/*
- // Override to support conditional rearranging of the table view.
- - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
- {
- // Return NO if you do not want the item to be re-orderable.
- return YES;
- }
- */
 
 #pragma mark - Table view delegate
 

@@ -13,10 +13,10 @@
 @interface STTTLocationController : NSObject
 
 @property (nonatomic, strong) CLLocation *currentLocation;
-
 @property (nonatomic, strong) STSession *session;
 
-- (void)getLocation:(void (^)(BOOL success))completionHandler;
++ (STTTLocationController *)sharedLC;
+- (void)getLocation;
 
 
 @end

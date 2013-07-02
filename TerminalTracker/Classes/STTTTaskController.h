@@ -8,6 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-@interface STTTTaskController : NSObject
+@interface STTTTaskController : NSObject <UITableViewDataSource>
 
 @end

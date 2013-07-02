@@ -8,11 +8,12 @@
 
 #import <UIKit/UIKit.h>
 #import "STTTTerminalController.h"
+#import "STTTTaskController.h"
 #import "STTTLocationController.h"
 
 @interface STTTMainVC : UIViewController
 
 @property (nonatomic, strong) STTTTerminalController *terminalController;
-@property (nonatomic, strong) STTTLocationController *locationController;
+@property (nonatomic, strong) STTTTaskController *taskController;
 
 @end

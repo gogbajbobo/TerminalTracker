@@ -177,13 +177,11 @@
         if (!terminal.location.latitude || !terminal.location.longitude) {
             CLGeocoder *geoCoder = [[CLGeocoder alloc] init];
             [geoCoder geocodeAddressString:terminal.address completionHandler:^(NSArray *placemarks, NSError *error) {
-                NSLog(@"address %@", terminal.address);
+//                NSLog(@"address %@", terminal.address);
                 if (error) {
                     NSLog(@"error %@", error.localizedDescription);
                     terminal.location = nil;
                 } else {
-//                    NSLog(@"id %@", [properties valueForKey:@"id"]);
-//                    NSLog(@"placemarks %@", placemarks);
                     CLPlacemark *place = [placemarks lastObject];
                     terminal.location.latitude = [NSNumber numberWithDouble:place.location.coordinate.latitude];
                     terminal.location.longitude = [NSNumber numberWithDouble:place.location.coordinate.longitude];
@@ -193,9 +191,9 @@
 
         }
         
-        NSLog(@"latitude %@", [properties valueForKey:@"latitude"]);
-        NSLog(@"longitude %@", [properties valueForKey:@"longitude"]);
-        NSLog(@"terminal.location %@", terminal.location);
+//        NSLog(@"latitude %@", [properties valueForKey:@"latitude"]);
+//        NSLog(@"longitude %@", [properties valueForKey:@"longitude"]);
+//        NSLog(@"terminal.location %@", terminal.location);
         
         
     }
