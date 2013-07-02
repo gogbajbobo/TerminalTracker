@@ -57,6 +57,7 @@
 - (void)terminalViewTap {
     NSLog(@"terminalViewTap");
     if (!self.tableViewIsShown) {
+        [[STTTLocationController sharedLC] getLocation];
         [self shrinkInfoViews];
         self.terminalsIsShown = YES;
         [self showTableView];

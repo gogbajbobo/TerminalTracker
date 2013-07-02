@@ -15,5 +15,6 @@
 @property (nonatomic, strong) NSFetchedResultsController *resultsController;
 
 - (void)performFetch;
+- (void)calculateDistance;
 
 @end

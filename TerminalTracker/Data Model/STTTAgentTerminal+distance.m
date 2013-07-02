@@ -12,30 +12,53 @@
 
 @implementation STTTAgentTerminal (distance)
 
-- (void)awakeFromFetch {
-    NSLog(@"awakeFromFetch");
-    [self calculateDistance];
-}
 
-- (void)awakeFromInsert {
-    NSLog(@"awakeFromInsert");
-    [self calculateDistance];
-}
-
-
-- (void)calculateDistance {
-    CLLocation *currentLocation = [[STTTLocationController sharedLC] currentLocation];
-    CLLocation *terminalLocation = [[CLLocation alloc] initWithLatitude:[self.location.latitude doubleValue] longitude:[self.location.longitude doubleValue]];
+- (NSNumber *)sectionNumber {
     
-    if (!currentLocation || !terminalLocation) {
-//        NSLog(@"0");
-        [self setPrimitiveValue:0 forKey:@"distance"];
+    double distance = [self.distance doubleValue];
+    
+    NSLog(@"distance %f", distance);
+    
+    if (distance < 1000) {
+        return [NSNumber numberWithInt:0];
+    } else if (distance >= 1000 && distance < 2000) {
+        return [NSNumber numberWithInt:1];
+    } else if (distance >= 2000 && distance < 5000) {
+        return [NSNumber numberWithInt:2];
+    } else if (distance >= 5000) {
+        return [NSNumber numberWithInt:3];
     } else {
-        CLLocationDistance distance = [currentLocation distanceFromLocation:terminalLocation];
-//        NSLog(@"%f", distance);
-        [self setPrimitiveValue:[NSNumber numberWithDouble:distance] forKey:@"distance"];
+        return [NSNumber numberWithInt:0];
     }
     
 }
+
+//- (void)awakeFromFetch {
+//    [super awakeFromFetch];
+//    NSLog(@"awakeFromFetch");
+//    [self calculateDistance];
+//}
+//
+//- (void)awakeFromInsert {
+//    [super awakeFromInsert];
+//    NSLog(@"awakeFromInsert");
+//    [self calculateDistance];
+//}
+//
+//
+//- (void)calculateDistance {
+//    CLLocation *currentLocation = [[STTTLocationController sharedLC] currentLocation];
+//    CLLocation *terminalLocation = [[CLLocation alloc] initWithLatitude:[self.location.latitude doubleValue] longitude:[self.location.longitude doubleValue]];
+//    
+//    if (!currentLocation || !terminalLocation) {
+//        NSLog(@"0");
+//        [self setPrimitiveValue:0 forKey:@"distance"];
+//    } else {
+//        CLLocationDistance distance = [currentLocation distanceFromLocation:terminalLocation];
+//        NSLog(@"%f", distance);
+//        [self setPrimitiveValue:[NSNumber numberWithDouble:distance] forKey:@"distance"];
+//    }
+//    
+//}
 
 @end

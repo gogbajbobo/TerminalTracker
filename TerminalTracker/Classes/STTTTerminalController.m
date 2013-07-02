@@ -9,6 +9,7 @@
 #import "STTTTerminalController.h"
 #import "STTTAgentTerminal.h"
 #import "STTTTerminalLocation.h"
+#import "STTTLocationController.h"
 
 @interface STTTTerminalController() <NSFetchedResultsControllerDelegate>
 
@@ -33,7 +34,7 @@
         NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:NSStringFromClass([STTTAgentTerminal class])];
         request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"distance" ascending:YES selector:@selector(compare:)]];
 //        request.predicate = [NSPredicate predicateWithFormat:@"SELF.track == %@", self.track];
-        _resultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request managedObjectContext:self.session.document.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
+        _resultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request managedObjectContext:self.session.document.managedObjectContext sectionNameKeyPath:@"sectionNumber" cacheName:nil];
         _resultsController.delegate = self;
     }
     return _resultsController;
@@ -50,6 +51,30 @@
             //                NSLog(@"distance %@", [object valueForKey:@"distance"]);
         }
     }
+}
+
+- (void)calculateDistance {
+    
+    for (STTTAgentTerminal *terminal in self.resultsController.fetchedObjects) {
+        [self calculateDistanceFor:terminal];
+    }
+    
+}
+
+- (void)calculateDistanceFor:(STTTAgentTerminal *)terminal {
+
+    CLLocation *currentLocation = [[STTTLocationController sharedLC] currentLocation];
+    CLLocation *terminalLocation = [[CLLocation alloc] initWithLatitude:[terminal.location.latitude doubleValue] longitude:[terminal.location.longitude doubleValue]];
+    
+    if (!currentLocation || !terminalLocation) {
+        NSLog(@"0");
+        [terminal setPrimitiveValue:0 forKey:@"distance"];
+    } else {
+        CLLocationDistance distance = [currentLocation distanceFromLocation:terminalLocation];
+        NSLog(@"%f", distance);
+        [terminal setPrimitiveValue:[NSNumber numberWithDouble:distance] forKey:@"distance"];
+    }
+
 }
 
 
@@ -114,12 +139,40 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 1;
+    return [[self.resultsController sections] count];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 15;
+    id <NSFetchedResultsSectionInfo> sectionInfo = [[self.resultsController sections] objectAtIndex:section];
+    return [sectionInfo numberOfObjects];
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    id <NSFetchedResultsSectionInfo> sectionInfo = [[self.resultsController sections] objectAtIndex:section];
+    
+    NSUInteger sectionName = [[sectionInfo name] integerValue];
+    
+    switch (sectionName) {
+        case 0:
+            return @"менее 1 км";
+            break;
+        case 1:
+            return @"от 1 до 2 км";
+            break;
+        case 2:
+            return @"от 2 до 5 км";
+            break;
+        case 3:
+            return @"более 5 км";
+            break;
+            
+        default:
+            return @"";
+            break;
+    }
+    
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -127,18 +180,15 @@
     static NSString *cellIdentifier = @"terminalCell";
     //    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
-    UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+    UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
+
+    id <NSFetchedResultsSectionInfo> sectionInfo = [[self.resultsController sections] objectAtIndex:indexPath.section];
+    STTTAgentTerminal *terminal = (STTTAgentTerminal *)[[sectionInfo objects] objectAtIndex:indexPath.row];
+
+    cell.textLabel.text = [NSString stringWithFormat:@"%@\t%@", terminal.code, terminal.errorText];
+    cell.detailTextLabel.text = terminal.address;
     
-    UIFont *font = [UIFont systemFontOfSize:14];
-    
-    UILabel *firstLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 10, 140, 24)];
-    
-    firstLabel.text = @"terminal";
-    
-    firstLabel.font = font;
-    [cell.contentView addSubview:firstLabel];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    
     return cell;
 }
 
