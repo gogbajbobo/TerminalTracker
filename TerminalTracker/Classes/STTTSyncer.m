@@ -23,11 +23,13 @@
 @implementation STTTSyncer
 
 - (NSString *)requestParameters {
+    NSLog(@"fetchLimit %d", self.fetchLimit);
     return @"@shift=-17&page-size:=20&page-number:=1";
 }
 
 - (void)onTimerTick:(NSTimer *)timer {
-    [self setRequestType:@"megaport.iAgentTerminal"];
+//    [self setRequestType:@"megaport.iAgentTerminal"];
+    [self setRequestType:@"megaport.iAgentTask"];
     [super onTimerTick:timer];
 }
 
@@ -46,8 +48,8 @@
 - (void)parseResponse:(NSData *)responseData fromConnection:(NSURLConnection *)connection {
         
 //    NSLog(@"parseResponse");
-//    NSString *responseString = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
-//    NSLog(@"responseData %@", responseString);
+    NSString *responseString = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
+    NSLog(@"responseData %@", responseString);
     
     NSError *error;
     id responseJSON = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingMutableContainers error:&error];
@@ -196,6 +198,59 @@
 //        NSLog(@"terminal.location %@", terminal.location);
         
         
+    } else if ([name isEqualToString:@"megaport.iAgentTask"]) {
+        
+        NSString *xidString = [xid stringByReplacingOccurrencesOfString:@"-" withString:@""];
+        NSData *xidData = [self dataFromString:xidString];
+        //        terminal.xid = xidData;
+        
+        
+        NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:NSStringFromClass([STTTAgentTask class])];
+        request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"ts" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
+        request.predicate = [NSPredicate predicateWithFormat:@"SELF.xid == %@", xidData];
+        
+        NSError *error;
+        NSArray *fetchResult = [self.session.document.managedObjectContext executeFetchRequest:request error:&error];
+        
+        STTTAgentTask *task;
+        
+        if ([fetchResult lastObject]) {
+            task = [fetchResult lastObject];
+        } else {
+            task = (STTTAgentTask *)[NSEntityDescription insertNewObjectForEntityForName:NSStringFromClass([STTTAgentTask class]) inManagedObjectContext:self.session.document.managedObjectContext];
+            task.xid = xidData;
+        }
+                
+        task.terminalBreakName = [properties valueForKey:@"terminal_break_name"];
+        
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss.SSS"];
+        NSDate *doBeforeDate = [dateFormatter dateFromString:[properties valueForKey:@"do-before"]];
+        
+        task.doBefore = doBeforeDate;
+        task.lts = [NSDate date];
+        
+        NSDictionary *terminalData = [properties valueForKey:@"terminal"];
+        NSData *terminalXid = [self dataFromString:[[terminalData valueForKey:@"xid"] stringByReplacingOccurrencesOfString:@"-" withString:@""]];
+
+        request = [NSFetchRequest fetchRequestWithEntityName:NSStringFromClass([STTTAgentTerminal class])];
+        request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"ts" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
+        request.predicate = [NSPredicate predicateWithFormat:@"SELF.xid == %@", terminalXid];
+        fetchResult = [self.session.document.managedObjectContext executeFetchRequest:request error:&error];
+
+        STTTAgentTerminal *terminal;
+        
+        if ([fetchResult lastObject]) {
+            terminal = [fetchResult lastObject];
+        } else {
+            terminal = (STTTAgentTerminal *)[NSEntityDescription insertNewObjectForEntityForName:NSStringFromClass([STTTAgentTerminal class]) inManagedObjectContext:self.session.document.managedObjectContext];
+            terminal.xid = terminalXid;
+        }
+
+        task.terminal = terminal;
+        
+        NSLog(@"task %@", task);
+
     }
 
 }

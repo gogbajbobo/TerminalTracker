@@ -161,8 +161,8 @@
     id <NSFetchedResultsSectionInfo> sectionInfo = [[self.resultsController sections] objectAtIndex:indexPath.section];
     STTTAgentTask *task = (STTTAgentTask *)[[sectionInfo objects] objectAtIndex:indexPath.row];
     
-//    cell.textLabel.text = [NSString stringWithFormat:@"%@\t%@", terminal.code, terminal.errorText];
-//    cell.detailTextLabel.text = terminal.address;
+    cell.textLabel.text = [NSString stringWithFormat:@"%@", task.doBefore];
+    cell.detailTextLabel.text = task.terminalBreakName;
     
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     return cell;
