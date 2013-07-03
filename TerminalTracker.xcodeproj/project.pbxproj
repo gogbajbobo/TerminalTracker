@@ -19,6 +19,8 @@
 		2C93A5B2178218D40014001B /* STTTAgentTerminal.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A5B1178218D40014001B /* STTTAgentTerminal.m */; };
 		2C93A5B5178412410014001B /* STTTAgentTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A5B4178412410014001B /* STTTAgentTask.m */; };
 		2C93A5B8178420DC0014001B /* STTTAgentTask+remainingTime.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A5B7178420DC0014001B /* STTTAgentTask+remainingTime.m */; };
+		2C93A5BB178450F70014001B /* STTTTerminalVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A5BA178450F70014001B /* STTTTerminalVC.m */; };
+		2C93A5BE178452410014001B /* STTTTaskVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A5BD178452410014001B /* STTTTaskVC.m */; };
 		2CE3265B176F29E800BAA1D4 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE3265A176F29E800BAA1D4 /* UIKit.framework */; };
 		2CE3265D176F29E800BAA1D4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE3265C176F29E800BAA1D4 /* Foundation.framework */; };
 		2CE3265F176F29E800BAA1D4 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE3265E176F29E800BAA1D4 /* CoreGraphics.framework */; };
@@ -77,6 +79,10 @@
 		2C93A5B4178412410014001B /* STTTAgentTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTAgentTask.m; sourceTree = "<group>"; };
 		2C93A5B6178420DB0014001B /* STTTAgentTask+remainingTime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "STTTAgentTask+remainingTime.h"; sourceTree = "<group>"; };
 		2C93A5B7178420DC0014001B /* STTTAgentTask+remainingTime.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "STTTAgentTask+remainingTime.m"; sourceTree = "<group>"; };
+		2C93A5B9178450F60014001B /* STTTTerminalVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTTerminalVC.h; sourceTree = "<group>"; };
+		2C93A5BA178450F70014001B /* STTTTerminalVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTTerminalVC.m; sourceTree = "<group>"; };
+		2C93A5BC178452400014001B /* STTTTaskVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTTaskVC.h; sourceTree = "<group>"; };
+		2C93A5BD178452410014001B /* STTTTaskVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTTaskVC.m; sourceTree = "<group>"; };
 		2CE32657176F29E800BAA1D4 /* TerminalTracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TerminalTracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CE3265A176F29E800BAA1D4 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		2CE3265C176F29E800BAA1D4 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -230,6 +236,10 @@
 				2C93A5AB1781BA800014001B /* STTTLocationController.m */,
 				2C93A53617783CC00014001B /* STTTMainVC.h */,
 				2C93A53717783CC00014001B /* STTTMainVC.m */,
+				2C93A5B9178450F60014001B /* STTTTerminalVC.h */,
+				2C93A5BA178450F70014001B /* STTTTerminalVC.m */,
+				2C93A5BC178452400014001B /* STTTTaskVC.h */,
+				2C93A5BD178452410014001B /* STTTTaskVC.m */,
 				2CE32699176F2BE000BAA1D4 /* STTTSettingsController.h */,
 				2CE3269A176F2BE000BAA1D4 /* STTTSettingsController.m */,
 				2CE3269C176F2CAA00BAA1D4 /* STTTAuthBasic.h */,
@@ -418,6 +428,8 @@
 				2C93A5B2178218D40014001B /* STTTAgentTerminal.m in Sources */,
 				2C93A5B5178412410014001B /* STTTAgentTask.m in Sources */,
 				2C93A5B8178420DC0014001B /* STTTAgentTask+remainingTime.m in Sources */,
+				2C93A5BB178450F70014001B /* STTTTerminalVC.m in Sources */,
+				2C93A5BE178452410014001B /* STTTTaskVC.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

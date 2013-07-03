@@ -10,6 +10,8 @@
 #import <STManagedTracker/STSessionManager.h>
 #import "STTTAgentTask+remainingTime.h"
 #import "STTTAgentTerminal.h"
+#import "STTTTerminalVC.h"
+#import "STTTTaskVC.h"
 
 @interface STTTMainVC () <UITableViewDelegate>
 
@@ -20,6 +22,8 @@
 @property (nonatomic) BOOL tasksIsShown;
 @property (nonatomic) BOOL terminalsIsShown;
 @property (nonatomic, strong) STSession *session;
+@property (nonatomic, strong) STTTAgentTask *selectedTask;
+@property (nonatomic, strong) STTTAgentTerminal *selectedTerminal;
 
 @end
 
@@ -123,7 +127,7 @@
     int numberOfCricitalTasks = 0;
     for (STTTAgentTask *task in tasks) {
         NSTimeInterval remainingTime = [task remainingTime];
-        if (remainingTime > 0 && remainingTime < 60) {
+        if (remainingTime > 0 && remainingTime < 60*60) {
             numberOfCricitalTasks += 1;
         }
     }
@@ -239,16 +243,36 @@
 
 #pragma mark - Table view delegate
 
-//- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-//{
-//    id <NSFetchedResultsSectionInfo> sectionInfo = [[self.resultsController sections] objectAtIndex:indexPath.section];
-//    STHTLocation *location = (STHTLocation *)[[sectionInfo objects] objectAtIndex:indexPath.row];
-//    NSString *message = [NSString stringWithFormat:@"timestamp %@ \r\n accuracy %@ \r\n", location.timestamp, location.horizontalAccuracy];
-//
-//    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Location info" message:message delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil];
-//    [alert show];
-//}
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+    if (self.tasksIsShown) {
+        id <NSFetchedResultsSectionInfo> sectionInfo = [[self.taskController.resultsController sections] objectAtIndex:indexPath.section];
+        STTTAgentTask *task = (STTTAgentTask *)[[sectionInfo objects] objectAtIndex:indexPath.row];
+        [self performSegueWithIdentifier:@"showTask" sender:task];
 
+    } else if (self.terminalsIsShown) {
+        id <NSFetchedResultsSectionInfo> sectionInfo = [[self.terminalController.resultsController sections] objectAtIndex:indexPath.section];
+        STTTAgentTerminal *terminal = (STTTAgentTerminal *)[[sectionInfo objects] objectAtIndex:indexPath.row];
+        [self performSegueWithIdentifier:@"showTerminal" sender:terminal];
+
+    }
+
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    
+    if ([segue.identifier isEqualToString:@"showTask"]) {
+        if ([segue.destinationViewController isKindOfClass:[STTTTaskVC class]] && [sender isKindOfClass:[STTTAgentTask class]]) {
+            [(STTTTaskVC *)segue.destinationViewController setTask:(STTTAgentTask *)sender];
+        }
+    } else if ([segue.identifier isEqualToString:@"showTerminal"]) {
+        if ([segue.destinationViewController isKindOfClass:[STTTTerminalVC class]] && [sender isKindOfClass:[STTTAgentTerminal class]]) {
+            [(STTTTerminalVC *)segue.destinationViewController setTerminal:(STTTAgentTerminal *)sender];
+        }
+    }
+    
+}
 
 
 #pragma mark - view lifecycle

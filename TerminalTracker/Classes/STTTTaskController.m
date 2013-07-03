@@ -7,7 +7,7 @@
 //
 
 #import "STTTTaskController.h"
-#import "STTTAgentTask.h"
+#import "STTTAgentTask+remainingTime.h"
 #import "STTTTaskLocation.h"
 
 @interface STTTTaskController() <NSFetchedResultsControllerDelegate>
@@ -157,6 +157,24 @@
     cell.textLabel.text = [NSString stringWithFormat:@"%@", task.doBefore];
     cell.detailTextLabel.text = task.terminalBreakName;
     
+    NSTimeInterval remainingTime = [task remainingTime];
+    UIColor *backgroundColor = [UIColor whiteColor];
+    UIColor *textColor = [UIColor blackColor];
+    
+    if (remainingTime < 0) {
+        textColor = [UIColor redColor];
+    } else if (remainingTime > 0 && remainingTime <= 60*60) {
+        backgroundColor = [UIColor redColor];
+        textColor = [UIColor whiteColor];
+    } else if (remainingTime < 120*60) {
+        backgroundColor = [UIColor yellowColor];
+    } else if (remainingTime < 180*60) {
+        backgroundColor = [UIColor colorWithRed:144/255 green:238/255 blue:144/255 alpha:1];
+    }
+    
+    cell.backgroundColor = backgroundColor;
+    cell.textLabel.textColor = textColor;
+    cell.detailTextLabel.textColor = textColor;
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     return cell;
 }
