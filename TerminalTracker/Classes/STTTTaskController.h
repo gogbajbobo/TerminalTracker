@@ -8,10 +8,12 @@
 
 #import <Foundation/Foundation.h>
 #import <STManagedTracker/STSession.h>
+#import "STTTAgentTerminal.h"
 
 @interface STTTTaskController : NSObject <UITableViewDataSource>
 
 @property (nonatomic, strong) STSession *session;
 @property (nonatomic, strong) NSFetchedResultsController *resultsController;
+@property (nonatomic, strong) STTTAgentTerminal *terminal;
 
 @end

@@ -192,7 +192,7 @@
     cell.textLabel.text = [NSString stringWithFormat:@"%@\t%@", code, errorText];
     cell.detailTextLabel.text = address;
     
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+//    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     return cell;
 }
 

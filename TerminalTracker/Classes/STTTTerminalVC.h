@@ -17,12 +17,3 @@
 @property (nonatomic, strong) STTTAgentTerminal *terminal;
 
 @end
-
-
-
-
-@interface STTTMapAnnotation : NSObject <MKAnnotation>
-
-+ (STTTMapAnnotation *)initWithCoordinate:(CLLocationCoordinate2D)coordinate;
-
-@end

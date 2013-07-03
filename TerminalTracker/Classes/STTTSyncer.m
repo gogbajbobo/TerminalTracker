@@ -28,8 +28,8 @@
 }
 
 - (void)onTimerTick:(NSTimer *)timer {
-    [self setRequestType:@"megaport.iAgentTerminal"];
-//    [self setRequestType:@"megaport.iAgentTask"];
+//    [self setRequestType:@"megaport.iAgentTerminal"];
+    [self setRequestType:@"megaport.iAgentTask"];
     [super onTimerTick:timer];
 }
 

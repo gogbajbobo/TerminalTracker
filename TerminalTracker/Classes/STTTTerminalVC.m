@@ -8,8 +8,12 @@
 
 #import "STTTTerminalVC.h"
 #import "STTTTerminalLocation.h"
+#import "STTTAgentTask+remainingTime.h"
+#import <STManagedTracker/STSessionManager.h>
+#import "STTTTaskVC.h"
+#import "STTTMapAnnotation.h"
 
-@interface STTTTerminalVC ()
+@interface STTTTerminalVC () <UITableViewDataSource, UITableViewDelegate>
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
 @property (weak, nonatomic) IBOutlet UILabel *codeLabel;
 @property (weak, nonatomic) IBOutlet UILabel *srcSystemNameLabel;
@@ -52,8 +56,50 @@
 }
 
 - (void)tableViewInit {
+    self.tableView.dataSource = self;
+    self.tableView.delegate = self;
+    [self.tableView reloadData];
+}
+
+
+#pragma mark - tableview datasource & delegate
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return 1;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return 1;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"terminalTaskCell"];
+
+    cell.textLabel.text = self.terminal.task.terminalBreakName;
+    
+    return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+    [self performSegueWithIdentifier:@"goToTask" sender:self.terminal.task];
     
 }
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    
+    if ([segue.identifier isEqualToString:@"goToTask"]) {
+        if ([segue.destinationViewController isKindOfClass:[STTTTaskVC class]] && [sender isKindOfClass:[STTTAgentTask class]]) {
+            [(STTTTaskVC *)segue.destinationViewController setTask:(STTTAgentTask *)sender];
+        }
+    }
+    
+}
+
 
 #pragma mark - view lifecycle
 
@@ -73,36 +119,15 @@
 	// Do any additional setup after loading the view.
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self.tableView reloadData];
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
-@end
-
-
-
-
-
-@interface STTTMapAnnotation()
-
-@property (nonatomic) CLLocationCoordinate2D center;
-
-@end
-
-@implementation STTTMapAnnotation
-
-+ (STTTMapAnnotation *)initWithCoordinate:(CLLocationCoordinate2D)coordinate {
-    STTTMapAnnotation *annotation = [[STTTMapAnnotation alloc] init];
-    annotation.center = coordinate;
-    return annotation;
-}
-
-- (CLLocationCoordinate2D)coordinate
-{
-    return self.center;
-}
-
 
 @end

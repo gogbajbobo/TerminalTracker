@@ -33,7 +33,9 @@
     if (!_resultsController) {
         NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:NSStringFromClass([STTTAgentTask class])];
         request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"doBefore" ascending:YES selector:@selector(compare:)]];
-        //        request.predicate = [NSPredicate predicateWithFormat:@"SELF.track == %@", self.track];
+        if (self.terminal) {
+            request.predicate = [NSPredicate predicateWithFormat:@"SELF.terminal == %@", self.terminal];
+        }
         _resultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request managedObjectContext:self.session.document.managedObjectContext sectionNameKeyPath:@"visited" cacheName:nil];
         _resultsController.delegate = self;
     }
@@ -175,7 +177,7 @@
     cell.backgroundColor = backgroundColor;
     cell.textLabel.textColor = textColor;
     cell.detailTextLabel.textColor = textColor;
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+//    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     return cell;
 }
 
