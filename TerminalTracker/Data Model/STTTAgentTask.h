@@ -2,7 +2,7 @@
 //  STTTAgentTask.h
 //  TerminalTracker
 //
-//  Created by Maxim Grigoriev on 7/1/13.
+//  Created by Maxim Grigoriev on 7/3/13.
 //  Copyright (c) 2013 Maxim Grigoriev. All rights reserved.
 //
 
@@ -16,7 +16,8 @@
 
 @property (nonatomic, retain) NSDate * doBefore;
 @property (nonatomic, retain) NSString * terminalBreakName;
-@property (nonatomic, retain) STTTTaskLocation *visitLocation;
+@property (nonatomic, retain) NSNumber * visited;
 @property (nonatomic, retain) STTTAgentTerminal *terminal;
+@property (nonatomic, retain) STTTTaskLocation *visitLocation;
 
 @end

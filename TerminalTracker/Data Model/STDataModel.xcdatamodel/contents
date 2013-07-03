@@ -40,6 +40,7 @@
     <entity name="STTTAgentTask" representedClassName="STTTAgentTask" parentEntity="STComment" syncable="YES">
         <attribute name="doBefore" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="terminalBreakName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="visited" optional="YES" attributeType="Boolean" syncable="YES"/>
         <relationship name="terminal" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="STTTAgentTerminal" inverseName="task" inverseEntity="STTTAgentTerminal" syncable="YES"/>
         <relationship name="visitLocation" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="STTTTaskLocation" inverseName="task" inverseEntity="STTTTaskLocation" syncable="YES"/>
     </entity>
@@ -66,9 +67,9 @@
         <element name="STLocation" positionX="-3926" positionY="-864" width="128" height="163"/>
         <element name="STLogMessage" positionX="-4095" positionY="-939" width="128" height="73"/>
         <element name="STSettings" positionX="-4068" positionY="-1161" width="128" height="88"/>
-        <element name="STTTTaskLocation" positionX="-3728" positionY="-778" width="128" height="58"/>
-        <element name="STTTAgentTask" positionX="-3566" positionY="-943" width="128" height="103"/>
+        <element name="STTTAgentTask" positionX="-3566" positionY="-943" width="128" height="118"/>
         <element name="STTTAgentTerminal" positionX="-3611" positionY="-1179" width="128" height="163"/>
+        <element name="STTTTaskLocation" positionX="-3728" positionY="-778" width="128" height="58"/>
         <element name="STTTTerminalLocation" positionX="-3771" positionY="-873" width="128" height="58"/>
     </elements>
 </model>

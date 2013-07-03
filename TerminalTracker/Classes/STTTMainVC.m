@@ -8,6 +8,7 @@
 
 #import "STTTMainVC.h"
 #import <STManagedTracker/STSessionManager.h>
+#import "STTTAgentTask+remainingTime.h"
 #import "STTTAgentTerminal.h"
 
 @interface STTTMainVC () <UITableViewDelegate>
@@ -99,7 +100,45 @@
     [self.view addSubview:self.tableView];
 }
 
+- (void)showTaskInfo {
+    
+    [self removeSubviewsFrom:self.taskView];
+    
+    NSArray *tasks = self.taskController.resultsController.fetchedObjects;
+    
+    UILabel *numberOfTasksLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.taskView.bounds.size.width * 0.1, self.taskView.bounds.size.height * 0.05, self.taskView.bounds.size.width * 0.8, 44)];
+    numberOfTasksLabel.text = [NSString stringWithFormat:@"Всего задач: %d", tasks.count];
+    numberOfTasksLabel.textAlignment = NSTextAlignmentCenter;
+    numberOfTasksLabel.font = [UIFont boldSystemFontOfSize:28];
+    [self.taskView addSubview:numberOfTasksLabel];
+
+    UILabel *numberOfUnsolvedTasksLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.taskView.bounds.size.width * 0.1, self.taskView.bounds.size.height * 0.1 + 44, self.taskView.bounds.size.width * 0.8, 44)];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.visited == %@", 0];
+    NSUInteger numberOfUnsolvedTasks = [tasks filteredArrayUsingPredicate:predicate].count;
+    numberOfUnsolvedTasksLabel.text = [NSString stringWithFormat:@"Невыполненных: %d", numberOfUnsolvedTasks];
+    numberOfUnsolvedTasksLabel.font = [UIFont boldSystemFontOfSize:24];
+    [self.taskView addSubview:numberOfUnsolvedTasksLabel];
+
+    UILabel *numberOfCriticalTasksLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.taskView.bounds.size.width * 0.1, self.taskView.bounds.size.height * 0.1 + 88, self.taskView.bounds.size.width * 0.8, 88)];
+    int numberOfCricitalTasks = 0;
+    for (STTTAgentTask *task in tasks) {
+        NSTimeInterval remainingTime = [task remainingTime];
+        if (remainingTime > 0 && remainingTime < 60) {
+            numberOfCricitalTasks += 1;
+        }
+    }
+    numberOfCriticalTasksLabel.text = [NSString stringWithFormat:@"Критических: %d", numberOfCricitalTasks];
+    numberOfCriticalTasksLabel.font = [UIFont boldSystemFontOfSize:20];
+    numberOfCriticalTasksLabel.backgroundColor = [UIColor redColor];
+    numberOfCriticalTasksLabel.textColor = [UIColor whiteColor];
+    [self.taskView addSubview:numberOfCriticalTasksLabel];
+
+    
+}
+
 - (void)showTerminalInfo {
+    
+    [self removeSubviewsFrom:self.terminalView];
     
     UILabel *numberOfTerminalsLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.terminalView.bounds.size.width * 0.1, self.terminalView.bounds.size.height * 0.05, self.terminalView.bounds.size.width * 0.8, 44)];
     numberOfTerminalsLabel.text = [NSString stringWithFormat:@"Терминалов: %d", self.terminalController.resultsController.fetchedObjects.count];
@@ -113,12 +152,21 @@
     [self.terminalView addSubview:nearestLabel];
 
     UILabel *nearestAddressLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.terminalView.bounds.size.width * 0.1, self.terminalView.bounds.size.height * 0.1 + 88, self.terminalView.bounds.size.width * 0.8, 88)];
-    nearestAddressLabel.text = [(STTTAgentTerminal *)[self.terminalController.resultsController.fetchedObjects objectAtIndex:1] address];
+    if (self.terminalController.resultsController.fetchedObjects.count > 0) {
+        nearestAddressLabel.text = [(STTTAgentTerminal *)[self.terminalController.resultsController.fetchedObjects objectAtIndex:1] address];
+    }
     nearestAddressLabel.textAlignment = NSTextAlignmentRight;
     nearestAddressLabel.font = [UIFont systemFontOfSize:20];
     nearestAddressLabel.lineBreakMode = NSLineBreakByWordWrapping;
     nearestAddressLabel.numberOfLines = 3;
     [self.terminalView addSubview:nearestAddressLabel];
+
+}
+
+- (void)removeSubviewsFrom:(UIView *)view {
+    for (UIView *subview in view.subviews) {
+        [subview removeFromSuperview];
+    }
 
 }
 
@@ -160,10 +208,16 @@
         self.terminalController.session = self.session;
 
         self.taskController = [[STTTTaskController alloc] init];
+        self.taskController.session = self.session;
 
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(currentLocationUpdated:) name:@"currentLocationUpdated" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(taskControllerDidChangeContent:) name:@"taskControllerDidChangeContent" object:self.taskController];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(terminalControllerDidChangeContent:) name:@"terminalControllerDidChangeContent" object:self.terminalController];
+
+        
         [STTTLocationController sharedLC].session = [[STSessionManager sharedManager] currentSession];
         [[STTTLocationController sharedLC] getLocation];
+        [self showTaskInfo];
         [self showTerminalInfo];
 
     }
@@ -175,6 +229,13 @@
     [self.terminalController calculateDistance ];
 }
 
+- (void)taskControllerDidChangeContent:(NSNotification *)notification {
+    [self showTaskInfo];
+}
+
+- (void)terminalControllerDidChangeContent:(NSNotification *)notification {
+    [self showTerminalInfo];
+}
 
 #pragma mark - Table view delegate
 

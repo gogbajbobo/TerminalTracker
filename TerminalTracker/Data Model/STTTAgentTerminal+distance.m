@@ -17,7 +17,7 @@
     
     double distance = [self.distance doubleValue];
     
-    NSLog(@"distance %f", distance);
+//    NSLog(@"distance %f", distance);
     
     if (distance < 1000) {
         return [NSNumber numberWithInt:0];

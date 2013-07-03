@@ -34,7 +34,7 @@
         NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:NSStringFromClass([STTTAgentTask class])];
         request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"doBefore" ascending:YES selector:@selector(compare:)]];
         //        request.predicate = [NSPredicate predicateWithFormat:@"SELF.track == %@", self.track];
-        _resultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request managedObjectContext:self.session.document.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
+        _resultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request managedObjectContext:self.session.document.managedObjectContext sectionNameKeyPath:@"visited" cacheName:nil];
         _resultsController.delegate = self;
     }
     return _resultsController;
@@ -53,7 +53,6 @@
     }
 }
 
-
 #pragma mark - NSFetchedResultsController delegate
 
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
@@ -62,7 +61,7 @@
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
     //    NSLog(@"controllerDidChangeContent");
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"trackControllerDidChangeContent" object:self];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"taskControllerDidChangeContent" object:self];
 }
 
 - (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath {
@@ -132,18 +131,12 @@
     
     switch (sectionName) {
         case 0:
-            return @"менее 1 км";
+            return @"Невыполненные";
             break;
         case 1:
-            return @"от 1 до 2 км";
+            return @"Выполненные";
             break;
-        case 2:
-            return @"от 2 до 5 км";
-            break;
-        case 3:
-            return @"более 5 км";
-            break;
-            
+
         default:
             return @"";
             break;

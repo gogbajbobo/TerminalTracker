@@ -86,7 +86,7 @@
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
     //    NSLog(@"controllerDidChangeContent");
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"trackControllerDidChangeContent" object:self];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"terminalControllerDidChangeContent" object:self];
 }
 
 - (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath {
@@ -184,9 +184,13 @@
 
     id <NSFetchedResultsSectionInfo> sectionInfo = [[self.resultsController sections] objectAtIndex:indexPath.section];
     STTTAgentTerminal *terminal = (STTTAgentTerminal *)[[sectionInfo objects] objectAtIndex:indexPath.row];
+    
+    NSString *code = terminal.code ? terminal.code : @"Нет данных";
+    NSString *errorText = terminal.errorText ? terminal.errorText : @"";
+    NSString *address = terminal.address ? terminal.address : @"Нет данных";
 
-    cell.textLabel.text = [NSString stringWithFormat:@"%@\t%@", terminal.code, terminal.errorText];
-    cell.detailTextLabel.text = terminal.address;
+    cell.textLabel.text = [NSString stringWithFormat:@"%@\t%@", code, errorText];
+    cell.detailTextLabel.text = address;
     
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     return cell;
