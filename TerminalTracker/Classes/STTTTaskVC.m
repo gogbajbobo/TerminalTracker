@@ -16,6 +16,7 @@
 #import "STTTLocationController.h"
 #import "STTTTaskLocation.h"
 #import <STManagedTracker/STSession.h>
+#import "STTTCommentVC.h"
 
 @interface STTTTaskVC ()
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
@@ -25,6 +26,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *terminalButton;
 @property (weak, nonatomic) IBOutlet UIButton *geoLocationButton;
 @property (weak, nonatomic) IBOutlet UIButton *visitedButton;
+@property (weak, nonatomic) IBOutlet UIButton *commentButton;
 @property (nonatomic, strong) CLLocation *location;
 @property (nonatomic) BOOL waitingLocation;
 
@@ -46,12 +48,21 @@
     [self addTaskLocation];
 }
 
+- (IBAction)commentButtonPressed:(id)sender {
+    [self performSegueWithIdentifier:@"showComment" sender:self.task];
+}
+
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     
     if ([segue.identifier isEqualToString:@"goToTerminal"]) {
         if ([segue.destinationViewController isKindOfClass:[STTTTerminalVC class]] && [sender isKindOfClass:[STTTAgentTerminal class]]) {
             [(STTTTerminalVC *)segue.destinationViewController setTerminal:(STTTAgentTerminal *)sender];
             [(STTTTerminalVC *)segue.destinationViewController setBackgroundColors:self.backgroundColors];
+        }
+    } else if ([segue.identifier isEqualToString:@"showComment"]) {
+        if ([segue.destinationViewController isKindOfClass:[STTTCommentVC class]] && [sender isKindOfClass:[STTTAgentTask class]]) {
+            [(STTTCommentVC *)segue.destinationViewController setTask:(STTTAgentTask *)sender];
+            [(STTTCommentVC *)segue.destinationViewController setBackgroundColors:self.backgroundColors];
         }
     }
     
