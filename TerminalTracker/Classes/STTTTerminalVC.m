@@ -28,6 +28,13 @@
 
 
 - (void)viewInit {
+
+    if ([[self.backgroundColors valueForKey:@"terminal"] isKindOfClass:[UIColor class]]) {
+        self.view.backgroundColor = [self.backgroundColors valueForKey:@"terminal"];
+    } else {
+        self.view.backgroundColor = [UIColor whiteColor];
+    }
+
     [self labelsInit];
     [self mapInit];
     [self tableViewInit];
@@ -56,6 +63,7 @@
 }
 
 - (void)tableViewInit {
+    self.tableView.backgroundColor = self.view.backgroundColor;
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
     [self.tableView reloadData];
@@ -95,6 +103,7 @@
     if ([segue.identifier isEqualToString:@"goToTask"]) {
         if ([segue.destinationViewController isKindOfClass:[STTTTaskVC class]] && [sender isKindOfClass:[STTTAgentTask class]]) {
             [(STTTTaskVC *)segue.destinationViewController setTask:(STTTAgentTask *)sender];
+            [(STTTTaskVC *)segue.destinationViewController setBackgroundColors:self.backgroundColors];
         }
     }
     

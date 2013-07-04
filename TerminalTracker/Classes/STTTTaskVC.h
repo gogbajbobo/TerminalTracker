@@ -12,5 +12,6 @@
 @interface STTTTaskVC : UIViewController
 
 @property (nonatomic, strong) STTTAgentTask *task;
+@property (nonatomic, strong) NSDictionary *backgroundColors;
 
 @end

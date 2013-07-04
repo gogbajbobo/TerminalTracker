@@ -15,5 +15,6 @@
 @interface STTTTerminalVC : UIViewController
 
 @property (nonatomic, strong) STTTAgentTerminal *terminal;
+@property (nonatomic, strong) NSDictionary *backgroundColors;
 
 @end

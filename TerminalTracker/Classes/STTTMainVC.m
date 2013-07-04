@@ -24,10 +24,29 @@
 @property (nonatomic, strong) STSession *session;
 @property (nonatomic, strong) STTTAgentTask *selectedTask;
 @property (nonatomic, strong) STTTAgentTerminal *selectedTerminal;
+@property (nonatomic, strong) UIColor *terminalInfoViewColor;
+@property (nonatomic, strong) UIColor *taskInfoViewColor;
+@property (nonatomic, strong) NSDictionary *backgroundColors;
+
 
 @end
 
 @implementation STTTMainVC
+
+- (UIColor *)terminalInfoViewColor {
+    return [UIColor colorWithRed:0.9 green:0.9 blue:1 alpha:1];
+}
+
+- (UIColor *)taskInfoViewColor {
+    return [UIColor colorWithRed:0.9 green:1 blue:0.9 alpha:1];
+}
+
+- (NSDictionary *)backgroundColors {
+    if (!_backgroundColors) {
+        _backgroundColors = [NSDictionary dictionaryWithObjectsAndKeys:self.terminalInfoViewColor, @"terminal", self.taskInfoViewColor, @"task", nil];
+    }
+    return _backgroundColors;
+}
 
 - (STSession *)session {
     return [[STSessionManager sharedManager] currentSession];
@@ -36,25 +55,16 @@
 - (void)taskViewTap {
     NSLog(@"taskViewTap");
     if (!self.tableViewIsShown) {
-        [self shrinkInfoViews];
-        self.tasksIsShown = YES;
         [self showTableView];
-        self.tableView.dataSource = self.taskController;
-        [self.tableView reloadData];
+        self.tasksIsShown = YES;
         
     } else {
         if (self.tasksIsShown) {
             self.tasksIsShown = NO;
-            [self.tableView removeFromSuperview];
-            self.tableView = nil;
-            self.tableViewIsShown = NO;
             [self fullSizeInfoViews];
         } else {
             NSLog(@"show tasks table");
-            self.terminalsIsShown = NO;
             self.tasksIsShown = YES;
-            self.tableView.dataSource = self.taskController;
-            [self.tableView reloadData];
         }
     }
 }
@@ -63,28 +73,41 @@
     NSLog(@"terminalViewTap");
     if (!self.tableViewIsShown) {
         [[STTTLocationController sharedLC] getLocation];
-        [self shrinkInfoViews];
-        self.terminalsIsShown = YES;
         [self showTableView];
-        self.tableView.dataSource = self.terminalController;
-        [self.tableView reloadData];
+        self.terminalsIsShown = YES;
         
     } else {
         if (self.terminalsIsShown) {
             self.terminalsIsShown = NO;
-            [self.tableView removeFromSuperview];
-            self.tableView = nil;
-            self.tableViewIsShown = NO;
             [self fullSizeInfoViews];
         } else {
             NSLog(@"show terminals table");
-            self.tasksIsShown = NO;
             self.terminalsIsShown = YES;
-            self.tableView.dataSource = self.terminalController;
-            [self.tableView reloadData];
         }
     }
 
+}
+
+- (void)setTerminalsIsShown:(BOOL)terminalsIsShown {
+    _terminalsIsShown = terminalsIsShown;
+    if (_terminalsIsShown) {
+        self.tasksIsShown = NO;
+        self.title = @"Терминалы";
+        self.tableView.dataSource = self.terminalController;
+        self.tableView.backgroundColor = self.terminalInfoViewColor;
+        [self.tableView reloadData];
+    }
+}
+
+- (void)setTasksIsShown:(BOOL)tasksIsShown {
+    _tasksIsShown = tasksIsShown;
+    if (_tasksIsShown) {
+        self.terminalsIsShown = NO;
+        self.title = @"Задания";
+        self.tableView.dataSource = self.taskController;
+        self.tableView.backgroundColor = self.taskInfoViewColor;
+        [self.tableView reloadData];
+    }
 }
 
 - (void)shrinkInfoViews {
@@ -93,11 +116,16 @@
 }
 
 - (void)fullSizeInfoViews {
+    [self.tableView removeFromSuperview];
+    self.tableView = nil;
+    self.tableViewIsShown = NO;
+    self.title = @"Информация";
     self.taskView.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height / 2);
     self.terminalView.frame = CGRectMake(0, self.view.bounds.size.height / 2, self.view.bounds.size.width, self.view.bounds.size.height / 2);
 }
 
 - (void)showTableView {
+    [self shrinkInfoViews];
     self.tableViewIsShown = YES;
     self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 54, self.view.bounds.size.width, self.view.bounds.size.height - 108) style:UITableViewStylePlain];
     self.tableView.delegate = self;
@@ -111,9 +139,10 @@
     NSArray *tasks = self.taskController.resultsController.fetchedObjects;
     
     UILabel *numberOfTasksLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.taskView.bounds.size.width * 0.1, self.taskView.bounds.size.height * 0.05, self.taskView.bounds.size.width * 0.8, 44)];
-    numberOfTasksLabel.text = [NSString stringWithFormat:@"Всего задач: %d", tasks.count];
+    numberOfTasksLabel.text = [NSString stringWithFormat:@"Заданий: %d", tasks.count];
     numberOfTasksLabel.textAlignment = NSTextAlignmentCenter;
     numberOfTasksLabel.font = [UIFont boldSystemFontOfSize:28];
+    numberOfTasksLabel.backgroundColor = self.taskInfoViewColor;
     [self.taskView addSubview:numberOfTasksLabel];
 
     UILabel *numberOfUnsolvedTasksLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.taskView.bounds.size.width * 0.1, self.taskView.bounds.size.height * 0.1 + 44, self.taskView.bounds.size.width * 0.8, 44)];
@@ -121,20 +150,31 @@
     NSUInteger numberOfUnsolvedTasks = [tasks filteredArrayUsingPredicate:predicate].count;
     numberOfUnsolvedTasksLabel.text = [NSString stringWithFormat:@"Невыполненных: %d", numberOfUnsolvedTasks];
     numberOfUnsolvedTasksLabel.font = [UIFont boldSystemFontOfSize:24];
+    numberOfUnsolvedTasksLabel.backgroundColor = self.taskInfoViewColor;
     [self.taskView addSubview:numberOfUnsolvedTasksLabel];
 
     UILabel *numberOfCriticalTasksLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.taskView.bounds.size.width * 0.1, self.taskView.bounds.size.height * 0.1 + 88, self.taskView.bounds.size.width * 0.8, 88)];
-    int numberOfCricitalTasks = 0;
+    numberOfCriticalTasksLabel.lineBreakMode = NSLineBreakByWordWrapping;
+    numberOfCriticalTasksLabel.numberOfLines = 2;
+    int numberOfCriticalTasks = 0;
+    int numberOfOverdueTasks = 0;
     for (STTTAgentTask *task in tasks) {
         NSTimeInterval remainingTime = [task remainingTime];
         if (remainingTime > 0 && remainingTime < 60*60) {
-            numberOfCricitalTasks += 1;
+            numberOfCriticalTasks += 1;
+        } else if (remainingTime <= 0) {
+            numberOfOverdueTasks += 1;
         }
     }
-    numberOfCriticalTasksLabel.text = [NSString stringWithFormat:@"Критических: %d", numberOfCricitalTasks];
+    numberOfCriticalTasksLabel.text = [NSString stringWithFormat:@"Критических: %d \r\nПросроченных: %d", numberOfCriticalTasks, numberOfOverdueTasks];
     numberOfCriticalTasksLabel.font = [UIFont boldSystemFontOfSize:20];
-    numberOfCriticalTasksLabel.backgroundColor = [UIColor redColor];
-    numberOfCriticalTasksLabel.textColor = [UIColor whiteColor];
+    if (numberOfCriticalTasks + numberOfOverdueTasks > 0) {
+        numberOfCriticalTasksLabel.backgroundColor = [UIColor redColor];
+        numberOfCriticalTasksLabel.textColor = [UIColor whiteColor];
+    } else {
+        numberOfCriticalTasksLabel.backgroundColor = self.taskInfoViewColor;
+        numberOfCriticalTasksLabel.textColor = [UIColor blackColor];
+    }
     [self.taskView addSubview:numberOfCriticalTasksLabel];
 
     
@@ -148,11 +188,13 @@
     numberOfTerminalsLabel.text = [NSString stringWithFormat:@"Терминалов: %d", self.terminalController.resultsController.fetchedObjects.count];
     numberOfTerminalsLabel.textAlignment = NSTextAlignmentCenter;
     numberOfTerminalsLabel.font = [UIFont boldSystemFontOfSize:28];
+    numberOfTerminalsLabel.backgroundColor = self.terminalInfoViewColor;
     [self.terminalView addSubview:numberOfTerminalsLabel];
 
     UILabel *nearestLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.terminalView.bounds.size.width * 0.1, self.terminalView.bounds.size.height * 0.1 + 44, self.terminalView.bounds.size.width * 0.8, 44)];
     nearestLabel.text = @"Ближайший:";
     nearestLabel.font = [UIFont boldSystemFontOfSize:24];
+    nearestLabel.backgroundColor = self.terminalInfoViewColor;
     [self.terminalView addSubview:nearestLabel];
 
     UILabel *nearestAddressLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.terminalView.bounds.size.width * 0.1, self.terminalView.bounds.size.height * 0.1 + 88, self.terminalView.bounds.size.width * 0.8, 88)];
@@ -163,6 +205,7 @@
     nearestAddressLabel.font = [UIFont systemFontOfSize:20];
     nearestAddressLabel.lineBreakMode = NSLineBreakByWordWrapping;
     nearestAddressLabel.numberOfLines = 3;
+    nearestAddressLabel.backgroundColor = self.terminalInfoViewColor;
     [self.terminalView addSubview:nearestAddressLabel];
 
 }
@@ -175,23 +218,17 @@
 }
 
 - (void)viewInit {
-//    NSLog(@"self.view %@", self.view);
-//    NSLog(@"self.navigationController.navigationBar %@", self.navigationController.navigationBar);
-    
+
     CGFloat halfHeight = (self.view.bounds.size.height - self.navigationController.navigationBar.bounds.size.height) / 2;
 
     self.taskView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, halfHeight)];
-    self.taskView.backgroundColor = [UIColor greenColor];
+    self.taskView.backgroundColor = self.taskInfoViewColor;
     
     UIGestureRecognizer *taskViewTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(taskViewTap)];
     [self.taskView addGestureRecognizer:taskViewTap];
     
-//    UILabel *taskLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height / 2)];
-//    taskLabel.text = @"TASK";
-//    [self.taskView addSubview:taskLabel];
-    
     self.terminalView = [[UIView alloc] initWithFrame:CGRectMake(0, halfHeight, self.view.bounds.size.width, halfHeight)];
-    self.terminalView.backgroundColor = [UIColor blueColor];
+    self.terminalView.backgroundColor = self.terminalInfoViewColor;
     
     UIGestureRecognizer *terminalViewTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(terminalViewTap)];
     [self.terminalView addGestureRecognizer:terminalViewTap];
@@ -199,6 +236,7 @@
     [self.view addSubview:self.taskView];
     [self.view addSubview:self.terminalView];
     
+    self.title = @"Информация";
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sessionStatusChanged:) name:@"sessionStatusChanged" object:self.session];
     
@@ -265,10 +303,12 @@
     if ([segue.identifier isEqualToString:@"showTask"]) {
         if ([segue.destinationViewController isKindOfClass:[STTTTaskVC class]] && [sender isKindOfClass:[STTTAgentTask class]]) {
             [(STTTTaskVC *)segue.destinationViewController setTask:(STTTAgentTask *)sender];
+            [(STTTTaskVC *)segue.destinationViewController setBackgroundColors:self.backgroundColors];
         }
     } else if ([segue.identifier isEqualToString:@"showTerminal"]) {
         if ([segue.destinationViewController isKindOfClass:[STTTTerminalVC class]] && [sender isKindOfClass:[STTTAgentTerminal class]]) {
             [(STTTTerminalVC *)segue.destinationViewController setTerminal:(STTTAgentTerminal *)sender];
+            [(STTTTerminalVC *)segue.destinationViewController setBackgroundColors:self.backgroundColors];
         }
     }
     

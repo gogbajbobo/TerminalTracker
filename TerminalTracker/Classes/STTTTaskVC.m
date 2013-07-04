@@ -51,6 +51,7 @@
     if ([segue.identifier isEqualToString:@"goToTerminal"]) {
         if ([segue.destinationViewController isKindOfClass:[STTTTerminalVC class]] && [sender isKindOfClass:[STTTAgentTerminal class]]) {
             [(STTTTerminalVC *)segue.destinationViewController setTerminal:(STTTAgentTerminal *)sender];
+            [(STTTTerminalVC *)segue.destinationViewController setBackgroundColors:self.backgroundColors];
         }
     }
     
@@ -97,6 +98,11 @@
 }
 
 - (void)viewInit {
+    if ([[self.backgroundColors valueForKey:@"task"] isKindOfClass:[UIColor class]]) {
+        self.view.backgroundColor = [self.backgroundColors valueForKey:@"task"];
+    } else {
+        self.view.backgroundColor = [UIColor whiteColor];
+    }
     [self mapViewInit];
     [self labelsInit];
     [self buttonsInit];
