@@ -13,6 +13,9 @@
 #import "STTTTerminalLocation.h"
 #import "STTTMapAnnotation.h"
 #import "STTTTerminalVC.h"
+#import "STTTLocationController.h"
+#import "STTTTaskLocation.h"
+#import <STManagedTracker/STSession.h>
 
 @interface STTTTaskVC ()
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
@@ -22,6 +25,8 @@
 @property (weak, nonatomic) IBOutlet UIButton *terminalButton;
 @property (weak, nonatomic) IBOutlet UIButton *geoLocationButton;
 @property (weak, nonatomic) IBOutlet UIButton *visitedButton;
+@property (nonatomic, strong) CLLocation *location;
+@property (nonatomic) BOOL waitingLocation;
 
 @end
 
@@ -32,9 +37,13 @@
 }
 
 - (IBAction)geoLocationButtonPressed:(id)sender {
+    self.waitingLocation = YES;
+    [self showSpinner];
+    [[STTTLocationController sharedLC] getLocation];
 }
 
 - (IBAction)visitedButtonPressed:(id)sender {
+    [self addTaskLocation];
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
@@ -47,10 +56,51 @@
     
 }
 
+- (void)currentLocationUpdated:(NSNotification *)notification {
+    if (self.waitingLocation) {
+        self.location = [[STTTLocationController sharedLC] currentLocation];
+        self.waitingLocation = NO;
+        [self removeSpinner];
+        self.visitedButton.enabled = YES;
+    }
+}
+
+- (void)showSpinner {
+    [self.geoLocationButton setTitle:@"" forState:UIControlStateNormal];
+    UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    spinner.tag = 1;
+    [spinner startAnimating];
+    spinner.frame = self.geoLocationButton.bounds;
+    [self.geoLocationButton addSubview:spinner];
+    self.geoLocationButton.enabled = NO;
+}
+
+- (void)removeSpinner {
+    if ([[self.geoLocationButton viewWithTag:1] isKindOfClass:[UIActivityIndicatorView class]]) {
+        [[self.geoLocationButton viewWithTag:1] removeFromSuperview];
+        [self.geoLocationButton setTitle:@"Геометка" forState:UIControlStateNormal];
+    }
+}
+
+- (void)addTaskLocation {
+    if (self.location) {
+        STTTTaskLocation *taskLocation = (STTTTaskLocation *)[NSEntityDescription insertNewObjectForEntityForName:NSStringFromClass([STTTTaskLocation class]) inManagedObjectContext:[[STSessionManager sharedManager] currentSession].document.managedObjectContext];
+        taskLocation.latitude = [NSNumber numberWithDouble:self.location.coordinate.latitude];
+        taskLocation.longitude = [NSNumber numberWithDouble:self.location.coordinate.longitude];
+        self.task.visitLocation = taskLocation;
+        self.task.visited = [NSNumber numberWithBool:YES];
+        [self.visitedButton setTitleColor:[UIColor greenColor] forState:UIControlStateDisabled];
+        self.visitedButton.enabled = NO;
+    } else {
+        NSLog(@"No task location");
+    }
+}
+
 - (void)viewInit {
     [self mapViewInit];
     [self labelsInit];
     [self buttonsInit];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(currentLocationUpdated:) name:@"currentLocationUpdated" object:nil];
 }
 
 - (void)mapViewInit {
@@ -81,11 +131,12 @@
         self.terminalButton.enabled = NO;
     }
     self.visitedButton.enabled = NO;
+    [self.geoLocationButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateDisabled];
     if ([self.task.visited boolValue]) {
         [self.visitedButton setTitleColor:[UIColor greenColor] forState:UIControlStateDisabled];
-        [self.geoLocationButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateDisabled];
         self.geoLocationButton.enabled = NO;
     } else {
+        [self.visitedButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateDisabled];
         self.geoLocationButton.enabled = YES;
     }
 }
