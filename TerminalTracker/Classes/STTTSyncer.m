@@ -215,7 +215,7 @@
 //                        NSLog(@"object %@", object);
 //                        NSLog(@"connection.originalRequest.URL %@", connection.originalRequest.URL);
                         if ([[NSString stringWithFormat:@"%@", connection.originalRequest.URL] isEqualToString:self.recieveDataServerURI]) {
-//                            [self newObject:(NSDictionary *)object];
+                            [self newObject:(NSDictionary *)object];
                         }
                     }
                     

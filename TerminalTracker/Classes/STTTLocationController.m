@@ -31,9 +31,9 @@
     return _sharedLC;
 }
 
-- (CLLocation *)currentLocation {
-    return [[CLLocation alloc] initWithLatitude:55.806292 longitude:38.946073];
-}
+//- (CLLocation *)currentLocation {
+//    return [[CLLocation alloc] initWithLatitude:55.806292 longitude:38.946073];
+//}
 
 
 - (void)getLocation {

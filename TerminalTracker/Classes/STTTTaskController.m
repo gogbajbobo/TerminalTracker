@@ -185,12 +185,23 @@
         backgroundColor = [UIColor colorWithRed:144/255 green:238/255 blue:144/255 alpha:1];
     }
     
+    if (!task.synced) {
+        textColor = [UIColor grayColor];
+    }
+    
     cell.contentView.backgroundColor = backgroundColor;
     cell.textLabel.backgroundColor = backgroundColor;
     cell.detailTextLabel.backgroundColor = backgroundColor;
     cell.textLabel.textColor = textColor;
     cell.detailTextLabel.textColor = textColor;
+    
 //    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    
+    
+    NSLog(@"backgroundColor %@", backgroundColor);
+    NSLog(@"textColor %@", textColor);
+    
+    
     return cell;
 }
 

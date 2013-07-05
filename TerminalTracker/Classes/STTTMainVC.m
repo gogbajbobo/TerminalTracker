@@ -271,14 +271,17 @@
 - (void)currentLocationUpdated:(NSNotification *)notification {
     NSLog(@"currentLocation %@", notification.object);
     [self.terminalController calculateDistance];
+    [self.tableView reloadData];
 }
 
 - (void)taskControllerDidChangeContent:(NSNotification *)notification {
     [self showTaskInfo];
+    [self.tableView reloadData];
 }
 
 - (void)terminalControllerDidChangeContent:(NSNotification *)notification {
     [self showTerminalInfo];
+    [self.tableView reloadData];
 }
 
 #pragma mark - Table view delegate

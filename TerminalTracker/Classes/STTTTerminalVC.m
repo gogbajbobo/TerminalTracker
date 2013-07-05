@@ -54,7 +54,11 @@
         self.srcSystemNameLabel.text = self.terminal.srcSystemName;
         self.errorTextLabel.text = self.terminal.errorText;
         self.addressLabel.text = self.terminal.address;
-        self.lastActivityTimeLabel.text = [NSString stringWithFormat:@"%@", self.terminal.lastActivityTime];
+
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateStyle:NSDateFormatterMediumStyle];
+        [dateFormatter setTimeStyle:NSDateFormatterShortStyle];
+        self.lastActivityTimeLabel.text = [dateFormatter stringFromDate:self.terminal.lastActivityTime];
     }
 }
 

@@ -101,8 +101,11 @@
         taskLocation.longitude = [NSNumber numberWithDouble:self.location.coordinate.longitude];
         self.task.visitLocation = taskLocation;
         self.task.visited = [NSNumber numberWithBool:YES];
+        self.task.synced = [NSNumber numberWithBool:NO];
+        
         [self.visitedButton setTitleColor:[UIColor greenColor] forState:UIControlStateDisabled];
         self.visitedButton.enabled = NO;
+        
         [[[STSessionManager sharedManager] currentSession].document saveDocument:^(BOOL success) {
             if (!success) {
                 NSLog(@"save task fail");
