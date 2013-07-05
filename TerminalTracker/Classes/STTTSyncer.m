@@ -105,8 +105,8 @@
 //                [self sendData:[self JSONFrom:fetchResult] toServer:self.sendDataServerURI withParameters:nil];
                 [self sendData:nil toServer:self.recieveDataServerURI withParameters:self.requestParameters];
             } else {
-//                [self sendData:[self JSONFrom:fetchResult] toServer:self.sendDataServerURI withParameters:nil];
-                [self sendData:nil toServer:self.recieveDataServerURI withParameters:self.requestParameters];
+                [self sendData:[self JSONFrom:fetchResult] toServer:self.sendDataServerURI withParameters:nil];
+//                [self sendData:nil toServer:self.recieveDataServerURI withParameters:self.requestParameters];
             }
             
         }
@@ -114,17 +114,9 @@
         
 }
 
-- (void)sendData:(NSData *)requestData toServer:(NSString *)serverUrlString withParameters:(NSString *)parameters {
-//    NSLog(@"STTTSyncer sendData");
-//    if (!self.requestType) {
-//        NSLog(@"No request type");
-//        self.syncing = NO;
-//    } else {
-//        NSString *requestString = [NSString stringWithFormat:@"%@/%@", serverUrlString, self.requestType];
-//        NSLog(@"requestString %@", requestString);
-        [super sendData:requestData toServer:serverUrlString withParameters:self.requestParameters];
-//    }
-}
+//- (void)sendData:(NSData *)requestData toServer:(NSString *)serverUrlString withParameters:(NSString *)parameters {
+//        [super sendData:requestData toServer:serverUrlString withParameters:parameters];
+//}
 
 - (NSData *)JSONFrom:(NSArray *)dataForSyncing {
     
@@ -192,8 +184,8 @@
 - (void)parseResponse:(NSData *)responseData fromConnection:(NSURLConnection *)connection {
         
 //    NSLog(@"parseResponse");
-//    NSString *responseString = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
-//    NSLog(@"responseData %@", responseString);
+    NSString *responseString = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
+    NSLog(@"responseData %@", responseString);
     
     NSError *error;
     id responseJSON = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingMutableContainers error:&error];
@@ -223,7 +215,7 @@
 //                        NSLog(@"object %@", object);
 //                        NSLog(@"connection.originalRequest.URL %@", connection.originalRequest.URL);
                         if ([[NSString stringWithFormat:@"%@", connection.originalRequest.URL] isEqualToString:self.recieveDataServerURI]) {
-                            [self newObject:(NSDictionary *)object];
+//                            [self newObject:(NSDictionary *)object];
                         }
                     }
                     
