@@ -56,7 +56,7 @@
 #pragma mark - NSFetchedResultsController delegate
 
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
-    NSLog(@"controllerWillChangeContent");
+//    NSLog(@"controllerWillChangeContent");
 //    NSLog(@"controller.managedObjectContext.updatedObjects %@", controller.managedObjectContext.updatedObjects);
 //    NSLog(@"controller.managedObjectContext.insertedObjects %@", controller.managedObjectContext.insertedObjects);
     [self.tableView beginUpdates];
@@ -64,7 +64,7 @@
 }
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
-    NSLog(@"controllerDidChangeContent");
+//    NSLog(@"controllerDidChangeContent");
     [self.tableView endUpdates];
 //    [self.session.document saveDocument:^(BOOL success) {
 //        if (!success) {
@@ -99,7 +99,7 @@
             
             //        NSLog(@"NSFetchedResultsChangeInsert");
             
-            //            [self.tableView reloadData];
+//            [self.tableView reloadData];
             //            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
             //        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationNone];
             
@@ -108,10 +108,10 @@
             
         } else if (type == NSFetchedResultsChangeUpdate) {
             
-            NSLog(@"NSFetchedResultsChangeUpdate");
-            NSLog(@"anObject %@", anObject);
+//            NSLog(@"NSFetchedResultsChangeUpdate");
+//            NSLog(@"anObject %@", anObject);
             
-            //            [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
             //            [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationNone];
             
             //            [[NSNotificationCenter defaultCenter] postNotificationName:@"trackUpdated" object:self.currentSession userInfo:[NSDictionary dictionaryWithObject:anObject forKey:@"track"]];
@@ -171,7 +171,7 @@
     cell.detailTextLabel.text = task.terminalBreakName;
     
     NSTimeInterval remainingTime = [task remainingTime];
-    UIColor *backgroundColor = nil;
+    UIColor *backgroundColor = cell.contentView.backgroundColor;
     UIColor *textColor = [UIColor blackColor];
     
     if (remainingTime < 0) {
@@ -185,7 +185,9 @@
         backgroundColor = [UIColor colorWithRed:144/255 green:238/255 blue:144/255 alpha:1];
     }
     
-    cell.backgroundColor = backgroundColor;
+    cell.contentView.backgroundColor = backgroundColor;
+    cell.textLabel.backgroundColor = backgroundColor;
+    cell.detailTextLabel.backgroundColor = backgroundColor;
     cell.textLabel.textColor = textColor;
     cell.detailTextLabel.textColor = textColor;
 //    cell.selectionStyle = UITableViewCellSelectionStyleNone;

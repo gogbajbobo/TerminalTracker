@@ -13,6 +13,7 @@
 
 @property (nonatomic, strong) STSession *session;
 @property (nonatomic, strong) NSFetchedResultsController *resultsController;
+@property (nonatomic, weak) UITableView *tableView;
 
 - (void)performFetch;
 - (void)calculateDistance;

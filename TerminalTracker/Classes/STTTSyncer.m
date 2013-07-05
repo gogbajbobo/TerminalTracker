@@ -55,7 +55,7 @@
 //        }
 //        _dataOffset = dataOffset;
     }
-    NSLog(@"_dataOffset %@", _dataOffset);
+//    NSLog(@"_dataOffset %@", _dataOffset);
     return _dataOffset;
 }
 
@@ -71,7 +71,7 @@
 - (NSString *)requestParameters {
     NSString *dataOffsetString = self.dataOffset ? [NSString stringWithFormat:@"offset:=%@&", self.dataOffset] : @"";
     NSString *requestParameters = [NSString stringWithFormat:@"%@page-size:=%d", dataOffsetString, self.fetchLimit];
-    NSLog(@"requestParameters %@", requestParameters);
+//    NSLog(@"requestParameters %@", requestParameters);
     return requestParameters;
 }
 
@@ -91,8 +91,8 @@
         NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:NSStringFromClass([STTTAgentTask class])];
         request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"sqts" ascending:YES selector:@selector(compare:)]];
         [request setIncludesSubentities:YES];
-//        request.predicate = [NSPredicate predicateWithFormat:@"SELF.lts == %@ || SELF.ts > SELF.lts", nil];
-//        request.fetchLimit = self.fetchLimit;
+        request.predicate = [NSPredicate predicateWithFormat:@"SELF.lts == %@ || SELF.ts > SELF.lts", nil];
+        request.fetchLimit = self.fetchLimit;
         
         NSError *error;
         NSArray *fetchResult = [[(STSession *)self.session document].managedObjectContext executeFetchRequest:request error:&error];
@@ -145,7 +145,9 @@
     
     NSError *error;
     NSData *JSONData = [NSJSONSerialization dataWithJSONObject:dataDictionary options:NSJSONWritingPrettyPrinted error:&error];
+//    NSData *JSONData = [NSJSONSerialization dataWithJSONObject:dataDictionary options:0 error:&error];
     
+    NSLog(@"JSONData %@", JSONData);
     
     NSString *JSONString = [[NSString alloc] initWithData:JSONData encoding:NSUTF8StringEncoding];
     NSLog(@"JSONString %@", JSONString);
@@ -166,26 +168,24 @@
 
 - (NSMutableDictionary *)propertiesDictionaryForObject:(NSManagedObject *)object {
     
-    NSLog(@"object %@", object);
-    
-    NSLog(@"ts %@", [object valueForKey:@"ts"]);
-    NSLog(@"visited %@", [object valueForKey:@"visited"]);
-    NSLog(@"commentText %@", [object valueForKey:@"commentText"]);
+//    NSLog(@"object %@", object);
+//
+//    NSLog(@"ts %@", [object valueForKey:@"ts"]);
+//    NSLog(@"visited %@", [object valueForKey:@"visited"]);
+//    NSLog(@"commentText %@", [object valueForKey:@"commentText"]);
     
     double latitude = [[(STTTAgentTask *)object visitLocation].latitude doubleValue];
     double longitude = [[(STTTAgentTask *)object visitLocation].longitude doubleValue];
 
     NSMutableDictionary *propertiesDictionary = [NSMutableDictionary dictionary];
     
-    [propertiesDictionary setValue:[[object valueForKey:@"ts"] stringValue] forKey:@"ts"];
+    [propertiesDictionary setValue:[NSString stringWithFormat:@"%@", [object valueForKey:@"ts"]] forKey:@"ts"];
+    [propertiesDictionary setValue:[object valueForKey:@"visited"] forKey:@"visited"];
+    [propertiesDictionary setValue:[object valueForKey:@"commentText"] forKey:@"commentText"];
+    [propertiesDictionary setValue:[NSNumber numberWithDouble:latitude] forKey:@"latitude"];
+    [propertiesDictionary setValue:[NSNumber numberWithDouble:longitude] forKey:@"longitude"];
     
-//    NSMutableDictionary *propertiesDictionary = [NSMutableDictionary dictionaryWithObjectsAndKeys:[object valueForKey:@"ts"], @"ts",
-//                                                             [object valueForKey:@"visited"], @"visited",
-//                                                             [object valueForKey:@"commentText"], @"commentText",
-//                                                             latitude, @"latitude",
-//                                                             longitude, @"longitude", nil];
-//    NSMutableDictionary *propertiesDictionary = [NSMutableDictionary dictionaryWithObjectsAndKeys:[object valueForKey:@"visited"], @"visited", [object valueForKey:@"ts"], @"ts", nil];
-    NSLog(@"propertiesDictionary %@", propertiesDictionary);
+//    NSLog(@"propertiesDictionary %@", propertiesDictionary);
     return propertiesDictionary;
 }
 
@@ -231,11 +231,11 @@
                 
                 if (self.syncing) {
                     self.syncing = NO;
-                    NSLog(@"newsNextOffset %@", [(NSDictionary *)responseJSON valueForKey:@"newsNextOffset"]);
+//                    NSLog(@"newsNextOffset %@", [(NSDictionary *)responseJSON valueForKey:@"newsNextOffset"]);
                     self.dataOffset = [(NSDictionary *)responseJSON valueForKey:@"newsNextOffset"];
                     NSString *pageRowCount = [(NSDictionary *)responseJSON valueForKey:@"pageRowCount"];
                     NSString *pageSize = [(NSDictionary *)responseJSON valueForKey:@"pageSize"];
-                    NSLog(@"pageRowCount %@", pageRowCount);
+//                    NSLog(@"pageRowCount %@", pageRowCount);
                     if ([pageRowCount isEqualToString:pageSize]) {
                         self.syncing = YES;
                         [self sendData:nil toServer:self.recieveDataServerURI withParameters:self.requestParameters];

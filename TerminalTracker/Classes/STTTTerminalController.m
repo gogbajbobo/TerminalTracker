@@ -82,10 +82,12 @@
 
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
     //    NSLog(@"controllerWillChangeContent");
+//    [self.tableView beginUpdates];
 }
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
     //    NSLog(@"controllerDidChangeContent");
+//    [self.tableView endUpdates];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"terminalControllerDidChangeContent" object:self];
 }
 
@@ -93,12 +95,16 @@
     
     //    NSLog(@"controller didChangeObject");
     
+    
     if ([[self.session status] isEqualToString:@"running"]) {
     
         
         if (type == NSFetchedResultsChangeDelete) {
             
             //        NSLog(@"NSFetchedResultsChangeDelete");
+//            [self calculateDistanceFor:(STTTAgentTerminal *)anObject];
+//            [self.tableView reloadData];
+
             
 //            if ([self.tableView numberOfRowsInSection:indexPath.section] == 1) {
 //                [self.tableView reloadData];
@@ -113,7 +119,7 @@
         } else if (type == NSFetchedResultsChangeInsert) {
             
             //        NSLog(@"NSFetchedResultsChangeInsert");
-            
+//            [self calculateDistanceFor:(STTTAgentTerminal *)anObject];
 //            [self.tableView reloadData];
 //            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
             //        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationNone];
@@ -124,7 +130,9 @@
         } else if (type == NSFetchedResultsChangeUpdate) {
             
             //        NSLog(@"NSFetchedResultsChangeUpdate");
-            
+//            [self calculateDistanceFor:(STTTAgentTerminal *)anObject];
+//            [self.tableView reloadData];
+//            [self calculateDistanceFor:(STTTAgentTerminal *)anObject];
 //            [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
 //            [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationNone];
             

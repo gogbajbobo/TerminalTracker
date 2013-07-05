@@ -53,7 +53,7 @@
 }
 
 - (void)taskViewTap {
-    NSLog(@"taskViewTap");
+//    NSLog(@"taskViewTap");
     if (!self.tableViewIsShown) {
         [self showTableView];
         self.tasksIsShown = YES;
@@ -63,14 +63,14 @@
             self.tasksIsShown = NO;
             [self fullSizeInfoViews];
         } else {
-            NSLog(@"show tasks table");
+//            NSLog(@"show tasks table");
             self.tasksIsShown = YES;
         }
     }
 }
 
 - (void)terminalViewTap {
-    NSLog(@"terminalViewTap");
+//    NSLog(@"terminalViewTap");
     if (!self.tableViewIsShown) {
         [[STTTLocationController sharedLC] getLocation];
         [self showTableView];
@@ -81,7 +81,7 @@
             self.terminalsIsShown = NO;
             [self fullSizeInfoViews];
         } else {
-            NSLog(@"show terminals table");
+//            NSLog(@"show terminals table");
             self.terminalsIsShown = YES;
         }
     }
@@ -93,6 +93,7 @@
     if (_terminalsIsShown) {
         self.tasksIsShown = NO;
         self.title = @"Терминалы";
+//        self.terminalController.tableView = self.tableView;
         self.tableView.dataSource = self.terminalController;
         self.tableView.backgroundColor = self.terminalInfoViewColor;
         [self.tableView reloadData];
@@ -104,6 +105,7 @@
     if (_tasksIsShown) {
         self.terminalsIsShown = NO;
         self.title = @"Задания";
+//        self.taskController.tableView = self.tableView;
         self.tableView.dataSource = self.taskController;
         self.tableView.backgroundColor = self.taskInfoViewColor;
         [self.tableView reloadData];
@@ -199,7 +201,7 @@
 
     UILabel *nearestAddressLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.terminalView.bounds.size.width * 0.1, self.terminalView.bounds.size.height * 0.1 + 88, self.terminalView.bounds.size.width * 0.8, 88)];
     if (self.terminalController.resultsController.fetchedObjects.count > 0) {
-        nearestAddressLabel.text = [(STTTAgentTerminal *)[self.terminalController.resultsController.fetchedObjects objectAtIndex:1] address];
+        nearestAddressLabel.text = [(STTTAgentTerminal *)[self.terminalController.resultsController.fetchedObjects objectAtIndex:0] address];
     }
     nearestAddressLabel.textAlignment = NSTextAlignmentRight;
     nearestAddressLabel.font = [UIFont systemFontOfSize:20];
@@ -268,7 +270,7 @@
 
 - (void)currentLocationUpdated:(NSNotification *)notification {
     NSLog(@"currentLocation %@", notification.object);
-    [self.terminalController calculateDistance ];
+    [self.terminalController calculateDistance];
 }
 
 - (void)taskControllerDidChangeContent:(NSNotification *)notification {
