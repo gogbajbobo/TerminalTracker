@@ -103,6 +103,11 @@
         self.task.visited = [NSNumber numberWithBool:YES];
         [self.visitedButton setTitleColor:[UIColor greenColor] forState:UIControlStateDisabled];
         self.visitedButton.enabled = NO;
+        [[[STSessionManager sharedManager] currentSession].document saveDocument:^(BOOL success) {
+            if (!success) {
+                NSLog(@"save task fail");
+            }
+        }];
     } else {
         NSLog(@"No task location");
     }
@@ -152,6 +157,11 @@
     if ([self.task.visited boolValue]) {
         [self.visitedButton setTitleColor:[UIColor greenColor] forState:UIControlStateDisabled];
         self.geoLocationButton.enabled = NO;
+        
+// ____________testing
+        self.geoLocationButton.enabled = YES;
+// ___________________
+        
     } else {
         [self.visitedButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateDisabled];
         self.geoLocationButton.enabled = YES;

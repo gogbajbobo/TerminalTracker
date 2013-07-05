@@ -34,7 +34,7 @@
                                      @"10", @"requiredAccuracy",
                                      @"-1", @"distanceFilter",
                                      @"0.0", @"timeFilter",
-                                     @"2", @"fetchLimit",
+                                     @"10", @"fetchLimit",
                                      nil];
     
     NSDictionary *controllers = [NSDictionary dictionaryWithObjectsAndKeys:

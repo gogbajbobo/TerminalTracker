@@ -11,38 +11,182 @@
 #import "STTTAgentTerminal.h"
 #import "STTTAgentTask.h"
 #import "STTTTerminalLocation.h"
+#import "STTTTaskLocation.h"
 
 @interface STTTSyncer()
 
-//@property (nonatomic, strong) NSManagedObject *syncObject;
-
+@property (nonatomic, strong) NSString *recieveDataServerURI;
+@property (nonatomic, strong) NSString *sendDataServerURI;
+@property (nonatomic, strong) NSString *dataOffset;
 
 @end
 
 
 @implementation STTTSyncer
 
-- (NSString *)requestParameters {
-    NSLog(@"fetchLimit %d", self.fetchLimit);
-    return @"@shift=-17&page-size:=20&page-number:=1";
+@synthesize dataOffset = _dataOffset;
+
+- (NSString *)recieveDataServerURI {
+    if (!_recieveDataServerURI) {
+        _recieveDataServerURI = [self.settings valueForKey:@"recieveDataServerURI"];
+    }
+    return _recieveDataServerURI;
 }
 
-- (void)onTimerTick:(NSTimer *)timer {
+- (NSString *)sendDataServerURI {
+    if (!_sendDataServerURI) {
+        _sendDataServerURI = [self.settings valueForKey:@"sendDataServerURI"];
+    }
+    return _sendDataServerURI;
+}
+
+- (NSString *)dataOffset {
+    if (!_dataOffset) {
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        _dataOffset = [defaults objectForKey:@"dataOffset"];
+//        NSString *dataOffset = [defaults objectForKey:@"dataOffset"];
+//        if (!dataOffset) {
+//            NSDate *date = [NSDate date];
+//            NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+//            dateFormatter.dateFormat = @"yyyyMMdd";
+//            dataOffset = [dateFormatter stringFromDate:date];
+//            [defaults setObject:dataOffset forKey:@"dataOffset"];
+//            [defaults synchronize];
+//        }
+//        _dataOffset = dataOffset;
+    }
+    NSLog(@"_dataOffset %@", _dataOffset);
+    return _dataOffset;
+}
+
+- (void)setDataOffset:(NSString *)dataOffset {
+    if (_dataOffset != dataOffset) {
+        _dataOffset = dataOffset;
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        [defaults setObject:_dataOffset forKey:@"dataOffset"];
+        [defaults synchronize];
+    }
+}
+
+- (NSString *)requestParameters {
+    NSString *dataOffsetString = self.dataOffset ? [NSString stringWithFormat:@"offset:=%@&", self.dataOffset] : @"";
+    NSString *requestParameters = [NSString stringWithFormat:@"%@page-size:=%d", dataOffsetString, self.fetchLimit];
+    NSLog(@"requestParameters %@", requestParameters);
+    return requestParameters;
+}
+
+//- (void)onTimerTick:(NSTimer *)timer {
 //    [self setRequestType:@"megaport.iAgentTerminal"];
-    [self setRequestType:@"megaport.iAgentTask"];
-    [super onTimerTick:timer];
+//    [self setRequestType:@"megaport.iAgentTask"];
+//    [super onTimerTick:timer];
+//}
+
+- (void)syncData {
+    
+    if (!self.syncing) {
+        
+        self.syncing = YES;
+        
+        
+        NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:NSStringFromClass([STTTAgentTask class])];
+        request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"sqts" ascending:YES selector:@selector(compare:)]];
+        [request setIncludesSubentities:YES];
+//        request.predicate = [NSPredicate predicateWithFormat:@"SELF.lts == %@ || SELF.ts > SELF.lts", nil];
+//        request.fetchLimit = self.fetchLimit;
+        
+        NSError *error;
+        NSArray *fetchResult = [[(STSession *)self.session document].managedObjectContext executeFetchRequest:request error:&error];
+        
+        if (error) {
+            NSLog(@"syncer executeFetchRequest error: %@", error);
+        } else {
+            NSLog(@"fetchResult.count %d", fetchResult.count);
+            if (fetchResult.count == 0) {
+//                [self sendData:[self JSONFrom:fetchResult] toServer:self.sendDataServerURI withParameters:nil];
+                [self sendData:nil toServer:self.recieveDataServerURI withParameters:self.requestParameters];
+            } else {
+//                [self sendData:[self JSONFrom:fetchResult] toServer:self.sendDataServerURI withParameters:nil];
+                [self sendData:nil toServer:self.recieveDataServerURI withParameters:self.requestParameters];
+            }
+            
+        }
+    }
+        
 }
 
 - (void)sendData:(NSData *)requestData toServer:(NSString *)serverUrlString withParameters:(NSString *)parameters {
-    NSLog(@"STTTSyncer sendData");
-    if (!self.requestType) {
-        NSLog(@"No request type");
-        self.syncing = NO;
-    } else {
-        NSString *requestString = [NSString stringWithFormat:@"%@/%@", serverUrlString, self.requestType];
+//    NSLog(@"STTTSyncer sendData");
+//    if (!self.requestType) {
+//        NSLog(@"No request type");
+//        self.syncing = NO;
+//    } else {
+//        NSString *requestString = [NSString stringWithFormat:@"%@/%@", serverUrlString, self.requestType];
 //        NSLog(@"requestString %@", requestString);
-        [super sendData:nil toServer:requestString withParameters:self.requestParameters];
+        [super sendData:requestData toServer:serverUrlString withParameters:self.requestParameters];
+//    }
+}
+
+- (NSData *)JSONFrom:(NSArray *)dataForSyncing {
+    
+    NSMutableArray *syncDataArray = [NSMutableArray array];
+    
+    for (NSManagedObject *object in dataForSyncing) {
+        if ([object isKindOfClass:[STTTAgentTask class]]) {
+            [object setPrimitiveValue:[NSDate date] forKey:@"sts"];
+            NSMutableDictionary *objectDictionary = [self dictionaryForObject:object];
+            NSMutableDictionary *propertiesDictionary = [self propertiesDictionaryForObject:object];
+            
+            [objectDictionary setObject:propertiesDictionary forKey:@"properties"];
+            [syncDataArray addObject:objectDictionary];
+        }
     }
+    
+    NSDictionary *dataDictionary = [NSDictionary dictionaryWithObject:syncDataArray forKey:@"data"];
+    
+    NSError *error;
+    NSData *JSONData = [NSJSONSerialization dataWithJSONObject:dataDictionary options:NSJSONWritingPrettyPrinted error:&error];
+    
+    
+    NSString *JSONString = [[NSString alloc] initWithData:JSONData encoding:NSUTF8StringEncoding];
+    NSLog(@"JSONString %@", JSONString);
+    
+    return JSONData;
+}
+
+- (NSMutableDictionary *)dictionaryForObject:(NSManagedObject *)object {
+    
+    NSString *name = @"megaport.iAgentTask";
+    NSString *xid = [NSString stringWithFormat:@"%@", [object valueForKey:@"xid"]];
+    NSCharacterSet *charsToRemove = [NSCharacterSet characterSetWithCharactersInString:@"< >"];
+    xid = [[xid stringByTrimmingCharactersInSet:charsToRemove] stringByReplacingOccurrencesOfString:@" " withString:@""];
+    
+    return [NSMutableDictionary dictionaryWithObjectsAndKeys:name, @"name", xid, @"xid", nil];
+    
+}
+
+- (NSMutableDictionary *)propertiesDictionaryForObject:(NSManagedObject *)object {
+    
+    NSLog(@"object %@", object);
+    
+    NSLog(@"ts %@", [object valueForKey:@"ts"]);
+    NSLog(@"visited %@", [object valueForKey:@"visited"]);
+    NSLog(@"commentText %@", [object valueForKey:@"commentText"]);
+    
+    double latitude = [[(STTTAgentTask *)object visitLocation].latitude doubleValue];
+    double longitude = [[(STTTAgentTask *)object visitLocation].longitude doubleValue];
+
+    NSMutableDictionary *propertiesDictionary = [NSMutableDictionary dictionary];
+    
+    [propertiesDictionary setValue:[[object valueForKey:@"ts"] stringValue] forKey:@"ts"];
+    
+//    NSMutableDictionary *propertiesDictionary = [NSMutableDictionary dictionaryWithObjectsAndKeys:[object valueForKey:@"ts"], @"ts",
+//                                                             [object valueForKey:@"visited"], @"visited",
+//                                                             [object valueForKey:@"commentText"], @"commentText",
+//                                                             latitude, @"latitude",
+//                                                             longitude, @"longitude", nil];
+//    NSMutableDictionary *propertiesDictionary = [NSMutableDictionary dictionaryWithObjectsAndKeys:[object valueForKey:@"visited"], @"visited", [object valueForKey:@"ts"], @"ts", nil];
+    NSLog(@"propertiesDictionary %@", propertiesDictionary);
+    return propertiesDictionary;
 }
 
 - (void)parseResponse:(NSData *)responseData fromConnection:(NSURLConnection *)connection {
@@ -77,40 +221,28 @@
                         
                     } else {
 //                        NSLog(@"object %@", object);
-                        [self syncObject:(NSDictionary *)object];
+//                        NSLog(@"connection.originalRequest.URL %@", connection.originalRequest.URL);
+                        if ([[NSString stringWithFormat:@"%@", connection.originalRequest.URL] isEqualToString:self.recieveDataServerURI]) {
+                            [self newObject:(NSDictionary *)object];
+                        }
                     }
                     
-                    
                 }
-//                [[(STSession *)self.session document] saveDocument:^(BOOL success) {
-//                    if (success) {
-//                        NSLog(@"save response success");
-//                    }
-//                }];
-                //                [[(STSession *)self.session logger] saveLogMessageWithText:@"Sync done" type:@""];
                 
-                self.syncing = NO;
-                
-//                if (![[[connection currentRequest] HTTPMethod] isEqualToString:@"GET"]) {
-//                    if (self.resultsController.fetchedObjects.count > 0) {
-//                        //                        NSLog(@"fetchedObjects.count > 0");
-//                        [self syncData];
-//                    } else {
-//                        //                        NSLog(@"fetchedObjects.count <= 0");
-//                        self.syncing = YES;
-//                        [self sendData:nil toServer:self.syncServerURI withParameters:nil];
-//                    }
-//                } else {
-//                    if ([[(STSession *)self.session status] isEqualToString:@"finishing"]) {
-//                        if (self.resultsController.fetchedObjects.count == 0) {
-//                            [self stopSyncer];
-//                            [[STSessionManager sharedManager] sessionCompletionFinished:self.session];
-//                        } else {
-//                            [self syncData];
-//                        }
-//                    }
-//                }
-                
+                if (self.syncing) {
+                    self.syncing = NO;
+                    NSLog(@"newsNextOffset %@", [(NSDictionary *)responseJSON valueForKey:@"newsNextOffset"]);
+                    self.dataOffset = [(NSDictionary *)responseJSON valueForKey:@"newsNextOffset"];
+                    NSString *pageRowCount = [(NSDictionary *)responseJSON valueForKey:@"pageRowCount"];
+                    NSString *pageSize = [(NSDictionary *)responseJSON valueForKey:@"pageSize"];
+                    NSLog(@"pageRowCount %@", pageRowCount);
+                    if ([pageRowCount isEqualToString:pageSize]) {
+                        self.syncing = YES;
+                        [self sendData:nil toServer:self.recieveDataServerURI withParameters:self.requestParameters];
+                    } else {
+                        NSLog(@"All data recieved");
+                    }
+                }
                 
             }
             
@@ -121,7 +253,7 @@
 }
 
 
-- (void)syncObject:(NSDictionary *)object {
+- (void)newObject:(NSDictionary *)object {
     
 //    NSString *result = [(NSDictionary *)object valueForKey:@"result"];
     NSString *name = [(NSDictionary *)object valueForKey:@"name"];
@@ -172,6 +304,9 @@
 
         }
         
+//        NSLog(@"terminal %@", terminal);
+        NSLog(@"terminal.xid %@", terminal.xid);
+        
     } else if ([name isEqualToString:@"megaport.iAgentTask"]) {
         
         NSString *xidString = [xid stringByReplacingOccurrencesOfString:@"-" withString:@""];
@@ -197,6 +332,7 @@
         task.terminal = terminal;
         
 //        NSLog(@"task %@", task);
+        NSLog(@"task.xid %@", task.xid);
 
     }
 

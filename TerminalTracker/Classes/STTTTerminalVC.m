@@ -21,11 +21,19 @@
 @property (weak, nonatomic) IBOutlet UILabel *addressLabel;
 @property (weak, nonatomic) IBOutlet UILabel *lastActivityTimeLabel;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (nonatomic, strong) NSArray *sortedTasks;
 
 @end
 
 @implementation STTTTerminalVC
 
+- (NSArray *)sortedTasks {
+    if (!_sortedTasks) {
+        NSSortDescriptor *descriptor = [NSSortDescriptor sortDescriptorWithKey:@"doBefore" ascending:YES selector:@selector(compare:)];
+        _sortedTasks = [self.terminal.tasks sortedArrayUsingDescriptors:[NSArray arrayWithObject:descriptor]];
+    }
+    return _sortedTasks;
+}
 
 - (void)viewInit {
 
@@ -79,22 +87,20 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 1;
+    return self.terminal.tasks.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"terminalTaskCell"];
-
-    cell.textLabel.text = self.terminal.task.terminalBreakName;
-    
+    cell.textLabel.text = [(STTTAgentTask *)[self.sortedTasks objectAtIndex:indexPath.row] terminalBreakName];
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
-    [self performSegueWithIdentifier:@"goToTask" sender:self.terminal.task];
+    [self performSegueWithIdentifier:@"goToTask" sender:[self.sortedTasks objectAtIndex:indexPath.row]];
     
 }
 

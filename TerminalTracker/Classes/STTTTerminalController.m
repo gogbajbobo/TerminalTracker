@@ -19,9 +19,7 @@
 @implementation STTTTerminalController
 
 - (void)setSession:(STSession *)session {
-    
-    NSLog(@"TC setSession");
-    
+
     if (session != _session) {
         _session = session;
         [self performFetch];
@@ -67,12 +65,14 @@
     CLLocation *terminalLocation = [[CLLocation alloc] initWithLatitude:[terminal.location.latitude doubleValue] longitude:[terminal.location.longitude doubleValue]];
     
     if (!currentLocation || !terminalLocation) {
-        NSLog(@"0");
-        [terminal setPrimitiveValue:0 forKey:@"distance"];
+//        NSLog(@"0");
+//        [terminal setPrimitiveValue:0 forKey:@"distance"];
+        [terminal setValue:0 forKey:@"distance"];
     } else {
         CLLocationDistance distance = [currentLocation distanceFromLocation:terminalLocation];
-        NSLog(@"%f", distance);
-        [terminal setPrimitiveValue:[NSNumber numberWithDouble:distance] forKey:@"distance"];
+//        NSLog(@"%f", distance);
+//        [terminal setPrimitiveValue:[NSNumber numberWithDouble:distance] forKey:@"distance"];
+        [terminal setValue:[NSNumber numberWithDouble:distance] forKey:@"distance"];
     }
 
 }
@@ -184,6 +184,8 @@
 
     id <NSFetchedResultsSectionInfo> sectionInfo = [[self.resultsController sections] objectAtIndex:indexPath.section];
     STTTAgentTerminal *terminal = (STTTAgentTerminal *)[[sectionInfo objects] objectAtIndex:indexPath.row];
+    
+//    NSLog(@"terminal.location.latitude %@, terminal.location.longitude %@", terminal.location.latitude, terminal.location.longitude);
     
     NSString *code = terminal.code ? terminal.code : @"Нет данных";
     NSString *errorText = terminal.errorText ? terminal.errorText : @"";

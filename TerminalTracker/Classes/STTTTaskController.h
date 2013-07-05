@@ -15,5 +15,6 @@
 @property (nonatomic, strong) STSession *session;
 @property (nonatomic, strong) NSFetchedResultsController *resultsController;
 @property (nonatomic, strong) STTTAgentTerminal *terminal;
+@property (nonatomic, weak) UITableView *tableView;
 
 @end

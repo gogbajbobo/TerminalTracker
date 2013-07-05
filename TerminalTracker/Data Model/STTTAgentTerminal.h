@@ -2,7 +2,7 @@
 //  STTTAgentTerminal.h
 //  TerminalTracker
 //
-//  Created by Maxim Grigoriev on 7/2/13.
+//  Created by Maxim Grigoriev on 7/4/13.
 //  Copyright (c) 2013 Maxim Grigoriev. All rights reserved.
 //
 
@@ -14,13 +14,21 @@
 
 @interface STTTAgentTerminal : STComment
 
-@property (nonatomic, retain) NSString * code;
 @property (nonatomic, retain) NSString * address;
+@property (nonatomic, retain) NSString * code;
+@property (nonatomic, retain) NSNumber * distance;
 @property (nonatomic, retain) NSString * errorText;
 @property (nonatomic, retain) NSDate * lastActivityTime;
 @property (nonatomic, retain) NSString * srcSystemName;
-@property (nonatomic, retain) NSNumber * distance;
-@property (nonatomic, retain) STTTAgentTask *task;
 @property (nonatomic, retain) STTTTerminalLocation *location;
+@property (nonatomic, retain) NSSet *tasks;
+@end
+
+@interface STTTAgentTerminal (CoreDataGeneratedAccessors)
+
+- (void)addTasksObject:(STTTAgentTask *)value;
+- (void)removeTasksObject:(STTTAgentTask *)value;
+- (void)addTasks:(NSSet *)values;
+- (void)removeTasks:(NSSet *)values;
 
 @end

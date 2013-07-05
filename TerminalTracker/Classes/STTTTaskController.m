@@ -19,9 +19,7 @@
 
 
 - (void)setSession:(STSession *)session {
-    
-    NSLog(@"TC setSession");
-    
+
     if (session != _session) {
         _session = session;
         [self performFetch];
@@ -58,11 +56,21 @@
 #pragma mark - NSFetchedResultsController delegate
 
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
-    //    NSLog(@"controllerWillChangeContent");
+    NSLog(@"controllerWillChangeContent");
+//    NSLog(@"controller.managedObjectContext.updatedObjects %@", controller.managedObjectContext.updatedObjects);
+//    NSLog(@"controller.managedObjectContext.insertedObjects %@", controller.managedObjectContext.insertedObjects);
+    [self.tableView beginUpdates];
+
 }
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
-    //    NSLog(@"controllerDidChangeContent");
+    NSLog(@"controllerDidChangeContent");
+    [self.tableView endUpdates];
+//    [self.session.document saveDocument:^(BOOL success) {
+//        if (!success) {
+//            NSLog(@"save document fail");
+//        }
+//    }];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"taskControllerDidChangeContent" object:self];
 }
 
@@ -100,7 +108,8 @@
             
         } else if (type == NSFetchedResultsChangeUpdate) {
             
-            //        NSLog(@"NSFetchedResultsChangeUpdate");
+            NSLog(@"NSFetchedResultsChangeUpdate");
+            NSLog(@"anObject %@", anObject);
             
             //            [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
             //            [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationNone];
@@ -156,11 +165,13 @@
     id <NSFetchedResultsSectionInfo> sectionInfo = [[self.resultsController sections] objectAtIndex:indexPath.section];
     STTTAgentTask *task = (STTTAgentTask *)[[sectionInfo objects] objectAtIndex:indexPath.row];
     
+//    NSLog(@"task.visited %@", task.visited);
+    
     cell.textLabel.text = [NSString stringWithFormat:@"%@", task.doBefore];
     cell.detailTextLabel.text = task.terminalBreakName;
     
     NSTimeInterval remainingTime = [task remainingTime];
-    UIColor *backgroundColor = [UIColor whiteColor];
+    UIColor *backgroundColor = nil;
     UIColor *textColor = [UIColor blackColor];
     
     if (remainingTime < 0) {

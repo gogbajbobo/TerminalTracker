@@ -2,7 +2,7 @@
 //  STTTAgentTerminal.m
 //  TerminalTracker
 //
-//  Created by Maxim Grigoriev on 7/2/13.
+//  Created by Maxim Grigoriev on 7/4/13.
 //  Copyright (c) 2013 Maxim Grigoriev. All rights reserved.
 //
 
@@ -13,13 +13,13 @@
 
 @implementation STTTAgentTerminal
 
-@dynamic code;
 @dynamic address;
+@dynamic code;
+@dynamic distance;
 @dynamic errorText;
 @dynamic lastActivityTime;
 @dynamic srcSystemName;
-@dynamic distance;
-@dynamic task;
 @dynamic location;
+@dynamic tasks;
 
 @end
