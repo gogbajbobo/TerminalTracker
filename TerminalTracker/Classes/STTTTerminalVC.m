@@ -17,7 +17,7 @@
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
 @property (weak, nonatomic) IBOutlet UILabel *codeLabel;
 @property (weak, nonatomic) IBOutlet UILabel *srcSystemNameLabel;
-@property (weak, nonatomic) IBOutlet UILabel *errorTextLabel;
+@property (weak, nonatomic) IBOutlet UITextView *errorTextView;
 @property (weak, nonatomic) IBOutlet UILabel *addressLabel;
 @property (weak, nonatomic) IBOutlet UILabel *lastActivityTimeLabel;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -52,13 +52,17 @@
     if (self.terminal) {
         self.codeLabel.text = self.terminal.code;
         self.srcSystemNameLabel.text = self.terminal.srcSystemName;
-        self.errorTextLabel.text = self.terminal.errorText;
+        self.errorTextView.text = self.terminal.errorText;
         self.addressLabel.text = self.terminal.address;
 
-        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-        [dateFormatter setDateStyle:NSDateFormatterMediumStyle];
-        [dateFormatter setTimeStyle:NSDateFormatterShortStyle];
-        self.lastActivityTimeLabel.text = [dateFormatter stringFromDate:self.terminal.lastActivityTime];
+        if (self.terminal.lastActivityTime) {
+            NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+            [dateFormatter setDateStyle:NSDateFormatterMediumStyle];
+            [dateFormatter setTimeStyle:NSDateFormatterShortStyle];
+            self.lastActivityTimeLabel.text = [NSString stringWithFormat:@"LAT: %@", [dateFormatter stringFromDate:self.terminal.lastActivityTime]];
+        } else {
+            self.lastActivityTimeLabel.text = @"LAT: Нет данных";
+        }
     }
 }
 
