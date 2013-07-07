@@ -11,8 +11,7 @@
 @implementation STTTAgentTask (remainingTime)
 
 - (NSTimeInterval)remainingTime {
-    NSDate *currentDate = [NSDate date];
-    return [currentDate timeIntervalSinceDate:self.doBefore];
+    return [self.doBefore timeIntervalSinceDate:[NSDate date]];
 }
 
 @end

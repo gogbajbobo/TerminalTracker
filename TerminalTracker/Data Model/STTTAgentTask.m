@@ -2,7 +2,7 @@
 //  STTTAgentTask.m
 //  TerminalTracker
 //
-//  Created by Maxim Grigoriev on 7/5/13.
+//  Created by Maxim Grigoriev on 7/7/13.
 //  Copyright (c) 2013 Maxim Grigoriev. All rights reserved.
 //
 
@@ -16,7 +16,6 @@
 @dynamic doBefore;
 @dynamic terminalBreakName;
 @dynamic visited;
-@dynamic synced;
 @dynamic terminal;
 @dynamic visitLocation;
 

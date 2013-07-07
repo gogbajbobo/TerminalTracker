@@ -213,11 +213,17 @@
                         
                     } else {
 //                        NSLog(@"object %@", object);
-//                        NSLog(@"connection.originalRequest.URL %@", connection.originalRequest.URL);
+
                         if ([[NSString stringWithFormat:@"%@", connection.originalRequest.URL] isEqualToString:self.recieveDataServerURI]) {
+                            
                             [self newObject:(NSDictionary *)object];
+                            
+                        } else if ([[NSString stringWithFormat:@"%@", connection.originalRequest.URL] isEqualToString:self.sendDataServerURI]) {
+                            
+                            [self syncObject:object];
+                            
                         }
-                    }
+                    }   
                     
                 }
                 
@@ -245,88 +251,139 @@
 }
 
 
+- (void)syncObject:(NSDictionary *)object {
+    
+    NSString *result = [(NSDictionary *)object valueForKey:@"result"];
+    NSString *name = [(NSDictionary *)object valueForKey:@"name"];
+    NSString *xid = [(NSDictionary *)object valueForKey:@"xid"];
+    NSString *xidString = [xid stringByReplacingOccurrencesOfString:@"-" withString:@""];
+    NSData *xidData = [self dataFromString:xidString];
+
+    if (result && ![result isEqualToString:@"ok"]) {
+        
+        [[(STSession *)self.session logger] saveLogMessageWithText:[NSString stringWithFormat:@"Sync result not ok xid: %@", xid] type:@"error"];
+        
+    } else {
+        
+        if ([name isEqualToString:@"megaport.iAgentTask"]) {
+            
+            NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:NSStringFromClass([STTTAgentTask class])];
+            request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"ts" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
+            request.predicate = [NSPredicate predicateWithFormat:@"SELF.xid == %@", xidData];
+            
+            NSError *error;
+            NSArray *fetchResult = [self.session.document.managedObjectContext executeFetchRequest:request error:&error];
+            
+            if ([fetchResult lastObject]) {
+                
+                STTTAgentTask *task = [fetchResult lastObject];
+                [task setValue:[task valueForKey:@"sts"] forKey:@"lts"];
+//                NSLog(@"xid %@", xid);
+//                NSLog(@"ts %@", [self.syncObject valueForKey:@"ts"]);
+//                NSLog(@"lts %@", [self.syncObject valueForKey:@"lts"]);
+                
+            } else {
+                
+                [[(STSession *)self.session logger] saveLogMessageWithText:[NSString stringWithFormat:@"Sync: object wrong xid: %@", xid] type:@"error"];
+                
+            }
+
+        }
+        
+    }
+
+}
+
 - (void)newObject:(NSDictionary *)object {
     
 //    NSString *result = [(NSDictionary *)object valueForKey:@"result"];
     NSString *name = [(NSDictionary *)object valueForKey:@"name"];
     NSString *xid = [(NSDictionary *)object valueForKey:@"xid"];
+    NSString *xidString = [xid stringByReplacingOccurrencesOfString:@"-" withString:@""];
+    NSData *xidData = [self dataFromString:xidString];
     NSDictionary *properties = [(NSDictionary *)object valueForKey:@"properties"];
     
     if ([name isEqualToString:@"megaport.iAgentTerminal"]) {
 
-        NSString *xidString = [xid stringByReplacingOccurrencesOfString:@"-" withString:@""];
-        NSData *xidData = [self dataFromString:xidString];
-
-        STTTAgentTerminal *terminal = [self terminalByXid:xidData];
-                
-        if (!terminal.location) {
-            STTTTerminalLocation *location = (STTTTerminalLocation *)[NSEntityDescription insertNewObjectForEntityForName:NSStringFromClass([STTTTerminalLocation class]) inManagedObjectContext:self.session.document.managedObjectContext];
-            terminal.location = location;
-        }
-        
-        terminal.code = [properties valueForKey:@"code"];
-        terminal.errorText = [properties valueForKey:@"errortext"];
-        terminal.srcSystemName = [properties valueForKey:@"src_system_name"];
-        
-        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-        [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss.SSS"];
-        NSDate *lastActivityTime = [dateFormatter dateFromString:[properties valueForKey:@"lastactivitytime"]];
-        
-        terminal.lastActivityTime = lastActivityTime;
-        terminal.address = [NSString stringWithUTF8String:[[properties valueForKey:@"address"] UTF8String]];
-        
-        terminal.lts = [NSDate date];
-        terminal.location.latitude = [NSNumber numberWithDouble:[[properties valueForKey:@"latitude"] doubleValue]];
-        terminal.location.longitude = [NSNumber numberWithDouble:[[properties valueForKey:@"longitude"] doubleValue]];
-        
-        if (!terminal.location.latitude || !terminal.location.longitude) {
-            CLGeocoder *geoCoder = [[CLGeocoder alloc] init];
-            [geoCoder geocodeAddressString:terminal.address completionHandler:^(NSArray *placemarks, NSError *error) {
-//                NSLog(@"address %@", terminal.address);
-                if (error) {
-                    NSLog(@"error %@", error.localizedDescription);
-                    terminal.location = nil;
-                } else {
-                    CLPlacemark *place = [placemarks lastObject];
-                    terminal.location.latitude = [NSNumber numberWithDouble:place.location.coordinate.latitude];
-                    terminal.location.longitude = [NSNumber numberWithDouble:place.location.coordinate.longitude];
-                }
-                
-            }];
-
-        }
-        
-//        NSLog(@"terminal %@", terminal);
-        NSLog(@"terminal.xid %@", terminal.xid);
+        [self newTerminalWithXid:xidData andProperties:properties];
         
     } else if ([name isEqualToString:@"megaport.iAgentTask"]) {
-        
-        NSString *xidString = [xid stringByReplacingOccurrencesOfString:@"-" withString:@""];
-        NSData *xidData = [self dataFromString:xidString];
 
-        STTTAgentTask *task = [self taskByXid:xidData];
-
-        task.terminalBreakName = [properties valueForKey:@"terminal_break_name"];
-        task.visited = [NSNumber numberWithBool:[[properties valueForKey:@"visited"] boolValue]];
-        
-        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-        [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss.SSS"];
-        NSDate *doBeforeDate = [dateFormatter dateFromString:[properties valueForKey:@"do-before"]];
-        
-        task.doBefore = doBeforeDate;
-        task.lts = [NSDate date];
-        
-        NSDictionary *terminalData = [properties valueForKey:@"terminal"];
-        NSData *terminalXid = [self dataFromString:[[terminalData valueForKey:@"xid"] stringByReplacingOccurrencesOfString:@"-" withString:@""]];
-
-        STTTAgentTerminal *terminal = [self terminalByXid:terminalXid];
-
-        task.terminal = terminal;
-        
-//        NSLog(@"task %@", task);
-        NSLog(@"task.xid %@", task.xid);
+        [self newTaskWithXid:xidData andProperties:properties];
 
     }
+
+}
+
+- (void)newTerminalWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties {
+    
+    STTTAgentTerminal *terminal = [self terminalByXid:xidData];
+    
+    if (!terminal.location) {
+        STTTTerminalLocation *location = (STTTTerminalLocation *)[NSEntityDescription insertNewObjectForEntityForName:NSStringFromClass([STTTTerminalLocation class]) inManagedObjectContext:self.session.document.managedObjectContext];
+        terminal.location = location;
+    }
+    
+    terminal.code = [properties valueForKey:@"code"];
+    terminal.errorText = [properties valueForKey:@"errortext"];
+    terminal.srcSystemName = [properties valueForKey:@"src_system_name"];
+    
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss.SSS"];
+    NSDate *lastActivityTime = [dateFormatter dateFromString:[properties valueForKey:@"lastactivitytime"]];
+    
+    terminal.lastActivityTime = lastActivityTime;
+    terminal.address = [NSString stringWithUTF8String:[[properties valueForKey:@"address"] UTF8String]];
+    
+    terminal.lts = [NSDate date];
+    terminal.location.latitude = [NSNumber numberWithDouble:[[properties valueForKey:@"latitude"] doubleValue]];
+    terminal.location.longitude = [NSNumber numberWithDouble:[[properties valueForKey:@"longitude"] doubleValue]];
+    
+    if (!terminal.location.latitude || !terminal.location.longitude) {
+        CLGeocoder *geoCoder = [[CLGeocoder alloc] init];
+        [geoCoder geocodeAddressString:terminal.address completionHandler:^(NSArray *placemarks, NSError *error) {
+            //                NSLog(@"address %@", terminal.address);
+            if (error) {
+                NSLog(@"error %@", error.localizedDescription);
+                terminal.location = nil;
+            } else {
+                CLPlacemark *place = [placemarks lastObject];
+                terminal.location.latitude = [NSNumber numberWithDouble:place.location.coordinate.latitude];
+                terminal.location.longitude = [NSNumber numberWithDouble:place.location.coordinate.longitude];
+            }
+            
+        }];
+        
+    }
+    
+    //        NSLog(@"terminal %@", terminal);
+    NSLog(@"terminal.xid %@", terminal.xid);
+
+}
+
+- (void)newTaskWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties {
+    
+    STTTAgentTask *task = [self taskByXid:xidData];
+    
+    task.terminalBreakName = [properties valueForKey:@"terminal_break_name"];
+    task.visited = [NSNumber numberWithBool:[[properties valueForKey:@"visited"] boolValue]];
+    
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss.SSS"];
+    NSDate *doBeforeDate = [dateFormatter dateFromString:[properties valueForKey:@"do-before"]];
+    
+    task.doBefore = doBeforeDate;
+    task.lts = [NSDate date];
+    
+    NSDictionary *terminalData = [properties valueForKey:@"terminal"];
+    NSData *terminalXid = [self dataFromString:[[terminalData valueForKey:@"xid"] stringByReplacingOccurrencesOfString:@"-" withString:@""]];
+    
+    STTTAgentTerminal *terminal = [self terminalByXid:terminalXid];
+    
+    task.terminal = terminal;
+    
+    //        NSLog(@"task %@", task);
+    NSLog(@"task.xid %@", task.xid);
 
 }
 

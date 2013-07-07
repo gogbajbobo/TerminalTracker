@@ -101,7 +101,6 @@
         taskLocation.longitude = [NSNumber numberWithDouble:self.location.coordinate.longitude];
         self.task.visitLocation = taskLocation;
         self.task.visited = [NSNumber numberWithBool:YES];
-        self.task.synced = [NSNumber numberWithBool:NO];
         
         [self.visitedButton setTitleColor:[UIColor greenColor] forState:UIControlStateDisabled];
         self.visitedButton.enabled = NO;
@@ -142,7 +141,35 @@
 
 - (void)labelsInit {
     self.terminalBreakNameLabel.text = self.task.terminalBreakName;
-    self.doBeforeLabel.text = [NSString stringWithFormat:@"%@", self.task.doBefore];
+    
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    dateFormatter.dateStyle = NSDateFormatterMediumStyle;
+    dateFormatter.timeStyle = NSDateFormatterShortStyle;
+    
+    self.doBeforeLabel.text = [NSString stringWithFormat:@"%@", [dateFormatter stringFromDate:self.task.doBefore]];
+    
+    NSTimeInterval remainingTime = [self.task remainingTime];
+    UIColor *backgroundColor = self.doBeforeLabel.backgroundColor;
+    UIColor *textColor = [UIColor blackColor];
+    
+    if (remainingTime < 0) {
+        textColor = [UIColor redColor];
+    } else if (remainingTime > 0 && remainingTime <= 60*60) {
+        backgroundColor = [UIColor redColor];
+        textColor = [UIColor whiteColor];
+    } else if (remainingTime < 120*60) {
+        backgroundColor = [UIColor yellowColor];
+    } else if (remainingTime < 180*60) {
+        backgroundColor = [UIColor colorWithRed:0.56 green:0.93 blue:0.56 alpha:1];
+    }
+    
+    if (!self.task.lts || [self.task.ts compare:self.task.lts] == NSOrderedDescending) {
+        textColor = [UIColor grayColor];
+    }
+    
+    self.doBeforeLabel.backgroundColor = backgroundColor;
+    self.doBeforeLabel.textColor = textColor;
+
     if (self.task.terminal) {
         self.addressLabel.text = self.task.terminal.address;
     }

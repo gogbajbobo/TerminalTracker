@@ -167,7 +167,11 @@
     
 //    NSLog(@"task.visited %@", task.visited);
     
-    cell.textLabel.text = [NSString stringWithFormat:@"%@", task.doBefore];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    dateFormatter.dateStyle = NSDateFormatterMediumStyle;
+    dateFormatter.timeStyle = NSDateFormatterShortStyle;
+    
+    cell.textLabel.text = [NSString stringWithFormat:@"%@", [dateFormatter stringFromDate:task.doBefore]];
     cell.detailTextLabel.text = task.terminalBreakName;
     
     NSTimeInterval remainingTime = [task remainingTime];
@@ -182,10 +186,10 @@
     } else if (remainingTime < 120*60) {
         backgroundColor = [UIColor yellowColor];
     } else if (remainingTime < 180*60) {
-        backgroundColor = [UIColor colorWithRed:144/255 green:238/255 blue:144/255 alpha:1];
+        backgroundColor = [UIColor colorWithRed:0.56 green:0.93 blue:0.56 alpha:1];
     }
     
-    if (!task.synced) {
+    if (!task.lts || [task.ts compare:task.lts] == NSOrderedDescending) {
         textColor = [UIColor grayColor];
     }
     
@@ -198,8 +202,8 @@
 //    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
     
-    NSLog(@"backgroundColor %@", backgroundColor);
-    NSLog(@"textColor %@", textColor);
+//    NSLog(@"backgroundColor %@", backgroundColor);
+//    NSLog(@"textColor %@", textColor);
     
     
     return cell;
