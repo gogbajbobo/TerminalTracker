@@ -16,7 +16,6 @@ Pod::Spec.new do |s|
 
   s.requires_arc = true
 
-  s.dependency 'UDPushAuth', :git => 'https://github.com/Unact/UDPushAuth.git', :branch => 'dev'
   s.dependency 'STManagedTracker', :git => 'https://github.com/sys-team/STManagedTracker.git', :branch => 'terminals'
 
 end
