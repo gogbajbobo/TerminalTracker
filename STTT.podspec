@@ -11,7 +11,7 @@ Pod::Spec.new do |s|
 
   s.source_files = 'TerminalTracker/*.lproj/STTT*.storyboard', 'TerminalTracker/*.lproj/Localizable.strings', 'TerminalTracker/Classes/STTT*.{h,m}', 'TerminalTracker/DataModel/STTT*.{h,m}'
   s.resources = 'TerminalTracker/DataModel/*.{xcdatamodel,xcdatamodeld}'
-
+  s.preserve_paths = 'TerminalTracker/DataModel/'
 
   s.frameworks = 'SystemConfiguration', 'CoreData', 'MapKit', 'CoreLocation', 'UIKit', 'Foundation', 'CoreGraphics'
 
