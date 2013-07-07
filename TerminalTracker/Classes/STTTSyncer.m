@@ -136,13 +136,13 @@
     NSDictionary *dataDictionary = [NSDictionary dictionaryWithObject:syncDataArray forKey:@"data"];
     
     NSError *error;
-    NSData *JSONData = [NSJSONSerialization dataWithJSONObject:dataDictionary options:NSJSONWritingPrettyPrinted error:&error];
-//    NSData *JSONData = [NSJSONSerialization dataWithJSONObject:dataDictionary options:0 error:&error];
+//    NSData *JSONData = [NSJSONSerialization dataWithJSONObject:dataDictionary options:NSJSONWritingPrettyPrinted error:&error];
+    NSData *JSONData = [NSJSONSerialization dataWithJSONObject:dataDictionary options:0 error:&error];
     
-    NSLog(@"JSONData %@", JSONData);
+//    NSLog(@"JSONData %@", JSONData);
     
-    NSString *JSONString = [[NSString alloc] initWithData:JSONData encoding:NSUTF8StringEncoding];
-    NSLog(@"JSONString %@", JSONString);
+//    NSString *JSONString = [[NSString alloc] initWithData:JSONData encoding:NSUTF8StringEncoding];
+//    NSLog(@"JSONString %@", JSONString);
     
     return JSONData;
 }
@@ -184,8 +184,8 @@
 - (void)parseResponse:(NSData *)responseData fromConnection:(NSURLConnection *)connection {
         
 //    NSLog(@"parseResponse");
-    NSString *responseString = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
-    NSLog(@"responseData %@", responseString);
+//    NSString *responseString = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
+//    NSLog(@"responseData %@", responseString);
     
     NSError *error;
     id responseJSON = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingMutableContainers error:&error];
@@ -229,16 +229,24 @@
                 
                 if (self.syncing) {
                     self.syncing = NO;
-//                    NSLog(@"newsNextOffset %@", [(NSDictionary *)responseJSON valueForKey:@"newsNextOffset"]);
-                    self.dataOffset = [(NSDictionary *)responseJSON valueForKey:@"newsNextOffset"];
-                    NSString *pageRowCount = [(NSDictionary *)responseJSON valueForKey:@"pageRowCount"];
-                    NSString *pageSize = [(NSDictionary *)responseJSON valueForKey:@"pageSize"];
-//                    NSLog(@"pageRowCount %@", pageRowCount);
-                    if ([pageRowCount isEqualToString:pageSize]) {
-                        self.syncing = YES;
-                        [self sendData:nil toServer:self.recieveDataServerURI withParameters:self.requestParameters];
-                    } else {
-                        NSLog(@"All data recieved");
+                    if ([[NSString stringWithFormat:@"%@", connection.originalRequest.URL] isEqualToString:self.recieveDataServerURI]) {
+                        
+                        //                    NSLog(@"newsNextOffset %@", [(NSDictionary *)responseJSON valueForKey:@"newsNextOffset"]);
+                        self.dataOffset = [(NSDictionary *)responseJSON valueForKey:@"newsNextOffset"];
+                        NSString *pageRowCount = [(NSDictionary *)responseJSON valueForKey:@"pageRowCount"];
+                        NSString *pageSize = [(NSDictionary *)responseJSON valueForKey:@"pageSize"];
+                        //                    NSLog(@"pageRowCount %@", pageRowCount);
+                        if ([pageRowCount isEqualToString:pageSize]) {
+                            self.syncing = YES;
+                            [self sendData:nil toServer:self.recieveDataServerURI withParameters:self.requestParameters];
+                        } else {
+                            NSLog(@"All data recieved");
+                        }
+
+                    } else if ([[NSString stringWithFormat:@"%@", connection.originalRequest.URL] isEqualToString:self.sendDataServerURI]) {
+                        
+                        [self syncData];
+                        
                     }
                 }
                 
@@ -278,7 +286,7 @@
                 
                 STTTAgentTask *task = [fetchResult lastObject];
                 [task setValue:[task valueForKey:@"sts"] forKey:@"lts"];
-//                NSLog(@"xid %@", xid);
+                NSLog(@"sync object xid %@", xid);
 //                NSLog(@"ts %@", [self.syncObject valueForKey:@"ts"]);
 //                NSLog(@"lts %@", [self.syncObject valueForKey:@"lts"]);
                 
@@ -357,7 +365,7 @@
     }
     
     //        NSLog(@"terminal %@", terminal);
-    NSLog(@"terminal.xid %@", terminal.xid);
+    NSLog(@"get terminal.xid %@", terminal.xid);
 
 }
 
@@ -383,7 +391,7 @@
     task.terminal = terminal;
     
     //        NSLog(@"task %@", task);
-    NSLog(@"task.xid %@", task.xid);
+    NSLog(@"get task.xid %@", task.xid);
 
 }
 
