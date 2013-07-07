@@ -32,8 +32,8 @@
 		2CE3266D176F29E800BAA1D4 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 2CE3266C176F29E800BAA1D4 /* Default.png */; };
 		2CE3266F176F29E800BAA1D4 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2CE3266E176F29E800BAA1D4 /* Default@2x.png */; };
 		2CE32671176F29E800BAA1D4 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2CE32670176F29E800BAA1D4 /* Default-568h@2x.png */; };
-		2CE32674176F29E800BAA1D4 /* MainStoryboard_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2CE32672176F29E800BAA1D4 /* MainStoryboard_iPhone.storyboard */; };
-		2CE32677176F29E800BAA1D4 /* MainStoryboard_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2CE32675176F29E800BAA1D4 /* MainStoryboard_iPad.storyboard */; };
+		2CE32674176F29E800BAA1D4 /* STTTMainStoryboard_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2CE32672176F29E800BAA1D4 /* STTTMainStoryboard_iPhone.storyboard */; };
+		2CE32677176F29E800BAA1D4 /* STTTMainStoryboard_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2CE32675176F29E800BAA1D4 /* STTTMainStoryboard_iPad.storyboard */; };
 		2CE32682176F29E800BAA1D4 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE32681176F29E800BAA1D4 /* SenTestingKit.framework */; };
 		2CE32683176F29E800BAA1D4 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE3265A176F29E800BAA1D4 /* UIKit.framework */; };
 		2CE32684176F29E800BAA1D4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE3265C176F29E800BAA1D4 /* Foundation.framework */; };
@@ -102,8 +102,8 @@
 		2CE3266C176F29E800BAA1D4 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		2CE3266E176F29E800BAA1D4 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		2CE32670176F29E800BAA1D4 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
-		2CE32673176F29E800BAA1D4 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard_iPhone.storyboard; sourceTree = "<group>"; };
-		2CE32676176F29E800BAA1D4 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard_iPad.storyboard; sourceTree = "<group>"; };
+		2CE32673176F29E800BAA1D4 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/STTTMainStoryboard_iPhone.storyboard; sourceTree = "<group>"; };
+		2CE32676176F29E800BAA1D4 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/STTTMainStoryboard_iPad.storyboard; sourceTree = "<group>"; };
 		2CE32680176F29E800BAA1D4 /* TerminalTrackerTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TerminalTrackerTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CE32681176F29E800BAA1D4 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
 		2CE32689176F29E800BAA1D4 /* TerminalTrackerTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TerminalTrackerTests-Info.plist"; sourceTree = "<group>"; };
@@ -191,8 +191,8 @@
 				2CE32698176F2BB600BAA1D4 /* Classes */,
 				2CE32669176F29E800BAA1D4 /* STAppDelegate.h */,
 				2CE3266A176F29E800BAA1D4 /* STAppDelegate.m */,
-				2CE32672176F29E800BAA1D4 /* MainStoryboard_iPhone.storyboard */,
-				2CE32675176F29E800BAA1D4 /* MainStoryboard_iPad.storyboard */,
+				2CE32672176F29E800BAA1D4 /* STTTMainStoryboard_iPhone.storyboard */,
+				2CE32675176F29E800BAA1D4 /* STTTMainStoryboard_iPad.storyboard */,
 				2CE32661176F29E800BAA1D4 /* Supporting Files */,
 			);
 			path = TerminalTracker;
@@ -358,8 +358,8 @@
 				2CE3266D176F29E800BAA1D4 /* Default.png in Resources */,
 				2CE3266F176F29E800BAA1D4 /* Default@2x.png in Resources */,
 				2CE32671176F29E800BAA1D4 /* Default-568h@2x.png in Resources */,
-				2CE32674176F29E800BAA1D4 /* MainStoryboard_iPhone.storyboard in Resources */,
-				2CE32677176F29E800BAA1D4 /* MainStoryboard_iPad.storyboard in Resources */,
+				2CE32674176F29E800BAA1D4 /* STTTMainStoryboard_iPhone.storyboard in Resources */,
+				2CE32677176F29E800BAA1D4 /* STTTMainStoryboard_iPad.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -472,20 +472,20 @@
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
-		2CE32672176F29E800BAA1D4 /* MainStoryboard_iPhone.storyboard */ = {
+		2CE32672176F29E800BAA1D4 /* STTTMainStoryboard_iPhone.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
 				2CE32673176F29E800BAA1D4 /* en */,
 			);
-			name = MainStoryboard_iPhone.storyboard;
+			name = STTTMainStoryboard_iPhone.storyboard;
 			sourceTree = "<group>";
 		};
-		2CE32675176F29E800BAA1D4 /* MainStoryboard_iPad.storyboard */ = {
+		2CE32675176F29E800BAA1D4 /* STTTMainStoryboard_iPad.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
 				2CE32676176F29E800BAA1D4 /* en */,
 			);
-			name = MainStoryboard_iPad.storyboard;
+			name = STTTMainStoryboard_iPad.storyboard;
 			sourceTree = "<group>";
 		};
 		2CE3268A176F29E800BAA1D4 /* InfoPlist.strings */ = {
