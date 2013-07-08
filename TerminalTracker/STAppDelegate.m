@@ -35,6 +35,7 @@
                                      @"-1", @"distanceFilter",
                                      @"0.0", @"timeFilter",
                                      @"10", @"fetchLimit",
+                                     @"STTTDataModel", @"dataModelName",
                                      nil];
     
     NSDictionary *controllers = [NSDictionary dictionaryWithObjectsAndKeys:

@@ -242,6 +242,10 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sessionStatusChanged:) name:@"sessionStatusChanged" object:self.session];
     
+    if ([self.session.status isEqualToString:@"running"]) {
+        [self sessionStatusChanged:nil];
+    }
+
 }
 
 - (void)sessionStatusChanged:(NSNotification *)notification {
