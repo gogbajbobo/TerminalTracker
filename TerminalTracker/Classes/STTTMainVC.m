@@ -238,8 +238,6 @@
     [self.view addSubview:self.taskView];
     [self.view addSubview:self.terminalView];
     
-    self.title = @"Информация";
-    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sessionStatusChanged:) name:@"sessionStatusChanged" object:self.session];
     
     if ([self.session.status isEqualToString:@"running"]) {
@@ -325,6 +323,9 @@
 
 
 #pragma mark - view lifecycle
+- (void) awakeFromNib{
+    self.title = @"Информация";
+}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
