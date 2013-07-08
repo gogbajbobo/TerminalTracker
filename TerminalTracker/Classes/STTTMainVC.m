@@ -155,7 +155,7 @@
     numberOfUnsolvedTasksLabel.backgroundColor = self.taskInfoViewColor;
     [self.taskView addSubview:numberOfUnsolvedTasksLabel];
 
-    UILabel *numberOfCriticalTasksLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.taskView.bounds.size.width * 0.1, self.taskView.bounds.size.height * 0.1 + 88, self.taskView.bounds.size.width * 0.8, 88)];
+    UILabel *numberOfCriticalTasksLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.taskView.bounds.size.width * 0.1, self.taskView.bounds.size.height * 0.1 + 88, self.taskView.bounds.size.width * 0.8, 66)];
     numberOfCriticalTasksLabel.lineBreakMode = NSLineBreakByWordWrapping;
     numberOfCriticalTasksLabel.numberOfLines = 2;
     int numberOfCriticalTasks = 0;
@@ -199,7 +199,7 @@
     nearestLabel.backgroundColor = self.terminalInfoViewColor;
     [self.terminalView addSubview:nearestLabel];
 
-    UILabel *nearestAddressLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.terminalView.bounds.size.width * 0.1, self.terminalView.bounds.size.height * 0.1 + 88, self.terminalView.bounds.size.width * 0.8, 88)];
+    UILabel *nearestAddressLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.terminalView.bounds.size.width * 0.1, self.terminalView.bounds.size.height * 0.1 + 88, self.terminalView.bounds.size.width * 0.8, 66)];
     if (self.terminalController.resultsController.fetchedObjects.count > 0) {
         nearestAddressLabel.text = [(STTTAgentTerminal *)[self.terminalController.resultsController.fetchedObjects objectAtIndex:0] address];
     }
@@ -220,8 +220,8 @@
 }
 
 - (void)viewInit {
-
-    CGFloat halfHeight = (self.view.bounds.size.height - self.navigationController.navigationBar.bounds.size.height) / 2;
+    
+    CGFloat halfHeight = (self.view.bounds.size.height - self.navigationController.navigationBar.bounds.size.height - self.tabBarController.tabBar.bounds.size.height) / 2;
 
     self.taskView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, halfHeight)];
     self.taskView.backgroundColor = self.taskInfoViewColor;
