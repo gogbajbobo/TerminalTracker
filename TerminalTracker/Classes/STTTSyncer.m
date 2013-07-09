@@ -319,6 +319,10 @@
 
         [self newTaskWithXid:xidData andProperties:properties];
 
+    } else if ([name isEqualToString:@"megaport.iAgentSettings"]) {
+        
+        [self newSettingWithProperties:properties];
+        
     }
 
 }
@@ -395,6 +399,42 @@
 
 }
 
+- (void)newSettingWithProperties:(NSDictionary *)properties {
+    
+    NSString *group = [properties valueForKey:@"group"];
+    NSString *name = [properties valueForKey:@"name"];
+    NSString *value = [properties valueForKey:@"value"];
+    
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:NSStringFromClass([STSettings class])];
+    request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"ts" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
+    request.predicate = [NSPredicate predicateWithFormat:@"SELF.group == %@ && SELF.name == %@", group, name];
+    
+    NSError *error;
+    NSArray *fetchResult = [self.session.document.managedObjectContext executeFetchRequest:request error:&error];
+    
+    if ([fetchResult lastObject]) {
+        
+        STSettings *settingsObject = [fetchResult lastObject];
+        
+        NSString *oldValue = [settingsObject valueForKey:@"value"];
+        
+        if (![value isEqualToString:oldValue]) {
+            
+            NSString *newValue = [[(STSession *)self.session settingsController] normalizeValue:value forKey:name];
+            
+            if (newValue) {
+                
+                [settingsObject setValue:newValue forKey:@"value"];
+                NSLog(@"set %@ to %@", name, newValue);
+                
+            }
+            
+        }
+        
+    }
+    
+}
+
 - (STTTAgentTerminal *)terminalByXid:(NSData *)xid {
     
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:NSStringFromClass([STTTAgentTerminal class])];
@@ -437,5 +477,24 @@
     return task;
 
 }
+
+- (void)syncerSettingsChanged:(NSNotification *)notification {
+    
+    [super syncerSettingsChanged:notification];
+    
+    [self.settings addEntriesFromDictionary:notification.userInfo];
+    NSString *key = [[notification.userInfo allKeys] lastObject];
+    
+    //    NSLog(@"%@ %@", [notification.userInfo valueForKey:key], key);
+    if ([key isEqualToString:@"recieveDataServerURI"]) {
+        self.recieveDataServerURI = [notification.userInfo valueForKey:key];
+        
+    } else if ([key isEqualToString:@"sendDataServerURI"]) {
+        self.sendDataServerURI = [notification.userInfo valueForKey:key];
+        
+    }
+    
+}
+
 
 @end
