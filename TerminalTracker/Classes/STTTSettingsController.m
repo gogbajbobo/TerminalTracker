@@ -68,13 +68,27 @@
 
 - (NSString *)normalizeValue:(NSString *)value forKey:(NSString *)key {
     
-    [super normalizeValue:value forKey:key];
+//    [super normalizeValue:value forKey:key];
     
     NSArray *positiveDouble = [NSArray arrayWithObjects:@"requiredAccuracy", @"trackDetectionTime", @"trackSeparationDistance", @"trackScale", @"fetchLimit", @"syncInterval", @"HTCheckpointInterval", @"deviceMotionUpdateInterval", nil];
+    
+    NSArray *boolValue = [NSArray arrayWithObjects:@"TrackerAutoStart", @"localAccessToSettings", @"deviceMotionUpdate", @"getLocationsWithNegativeSpeed", @"showLocationInsteadOfMap", nil];
+    
+    NSArray *URIValue = [NSArray arrayWithObjects:@"syncServerURI", @"xmlNamespace", @"recieveDataServerURI", @"sendDataServerURI", nil];
     
     if ([positiveDouble containsObject:key]) {
         if ([self isPositiveDouble:value]) {
             return [NSString stringWithFormat:@"%f", [value doubleValue]];
+        }
+        
+    } else  if ([boolValue containsObject:key]) {
+        if ([self isBool:value]) {
+            return [NSString stringWithFormat:@"%d", [value boolValue]];
+        }
+        
+    } else if ([URIValue containsObject:key]) {
+        if ([self isValidURI:value]) {
+            return value;
         }
         
     } else if ([key isEqualToString:@"desiredAccuracy"]) {
@@ -101,11 +115,6 @@
             return [NSString stringWithFormat:@"%f", dValue];
         }
         
-    } else  if ([key hasSuffix:@"TrackerAutoStart"] || [key isEqualToString:@"localAccessToSettings"] || [key isEqualToString:@"deviceMotionUpdate"] || [key isEqualToString:@"getLocationsWithNegativeSpeed"] || [key isEqualToString:@"showLocationInsteadOfMap"]) {
-        if ([self isBool:value]) {
-            return [NSString stringWithFormat:@"%d", [value boolValue]];
-        }
-        
     } else if ([key hasSuffix:@"TrackerStartTime"] || [key hasSuffix:@"TrackerFinishTime"]) {
         if ([self isValidTime:value]) {
             return [NSString stringWithFormat:@"%f", [value doubleValue]];
@@ -121,11 +130,6 @@
         double iValue = [value doubleValue];
         if (iValue == 0 || iValue == 1) {
             return [NSString stringWithFormat:@"%.f", iValue];
-        }
-        
-    } else if ([key isEqualToString:@"syncServerURI"] || [key isEqualToString:@"xmlNamespace"]) {
-        if ([self isValidURI:value]) {
-            return value;
         }
         
     }
