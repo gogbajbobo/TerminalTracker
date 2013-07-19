@@ -184,6 +184,10 @@
 - (void)parseResponse:(NSData *)responseData fromConnection:(NSURLConnection *)connection {
         
 //    NSLog(@"parseResponse");
+
+//    NSString *dataPath = [[NSBundle mainBundle] pathForResource:@"STTTtest" ofType:@"json"];
+//    responseData = [NSData dataWithContentsOfFile:dataPath];
+
 //    NSString *responseString = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
 //    NSLog(@"responseData %@", responseString);
     
@@ -236,11 +240,11 @@
                         NSString *pageRowCount = [(NSDictionary *)responseJSON valueForKey:@"pageRowCount"];
                         NSString *pageSize = [(NSDictionary *)responseJSON valueForKey:@"pageSize"];
                         //                    NSLog(@"pageRowCount %@", pageRowCount);
-                        if ([pageRowCount isEqualToString:pageSize]) {
+                        if ([pageRowCount intValue] < [pageSize intValue]) {
+                            NSLog(@"All data recieved");
+                        } else {
                             self.syncing = YES;
                             [self sendData:nil toServer:self.recieveDataServerURI withParameters:self.requestParameters];
-                        } else {
-                            NSLog(@"All data recieved");
                         }
 
                     } else if ([[NSString stringWithFormat:@"%@", connection.originalRequest.URL] isEqualToString:self.sendDataServerURI]) {
