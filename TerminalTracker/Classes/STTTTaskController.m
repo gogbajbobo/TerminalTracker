@@ -178,19 +178,21 @@
     UIColor *backgroundColor = cell.contentView.backgroundColor;
     UIColor *textColor = [UIColor blackColor];
     
-    if (remainingTime < 0) {
-        textColor = [UIColor redColor];
-    } else if (remainingTime > 0 && remainingTime <= 60*60) {
-        backgroundColor = [UIColor redColor];
-        textColor = [UIColor whiteColor];
-    } else if (remainingTime < 120*60) {
-        backgroundColor = [UIColor yellowColor];
-    } else if (remainingTime < 180*60) {
-        backgroundColor = [UIColor colorWithRed:0.56 green:0.93 blue:0.56 alpha:1];
-    }
-    
     if (!task.lts || [task.ts compare:task.lts] == NSOrderedDescending) {
         textColor = [UIColor grayColor];
+    } else {
+        if (![task.visited boolValue]) {
+            if (remainingTime < 0) {
+                textColor = [UIColor redColor];
+            } else if (remainingTime > 0 && remainingTime <= 60*60) {
+                backgroundColor = [UIColor redColor];
+                textColor = [UIColor whiteColor];
+            } else if (remainingTime < 120*60) {
+                backgroundColor = [UIColor yellowColor];
+            } else if (remainingTime < 180*60) {
+                backgroundColor = [UIColor colorWithRed:0.56 green:0.93 blue:0.56 alpha:1];
+            }
+        }
     }
     
     cell.contentView.backgroundColor = backgroundColor;
