@@ -148,7 +148,7 @@
     [self.taskView addSubview:numberOfTasksLabel];
 
     UILabel *numberOfUnsolvedTasksLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.taskView.bounds.size.width * 0.1, self.taskView.bounds.size.height * 0.1 + 44, self.taskView.bounds.size.width * 0.8, 44)];
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.visited == %@", 0];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.visited == %@", [NSNumber numberWithInt:0]];
     NSUInteger numberOfUnsolvedTasks = [tasks filteredArrayUsingPredicate:predicate].count;
     numberOfUnsolvedTasksLabel.text = [NSString stringWithFormat:@"Невыполненных: %d", numberOfUnsolvedTasks];
     numberOfUnsolvedTasksLabel.font = [UIFont boldSystemFontOfSize:24];
@@ -161,11 +161,13 @@
     int numberOfCriticalTasks = 0;
     int numberOfOverdueTasks = 0;
     for (STTTAgentTask *task in tasks) {
-        NSTimeInterval remainingTime = [task remainingTime];
-        if (remainingTime > 0 && remainingTime < 60*60) {
-            numberOfCriticalTasks += 1;
-        } else if (remainingTime <= 0) {
-            numberOfOverdueTasks += 1;
+        if (![task.visited boolValue]) {
+            NSTimeInterval remainingTime = [task remainingTime];
+            if (remainingTime > 0 && remainingTime < 60*60) {
+                numberOfCriticalTasks += 1;
+            } else if (remainingTime <= 0) {
+                numberOfOverdueTasks += 1;
+            }
         }
     }
     numberOfCriticalTasksLabel.text = [NSString stringWithFormat:@"Критических: %d \r\nПросроченных: %d", numberOfCriticalTasks, numberOfOverdueTasks];
