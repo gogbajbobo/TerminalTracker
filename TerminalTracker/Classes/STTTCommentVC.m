@@ -28,8 +28,8 @@
         self.commentView.editable = NO;
         
 // _________for testing
-        self.commentView.editable = YES;
-        self.commentView.delegate = self;
+//        self.commentView.editable = YES;
+//        self.commentView.delegate = self;
 // ____________________
         
     } else {

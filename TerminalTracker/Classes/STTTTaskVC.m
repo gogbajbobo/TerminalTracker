@@ -189,7 +189,7 @@
         self.geoLocationButton.enabled = NO;
         
 // ____________testing
-        self.geoLocationButton.enabled = YES;
+//        self.geoLocationButton.enabled = YES;
 // ___________________
         
     } else {
