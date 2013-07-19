@@ -30,7 +30,7 @@
 - (NSFetchedResultsController *)resultsController {
     if (!_resultsController) {
         NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:NSStringFromClass([STTTAgentTask class])];
-        request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"doBefore" ascending:YES selector:@selector(compare:)]];
+        request.sortDescriptors = [NSArray arrayWithObjects:[NSSortDescriptor sortDescriptorWithKey:@"visited" ascending:YES selector:@selector(compare:)], [NSSortDescriptor sortDescriptorWithKey:@"doBefore" ascending:YES selector:@selector(compare:)], nil];
         if (self.terminal) {
             request.predicate = [NSPredicate predicateWithFormat:@"SELF.terminal == %@", self.terminal];
         }
