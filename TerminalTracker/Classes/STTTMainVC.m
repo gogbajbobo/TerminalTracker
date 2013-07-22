@@ -326,7 +326,7 @@
 
 #pragma mark - view lifecycle
 - (void) awakeFromNib{
-    self.title = @"Информация";
+    self.title = @"Техники";
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
