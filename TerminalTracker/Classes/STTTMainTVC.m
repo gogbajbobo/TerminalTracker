@@ -10,6 +10,7 @@
 #import <STManagedTracker/STSessionManager.h>
 #import "STTTLocationController.h"
 #import "STTTAgentTask+remainingTime.h"
+#import "STTTInfoTVC.h"
 
 @interface STTTMainTVC ()
 
@@ -191,7 +192,7 @@
     if (numberOfCautionTasks + numberOfCriticalTasks + numberOfHurryTasks + numberOfOverdueTasks + numberOfUnsolvedTasks > 0) {
         
         NSString *text;
-        UIColor *backgroundColor = [UIColor clearColor];
+        UIColor *backgroundColor = cell.backgroundColor;
         UIColor *textColor = [UIColor blackColor];
         UIFont *font = [UIFont boldSystemFontOfSize:18];
 
@@ -239,7 +240,7 @@
         cell.detailTextLabel.text = [(STTTAgentTerminal *)[self.terminalController.resultsController.fetchedObjects objectAtIndex:0] address];
 
         NSString *text = [NSString stringWithFormat:@"%d", terminals.count];
-        UIColor *backgroundColor = [UIColor clearColor];
+        UIColor *backgroundColor = cell.backgroundColor;
         UIColor *textColor = [UIColor blackColor];
         UIFont *font = [UIFont boldSystemFontOfSize:18];
         NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -285,7 +286,26 @@
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    [self performSegueWithIdentifier:@"showInfoTVC" sender:indexPath];
 
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([segue.identifier isEqualToString:@"showInfoTVC"]) {
+        if ([segue.destinationViewController isKindOfClass:[STTTInfoTVC class]]) {
+            STTTInfoTVC *infoTVC = (STTTInfoTVC *)segue.destinationViewController;
+            if ([sender isKindOfClass:[NSIndexPath class]]) {
+                if ([(NSIndexPath *)sender section] == 0) {
+                    infoTVC.tableView.dataSource = self.taskController;
+                    infoTVC.title = @"Задачи";
+                } else if ([(NSIndexPath *)sender section] == 1) {
+                    infoTVC.tableView.dataSource = self.terminalController;
+                    infoTVC.title = @"Терминалы";
+                }
+            }
+        }
+    }
 }
 
 @end
