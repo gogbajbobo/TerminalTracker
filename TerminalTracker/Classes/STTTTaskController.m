@@ -7,7 +7,6 @@
 //
 
 #import "STTTTaskController.h"
-#import "STTTAgentTask+remainingTime.h"
 #import "STTTTaskLocation.h"
 
 @interface STTTTaskController() <NSFetchedResultsControllerDelegate>

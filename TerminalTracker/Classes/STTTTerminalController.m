@@ -7,7 +7,6 @@
 //
 
 #import "STTTTerminalController.h"
-#import "STTTAgentTerminal.h"
 #import "STTTTerminalLocation.h"
 #import "STTTLocationController.h"
 

@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <STManagedTracker/STSession.h>
+#import "STTTAgentTerminal.h"
 
 @interface STTTTerminalController : NSObject <UITableViewDataSource>
 
