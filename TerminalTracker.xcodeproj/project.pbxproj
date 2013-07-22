@@ -44,6 +44,7 @@
 		2CE326A0176F2F2C00BAA1D4 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE3269F176F2F2C00BAA1D4 /* CoreData.framework */; };
 		2CE326A2176F2F3500BAA1D4 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE326A1176F2F3500BAA1D4 /* CoreLocation.framework */; };
 		2CE326A4176F2F3E00BAA1D4 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE326A3176F2F3E00BAA1D4 /* MapKit.framework */; };
+		2CE7E4B5179D31B000113A6A /* STTTMainTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CE7E4B4179D31B000113A6A /* STTTMainTVC.m */; };
 		9E0575B8127B4EE5B37A6DF5 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F26E7DA269E4C8AB402C081 /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -117,6 +118,8 @@
 		2CE3269F176F2F2C00BAA1D4 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		2CE326A1176F2F3500BAA1D4 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		2CE326A3176F2F3E00BAA1D4 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		2CE7E4B3179D31B000113A6A /* STTTMainTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTMainTVC.h; sourceTree = "<group>"; };
+		2CE7E4B4179D31B000113A6A /* STTTMainTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTMainTVC.m; sourceTree = "<group>"; };
 		3F26E7DA269E4C8AB402C081 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD3C601463AF4A6E80FEF924 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -234,6 +237,8 @@
 		2CE32698176F2BB600BAA1D4 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				2CE7E4B3179D31B000113A6A /* STTTMainTVC.h */,
+				2CE7E4B4179D31B000113A6A /* STTTMainTVC.m */,
 				2C93A563177D79790014001B /* STTTTaskController.h */,
 				2C93A564177D79790014001B /* STTTTaskController.m */,
 				2C93A560177D795E0014001B /* STTTTerminalController.h */,
@@ -442,6 +447,7 @@
 				2C93A5C4178597940014001B /* STTTCommentVC.m in Sources */,
 				2C93A5C717859F880014001B /* STTTAgentTerminal.m in Sources */,
 				2C93A5CD1789B6180014001B /* STTTAgentTask.m in Sources */,
+				2CE7E4B5179D31B000113A6A /* STTTMainTVC.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

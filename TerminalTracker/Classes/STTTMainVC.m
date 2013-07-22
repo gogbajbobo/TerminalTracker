@@ -223,22 +223,22 @@
 
 - (void)viewInit {
     
-    CGFloat halfHeight = (self.view.bounds.size.height - self.navigationController.navigationBar.bounds.size.height - self.tabBarController.tabBar.bounds.size.height) / 2;
-
-    self.taskView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, halfHeight)];
-    self.taskView.backgroundColor = self.taskInfoViewColor;
-    
-    UIGestureRecognizer *taskViewTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(taskViewTap)];
-    [self.taskView addGestureRecognizer:taskViewTap];
-    
-    self.terminalView = [[UIView alloc] initWithFrame:CGRectMake(0, halfHeight, self.view.bounds.size.width, halfHeight)];
-    self.terminalView.backgroundColor = self.terminalInfoViewColor;
-    
-    UIGestureRecognizer *terminalViewTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(terminalViewTap)];
-    [self.terminalView addGestureRecognizer:terminalViewTap];
-        
-    [self.view addSubview:self.taskView];
-    [self.view addSubview:self.terminalView];
+//    CGFloat halfHeight = (self.view.bounds.size.height - self.navigationController.navigationBar.bounds.size.height - self.tabBarController.tabBar.bounds.size.height) / 2;
+//
+//    self.taskView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, halfHeight)];
+//    self.taskView.backgroundColor = self.taskInfoViewColor;
+//    
+//    UIGestureRecognizer *taskViewTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(taskViewTap)];
+//    [self.taskView addGestureRecognizer:taskViewTap];
+//    
+//    self.terminalView = [[UIView alloc] initWithFrame:CGRectMake(0, halfHeight, self.view.bounds.size.width, halfHeight)];
+//    self.terminalView.backgroundColor = self.terminalInfoViewColor;
+//    
+//    UIGestureRecognizer *terminalViewTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(terminalViewTap)];
+//    [self.terminalView addGestureRecognizer:terminalViewTap];
+//        
+//    [self.view addSubview:self.taskView];
+//    [self.view addSubview:self.terminalView];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sessionStatusChanged:) name:@"sessionStatusChanged" object:self.session];
     
@@ -265,8 +265,8 @@
         
         [STTTLocationController sharedLC].session = [[STSessionManager sharedManager] currentSession];
         [[STTTLocationController sharedLC] getLocation];
-        [self showTaskInfo];
-        [self showTerminalInfo];
+//        [self showTaskInfo];
+//        [self showTerminalInfo];
 
     }
 

@@ -1,0 +1,291 @@
+//
+//  STTTMainTVC.m
+//  TerminalTracker
+//
+//  Created by Maxim Grigoriev on 7/22/13.
+//  Copyright (c) 2013 Maxim Grigoriev. All rights reserved.
+//
+
+#import "STTTMainTVC.h"
+#import <STManagedTracker/STSessionManager.h>
+#import "STTTLocationController.h"
+#import "STTTAgentTask+remainingTime.h"
+
+@interface STTTMainTVC ()
+
+@property (nonatomic, strong) STSession *session;
+
+
+@end
+
+@implementation STTTMainTVC
+
+- (STSession *)session {
+    return [[STSessionManager sharedManager] currentSession];
+}
+
+- (void)viewInit {
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sessionStatusChanged:) name:@"sessionStatusChanged" object:self.session];
+    
+    if ([self.session.status isEqualToString:@"running"]) {
+        [self sessionStatusChanged:nil];
+    }
+
+}
+
+- (void)sessionStatusChanged:(NSNotification *)notification {
+    
+    if ([self.session.status isEqualToString:@"running"]) {
+        
+        self.terminalController = [[STTTTerminalController alloc] init];
+        self.terminalController.session = self.session;
+        
+        self.taskController = [[STTTTaskController alloc] init];
+        self.taskController.session = self.session;
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(currentLocationUpdated:) name:@"currentLocationUpdated" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(taskControllerDidChangeContent:) name:@"taskControllerDidChangeContent" object:self.taskController];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(terminalControllerDidChangeContent:) name:@"terminalControllerDidChangeContent" object:self.terminalController];
+        
+        
+        [STTTLocationController sharedLC].session = [[STSessionManager sharedManager] currentSession];
+        [[STTTLocationController sharedLC] getLocation];
+        
+    }
+    
+}
+
+- (void)currentLocationUpdated:(NSNotification *)notification {
+    NSLog(@"currentLocation %@", notification.object);
+    [self.terminalController calculateDistance];
+    [self.tableView reloadData];
+}
+
+- (void)taskControllerDidChangeContent:(NSNotification *)notification {
+    [self.tableView reloadData];
+}
+
+- (void)terminalControllerDidChangeContent:(NSNotification *)notification {
+    [self.tableView reloadData];
+}
+
+
+#pragma mark - view lifecycle
+
+- (void) awakeFromNib {
+    self.title = @"Техники";
+}
+
+
+- (id)initWithStyle:(UITableViewStyle)style
+{
+    self = [super initWithStyle:style];
+    if (self) {
+        // Custom initialization
+    }
+    return self;
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    NSLog(@"viewWillAppear");
+    [[STTTLocationController sharedLC] getLocation];
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    [self viewInit];
+
+}
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - Table view data source
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    
+    return 2;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    
+    return 1;
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    
+    NSString *sectionTitle;
+    switch (section) {
+        case 0:
+            sectionTitle = @"Задачи";
+            break;
+        case 1:
+            sectionTitle = @"Терминалы";
+            break;
+        default:
+            break;
+    }
+    return sectionTitle;
+    
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    static NSString *CellIdentifier = @"mainViewCell";
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
+    
+    switch (indexPath.section) {
+        case 0:
+            [self configureTaskCell:cell];
+            break;
+        case 1:
+            [self configureTerminalCell:cell];
+            break;
+            
+        default:
+            break;
+    }
+    
+    return cell;
+}
+
+- (void)configureTaskCell:(UITableViewCell *)cell {
+    
+    NSArray *tasks = self.taskController.resultsController.fetchedObjects;
+    
+    if (tasks.count > 0) {
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    }
+//    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.visited == %@", [NSNumber numberWithInt:0]];
+    NSArray *unsolvedTasks = [tasks filteredArrayUsingPredicate:predicate];
+    NSUInteger numberOfUnsolvedTasks = unsolvedTasks.count;
+    cell.textLabel.text = [NSString stringWithFormat:@"Невыполненных: %d", numberOfUnsolvedTasks];
+    
+    NSString *subtitle = @"Всего: ";
+    cell.detailTextLabel.text = [subtitle stringByAppendingFormat:@"%d", tasks.count];
+    
+    int numberOfOverdueTasks = 0;
+    int numberOfCriticalTasks = 0;
+    int numberOfCautionTasks = 0;
+    int numberOfHurryTasks = 0;
+    for (STTTAgentTask *task in unsolvedTasks) {
+        NSTimeInterval remainingTime = [task remainingTime];
+        if (remainingTime <= 0) {
+            numberOfOverdueTasks += 1;
+        } else if (remainingTime > 0 && remainingTime < 60*60) {
+            numberOfCriticalTasks += 1;
+        } else if (remainingTime > 60*60 && remainingTime < 120*60) {
+            numberOfCautionTasks += 1;
+        } else if (remainingTime > 120*60 && remainingTime < 180*60) {
+            numberOfHurryTasks += 1;
+        }
+    }
+    
+    if (numberOfCautionTasks + numberOfCriticalTasks + numberOfHurryTasks + numberOfOverdueTasks + numberOfUnsolvedTasks > 0) {
+        
+        NSString *text;
+        UIColor *backgroundColor = [UIColor clearColor];
+        UIColor *textColor = [UIColor blackColor];
+        UIFont *font = [UIFont boldSystemFontOfSize:18];
+
+        if (numberOfOverdueTasks + numberOfCriticalTasks > 0) {
+            
+            text = [NSString stringWithFormat:@"%d/%d", numberOfOverdueTasks, numberOfCriticalTasks];
+            backgroundColor = [UIColor redColor];
+            textColor = [UIColor whiteColor];
+            
+        } else {
+            if (numberOfCautionTasks > 0) {
+                text = [NSString stringWithFormat:@"%d", numberOfCautionTasks];
+                backgroundColor = [UIColor yellowColor];
+                
+            } else {
+                if (numberOfHurryTasks > 0) {
+                    text = [NSString stringWithFormat:@"%d", numberOfHurryTasks];
+                    backgroundColor = [UIColor colorWithRed:0.56 green:0.93 blue:0.56 alpha:1];
+                }
+            }
+        }
+        
+        NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:
+                                    font, NSFontAttributeName,
+                                    backgroundColor, NSBackgroundColorAttributeName,
+                                    textColor, NSForegroundColorAttributeName,
+                                    nil];
+        [self addInfoLabelWithText:text andAttributes:attributes toCell:cell];
+
+    }
+    
+    
+    
+    
+
+}
+
+- (void)configureTerminalCell:(UITableViewCell *)cell {
+    
+    NSArray *terminals = self.terminalController.resultsController.fetchedObjects;
+    
+    if (terminals.count > 0) {
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        cell.textLabel.text = @"Ближайший:";
+        cell.detailTextLabel.text = [(STTTAgentTerminal *)[self.terminalController.resultsController.fetchedObjects objectAtIndex:0] address];
+
+        NSString *text = [NSString stringWithFormat:@"%d", terminals.count];
+        UIColor *backgroundColor = [UIColor clearColor];
+        UIColor *textColor = [UIColor blackColor];
+        UIFont *font = [UIFont boldSystemFontOfSize:18];
+        NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:
+                                    font, NSFontAttributeName,
+                                    backgroundColor, NSBackgroundColorAttributeName,
+                                    textColor, NSForegroundColorAttributeName,
+                                    nil];
+        [self addInfoLabelWithText:text andAttributes:attributes toCell:cell];
+
+    } else {
+        cell.textLabel.text = @"Нет данных";
+        cell.detailTextLabel.text = @"";
+    }
+    
+}
+
+- (void)addInfoLabelWithText:(NSString *)text andAttributes:(NSDictionary *)attributes toCell:(UITableViewCell *)cell {
+    
+    UIFont *font = [attributes objectForKey:NSFontAttributeName];;
+    
+    CGSize size = [text sizeWithFont:font];
+    //    NSLog(@"size w %f h %f", size.width, size.height);
+    
+    CGFloat paddingX = 0;
+    CGFloat paddingY = 0;
+    CGFloat marginX = 10;
+    
+    CGFloat x = cell.contentView.frame.size.width - size.width - 2 * paddingX - marginX;
+    CGFloat y = (cell.contentView.frame.size.height - size.height - 2 * paddingY) / 2;
+    //    NSLog(@"x, y, %f, %f", x, y);
+    
+    CGRect frame = CGRectMake(x, y, size.width + 2 * paddingX, size.height + 2 * paddingY);
+    
+    UILabel *infoLabel = [[UILabel alloc] initWithFrame:frame];
+    infoLabel.attributedText = [[NSAttributedString alloc] initWithString:text attributes:attributes];
+    infoLabel.tag = 666;
+    
+    [[cell.contentView viewWithTag:666] removeFromSuperview];
+    [cell.contentView addSubview:infoLabel];
+
+}
+
+#pragma mark - Table view delegate
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+
+}
+
+@end
