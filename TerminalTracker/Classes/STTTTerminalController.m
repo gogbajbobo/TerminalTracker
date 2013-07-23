@@ -169,8 +169,10 @@
     }
     
     NSString *code = terminal.code ? terminal.code : @"Н/Д";
+//    NSString *sysName = terminal.srcSystemName ? [NSString stringWithFormat:@" / %@", terminal.srcSystemName] : @"";
     NSString *breakName = lastTask.terminalBreakName ? [NSString stringWithFormat:@" / %@", lastTask.terminalBreakName] : @"";
     
+//    cell.textLabel.text = [NSString stringWithFormat:@"%@%@%@", code, sysName, breakName];
     cell.textLabel.text = [NSString stringWithFormat:@"%@%@", code, breakName];
     cell.detailTextLabel.text = terminal.address ? terminal.address : @"Нет данных";;
     

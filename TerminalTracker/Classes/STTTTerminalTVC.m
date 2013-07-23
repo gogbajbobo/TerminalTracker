@@ -7,6 +7,12 @@
 //
 
 #import "STTTTerminalTVC.h"
+#import <MapKit/MapKit.h>
+#import <QuartzCore/QuartzCore.h>
+#import <CoreLocation/CoreLocation.h>
+#import "STTTMapAnnotation.h"
+#import "STTTTerminalLocation.h"
+#import "STTTAgentTask+remainingTime.h"
 
 @interface STTTTerminalTVC ()
 
@@ -26,92 +32,209 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
- 
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
+
 
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 0;
+    
+    return 5;
+    
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 0;
+    
+    switch (section) {
+        case 0:
+            return 1;
+            break;
+        case 1:
+            return 1;
+            break;
+        case 2:
+            return 1;
+            break;
+        case 3:
+            return 1;
+            break;
+        case 4:
+            return self.terminal.tasks.count;
+            break;
+            
+        default:
+            return 0;
+            break;
+    }
+    
 }
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    
+    NSString *sectionTitle;
+    switch (section) {
+        case 0:
+            sectionTitle = nil;
+            break;
+        case 1:
+            sectionTitle = nil;
+            break;
+        case 2:
+            sectionTitle = nil;
+            break;
+        case 3:
+            sectionTitle = @"Комментарии:";
+            break;
+            
+        default:
+            break;
+    }
+    return sectionTitle;
+    
+}
+
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"Cell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
+    static NSString *cellIdentifier = @"terminalCell";
+    UITableViewCell *cell = [UITableViewCell alloc];
     
-    // Configure the cell...
+    switch (indexPath.section) {
+        case 0:
+            cell = [cell initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+            [self addMapToCell:cell];
+            break;
+        case 1:
+            cell = [cell initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellIdentifier];
+            [self addInfoToCell:cell];
+            break;
+        case 2:
+            cell = [cell initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+//            [self addButtonsToCell:cell];
+            break;
+        case 3:
+            cell = [cell initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+//            [self addCommentToCell:cell];
+            break;
+        case 4:
+            cell = [cell initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+            //            [self addCommentToCell:cell];
+            break;
+            
+        default:
+            cell = [cell initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+            break;
+    }
     
     return cell;
 }
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
+- (void)addInfoToCell:(UITableViewCell *)cell {
 
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
+    NSSortDescriptor *descriptor = [NSSortDescriptor sortDescriptorWithKey:@"doBefore" ascending:YES selector:@selector(compare:)];
+    NSArray *sortedTasks = [self.terminal.tasks sortedArrayUsingDescriptors:[NSArray arrayWithObject:descriptor]];
+    STTTAgentTask *lastTask;
+    if (sortedTasks.count > 0) {
+        lastTask = (STTTAgentTask *)[sortedTasks objectAtIndex:0];
+    }
 
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
+    NSString *code = self.terminal.code ? self.terminal.code : @"Н/Д";
+//    NSString *sysName = self.terminal.srcSystemName ? [NSString stringWithFormat:@" / %@", self.terminal.srcSystemName] : @"";
+    NSString *breakName = lastTask.terminalBreakName ? [NSString stringWithFormat:@" / %@", lastTask.terminalBreakName] : @"";
+    
+//    cell.textLabel.text = [NSString stringWithFormat:@"%@%@%@", code, sysName, breakName];
+    cell.textLabel.text = [NSString stringWithFormat:@"%@%@", code, breakName];
+    
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    NSTimeInterval timeInterval = [[NSDate date] timeIntervalSinceDate:self.terminal.lastActivityTime];
+    
+    if (timeInterval > 0 && timeInterval <= 24 * 3600) {
+        dateFormatter.dateStyle = NSDateFormatterNoStyle;
+        dateFormatter.timeStyle = NSDateFormatterShortStyle;
+    } else if (timeInterval <= 7 * 24 * 3600) {
+        dateFormatter.dateFormat = @"EEEE";
+    } else {
+        dateFormatter.dateStyle = NSDateFormatterShortStyle;
+        dateFormatter.timeStyle = NSDateFormatterNoStyle;
+    }
+    
+    cell.detailTextLabel.text = [dateFormatter stringFromDate:self.terminal.lastActivityTime];
 
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
 }
-*/
+
+- (void)addMapToCell:(UITableViewCell *)cell {
+
+    CLLocationCoordinate2D terminalCoordinate = CLLocationCoordinate2DMake([self.terminal.location.latitude doubleValue], [self.terminal.location.longitude doubleValue]);
+    MKCoordinateSpan span;
+    span.longitudeDelta = 0.01;
+    span.latitudeDelta = 0.01;
+    
+    MKMapView *mapView = [[MKMapView alloc] initWithFrame:CGRectMake(0, 0, 300, 158)];
+    [mapView setRegion:MKCoordinateRegionMake(terminalCoordinate, span)];
+    mapView.showsUserLocation = YES;
+    [mapView addAnnotation:[STTTMapAnnotation initWithCoordinate:terminalCoordinate]];
+    
+    mapView.layer.cornerRadius = 10.0;
+    
+    [cell.contentView addSubview:mapView];
+    
+}
+
 
 #pragma mark - Table view delegate
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Navigation logic may go here. Create and push another view controller.
-    /*
-     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-     [self.navigationController pushViewController:detailViewController animated:YES];
-     */
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    switch (indexPath.section) {
+        case 0:
+            return 160;
+            break;
+        case 1:
+            return 44;
+            break;
+        case 2:
+            return 44;
+            break;
+        case 3:
+            return 44;
+            break;
+            
+        default:
+            return 0;
+            break;
+    }
 }
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    switch (indexPath.section) {
+        case 0:
+            // show full map
+            break;
+        case 1:
+            // show terminal
+            break;
+        case 2:
+//            if (![self.task.visited boolValue]) {
+//                [self buttonsBehaviorInCell:[tableView cellForRowAtIndexPath:indexPath]];
+//            }
+            break;
+        case 3:
+//            [self performSegueWithIdentifier:@"showComment" sender:self.task];
+            break;
+            
+        default:
+            break;
+    }
+    
+}
+
 
 @end
