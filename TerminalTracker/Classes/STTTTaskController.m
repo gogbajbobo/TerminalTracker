@@ -55,21 +55,12 @@
 #pragma mark - NSFetchedResultsController delegate
 
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
-//    NSLog(@"controllerWillChangeContent");
-//    NSLog(@"controller.managedObjectContext.updatedObjects %@", controller.managedObjectContext.updatedObjects);
-//    NSLog(@"controller.managedObjectContext.insertedObjects %@", controller.managedObjectContext.insertedObjects);
-    [self.tableView beginUpdates];
-
+    NSLog(@"controllerWillChangeContent");
 }
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
-//    NSLog(@"controllerDidChangeContent");
-    [self.tableView endUpdates];
-//    [self.session.document saveDocument:^(BOOL success) {
-//        if (!success) {
-//            NSLog(@"save document fail");
-//        }
-//    }];
+    NSLog(@"controllerDidChangeContent");
+    [self.tableView reloadData];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"taskControllerDidChangeContent" object:self];
 }
 

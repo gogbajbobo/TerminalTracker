@@ -10,7 +10,7 @@
 #import "STTTTerminalLocation.h"
 #import "STTTAgentTask+remainingTime.h"
 #import <STManagedTracker/STSessionManager.h>
-#import "STTTTaskVC.h"
+//#import "STTTTaskVC.h"
 #import "STTTMapAnnotation.h"
 
 @interface STTTTerminalVC () <UITableViewDataSource, UITableViewDelegate>
@@ -115,10 +115,10 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     
     if ([segue.identifier isEqualToString:@"goToTask"]) {
-        if ([segue.destinationViewController isKindOfClass:[STTTTaskVC class]] && [sender isKindOfClass:[STTTAgentTask class]]) {
-            [(STTTTaskVC *)segue.destinationViewController setTask:(STTTAgentTask *)sender];
-            [(STTTTaskVC *)segue.destinationViewController setBackgroundColors:self.backgroundColors];
-        }
+//        if ([segue.destinationViewController isKindOfClass:[STTTTaskVC class]] && [sender isKindOfClass:[STTTAgentTask class]]) {
+//            [(STTTTaskVC *)segue.destinationViewController setTask:(STTTAgentTask *)sender];
+//            [(STTTTaskVC *)segue.destinationViewController setBackgroundColors:self.backgroundColors];
+//        }
     }
     
 }

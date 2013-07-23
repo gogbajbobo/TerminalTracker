@@ -11,7 +11,7 @@
 #import "STTTAgentTask+remainingTime.h"
 #import "STTTAgentTerminal.h"
 #import "STTTTerminalVC.h"
-#import "STTTTaskVC.h"
+//#import "STTTTaskVC.h"
 
 @interface STTTMainVC () <UITableViewDelegate>
 
@@ -310,10 +310,10 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     
     if ([segue.identifier isEqualToString:@"showTask"]) {
-        if ([segue.destinationViewController isKindOfClass:[STTTTaskVC class]] && [sender isKindOfClass:[STTTAgentTask class]]) {
-            [(STTTTaskVC *)segue.destinationViewController setTask:(STTTAgentTask *)sender];
-            [(STTTTaskVC *)segue.destinationViewController setBackgroundColors:self.backgroundColors];
-        }
+//        if ([segue.destinationViewController isKindOfClass:[STTTTaskVC class]] && [sender isKindOfClass:[STTTAgentTask class]]) {
+//            [(STTTTaskVC *)segue.destinationViewController setTask:(STTTAgentTask *)sender];
+//            [(STTTTaskVC *)segue.destinationViewController setBackgroundColors:self.backgroundColors];
+//        }
     } else if ([segue.identifier isEqualToString:@"showTerminal"]) {
         if ([segue.destinationViewController isKindOfClass:[STTTTerminalVC class]] && [sender isKindOfClass:[STTTAgentTerminal class]]) {
             [(STTTTerminalVC *)segue.destinationViewController setTerminal:(STTTAgentTerminal *)sender];

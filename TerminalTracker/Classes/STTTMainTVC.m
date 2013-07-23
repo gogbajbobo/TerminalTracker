@@ -302,6 +302,7 @@
             if ([sender isKindOfClass:[NSIndexPath class]]) {
                 if ([(NSIndexPath *)sender section] == 0) {
                     infoTVC.tableView.dataSource = self.taskController;
+                    self.taskController.tableView = infoTVC.tableView;
                     infoTVC.title = @"Задачи";
                 } else if ([(NSIndexPath *)sender section] == 1) {
                     infoTVC.tableView.dataSource = self.terminalController;

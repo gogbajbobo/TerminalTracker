@@ -38,6 +38,7 @@
     
     if ([change valueForKey:NSKeyValueChangeNewKey] != [change valueForKey:NSKeyValueChangeOldKey]) {
         if ([keyPath isEqualToString:@"commentText"]) {
+            [self saveDocument];
             [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[self.tableView indexPathForCell:self.commentsCell]] withRowAnimation:UITableViewRowAnimationAutomatic];
 
         }
@@ -366,12 +367,7 @@
         taskLocation.longitude = [NSNumber numberWithDouble:self.location.coordinate.longitude];
         self.task.visitLocation = taskLocation;
         self.task.visited = [NSNumber numberWithBool:YES];
-        
-        [[[STSessionManager sharedManager] currentSession].document saveDocument:^(BOOL success) {
-            if (!success) {
-                NSLog(@"save task fail");
-            }
-        }];
+        [self saveDocument];
     } else {
         NSLog(@"No task location");
     }
@@ -390,6 +386,14 @@
 //        }
     }
     
+}
+
+- (void)saveDocument {
+    [[[STSessionManager sharedManager] currentSession].document saveDocument:^(BOOL success) {
+        if (!success) {
+            NSLog(@"save task fail");
+        }
+    }];
 }
 
 @end

@@ -21,7 +21,7 @@
     if ([[self.backgroundColors valueForKey:@"task"] isKindOfClass:[UIColor class]]) {
         self.view.backgroundColor = [self.backgroundColors valueForKey:@"task"];
     } else {
-        self.view.backgroundColor = [UIColor grayColor];
+        self.view.backgroundColor = [UIColor lightGrayColor];
     }
     self.commentView.text = self.task.commentText;
     if ([self.task.visited boolValue]) {
