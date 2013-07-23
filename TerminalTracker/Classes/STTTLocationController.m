@@ -48,7 +48,7 @@
         [[NSNotificationCenter defaultCenter] postNotificationName:@"currentLocationUpdated" object:self.currentLocation];
     } else {
         [self.locationManager startUpdatingLocation];
-        NSLog(@"startUpdatingLocation");
+//        NSLog(@"startUpdatingLocation");
     }
 }
 
@@ -98,7 +98,7 @@
         newLocation.horizontalAccuracy <= self.requiredAccuracy) {
             self.currentLocation = newLocation;
             [self.locationManager stopUpdatingLocation];
-            NSLog(@"stopUpdatingLocation");
+//            NSLog(@"stopUpdatingLocation");
             self.locationManager = nil;
             [[NSNotificationCenter defaultCenter] postNotificationName:@"currentLocationUpdated" object:self.currentLocation];
     }
