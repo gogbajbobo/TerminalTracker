@@ -45,7 +45,7 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     
-    return 5;
+    return 3;
     
 }
 
@@ -57,15 +57,9 @@
             return 1;
             break;
         case 1:
-            return 1;
+            return 3;
             break;
         case 2:
-            return 1;
-            break;
-        case 3:
-            return 1;
-            break;
-        case 4:
             return self.terminal.tasks.count;
             break;
             
@@ -78,19 +72,16 @@
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     
-    NSString *sectionTitle;
+    NSString *sectionTitle = nil;
     switch (section) {
         case 0:
-            sectionTitle = nil;
             break;
         case 1:
-            sectionTitle = nil;
             break;
         case 2:
-            sectionTitle = nil;
-            break;
-        case 3:
-            sectionTitle = @"Комментарии:";
+            if (self.terminal.tasks.count > 0) {
+                sectionTitle = @"Список задач:";
+            }
             break;
             
         default:
@@ -112,21 +103,28 @@
             [self addMapToCell:cell];
             break;
         case 1:
-            cell = [cell initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellIdentifier];
-            [self addInfoToCell:cell];
+            switch (indexPath.row) {
+                case 0:
+                    cell = [cell initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellIdentifier];
+                    [self addInfoToCell:cell];
+                    break;
+                case 1:
+                    cell = [cell initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+                    [self addAddressToCell:cell];
+                    break;
+                case 2:
+                    cell = [cell initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+                    [self addErrorTextToCell:cell];
+                    break;
+                    
+                default:
+                    break;
+            }
             break;
         case 2:
             cell = [cell initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
 //            [self addButtonsToCell:cell];
-            break;
-        case 3:
-            cell = [cell initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-//            [self addCommentToCell:cell];
-            break;
-        case 4:
-            cell = [cell initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-            //            [self addCommentToCell:cell];
             break;
             
         default:
@@ -135,6 +133,24 @@
     }
     
     return cell;
+}
+
+- (void)addErrorTextToCell:(UITableViewCell *)cell {
+    
+    cell.textLabel.text = self.terminal.errorText;
+    cell.textLabel.font = [UIFont systemFontOfSize:12];
+    cell.textLabel.numberOfLines = 3;
+    cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
+    
+}
+    
+- (void)addAddressToCell:(UITableViewCell *)cell {
+
+    cell.textLabel.text = self.terminal.address;
+    cell.textLabel.font = [UIFont systemFontOfSize:14];
+    cell.textLabel.numberOfLines = 2;
+    cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
+    
 }
 
 - (void)addInfoToCell:(UITableViewCell *)cell {
@@ -184,6 +200,8 @@
     
     mapView.layer.cornerRadius = 10.0;
     
+    mapView.userInteractionEnabled = NO;
+    
     [cell.contentView addSubview:mapView];
     
 }
@@ -197,12 +215,17 @@
             return 160;
             break;
         case 1:
-            return 44;
+            switch (indexPath.row) {
+                case 2:
+                    return 66;
+                    break;
+                
+                default:
+                    return 44;
+                    break;
+            }
             break;
         case 2:
-            return 44;
-            break;
-        case 3:
             return 44;
             break;
             
