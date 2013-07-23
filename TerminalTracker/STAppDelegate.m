@@ -30,12 +30,13 @@
     
     
     NSDictionary *sessionSettings = [NSDictionary dictionaryWithObjectsAndKeys:
-                                     @"10", @"desiredAccuracy",
-                                     @"10", @"requiredAccuracy",
+                                     @"100", @"desiredAccuracy",
+                                     @"100", @"requiredAccuracy",
                                      @"-1", @"distanceFilter",
-                                     @"0.0", @"timeFilter",
-                                     @"10", @"fetchLimit",
+                                     @"300.0", @"timeFilter",
+                                     @"50", @"fetchLimit",
                                      @"STTTDataModel", @"dataModelName",
+                                     @"https://system.unact.ru/iproxy/testdata/megaport", @"recieveDataServerURI",
                                      nil];
     
     NSDictionary *controllers = [NSDictionary dictionaryWithObjectsAndKeys:

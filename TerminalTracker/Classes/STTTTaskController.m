@@ -157,7 +157,6 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *cellIdentifier = @"taskCell";
-    //    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
     UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
     
@@ -166,12 +165,46 @@
     
 //    NSLog(@"task.visited %@", task.visited);
     
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    dateFormatter.dateStyle = NSDateFormatterMediumStyle;
-    dateFormatter.timeStyle = NSDateFormatterShortStyle;
+    cell.textLabel.text = task.terminalBreakName;
+    cell.detailTextLabel.text = task.terminal.address;
     
-    cell.textLabel.text = [NSString stringWithFormat:@"%@", [dateFormatter stringFromDate:task.doBefore]];
-    cell.detailTextLabel.text = task.terminalBreakName;
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    NSString *infoText;
+    NSTimeInterval timeInterval = [[NSDate date] timeIntervalSinceDate:task.doBefore];
+    
+    if (timeInterval > 0 && timeInterval <= 24 * 3600) {
+        dateFormatter.dateStyle = NSDateFormatterNoStyle;
+        dateFormatter.timeStyle = NSDateFormatterShortStyle;
+    } else if (timeInterval <= 7 * 24 * 3600) {
+        dateFormatter.dateFormat = @"EEEE";
+    } else {
+        dateFormatter.dateStyle = NSDateFormatterShortStyle;
+        dateFormatter.timeStyle = NSDateFormatterNoStyle;
+    }
+    
+    infoText = [dateFormatter stringFromDate:task.doBefore];
+
+    UIFont *font = [UIFont systemFontOfSize:16];
+    CGSize size = [infoText sizeWithFont:font];
+    
+    CGFloat paddingX = 0;
+    CGFloat paddingY = 0;
+    CGFloat marginX = 10;
+    
+    CGFloat x = cell.contentView.frame.size.width - size.width - 2 * paddingX - marginX;
+    CGFloat y = cell.textLabel.bounds.origin.y;
+    
+    CGRect frame = CGRectMake(x, y, size.width + 2 * paddingX, size.height + 2 * paddingY);
+    
+    UILabel *infoLabel = [[UILabel alloc] initWithFrame:frame];
+    infoLabel.text = infoText;
+    infoLabel.font = font;
+    infoLabel.textColor = [UIColor blueColor];
+    infoLabel.tag = 666;
+    
+    [[cell.contentView viewWithTag:666] removeFromSuperview];
+    [cell.contentView addSubview:infoLabel];
+
     
     NSTimeInterval remainingTime = [task remainingTime];
     UIColor *backgroundColor = cell.contentView.backgroundColor;

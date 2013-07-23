@@ -208,6 +208,7 @@
         } else {
             id objectsArray = [(NSDictionary *)responseJSON valueForKey:@"data"];
             if ([objectsArray isKindOfClass:[NSArray class]]) {
+                NSLog(@"recieve %d objects", [(NSArray *)objectsArray count]);
                 for (id object in (NSArray *)objectsArray) {
                     
                     if (![object isKindOfClass:[NSDictionary class]]) {
@@ -241,7 +242,7 @@
                         NSString *pageSize = [(NSDictionary *)responseJSON valueForKey:@"pageSize"];
                         //                    NSLog(@"pageRowCount %@", pageRowCount);
                         if ([pageRowCount intValue] < [pageSize intValue]) {
-                            NSLog(@"All data recieved");
+                            NSLog(@"All recieved data were stored");
                         } else {
                             self.syncing = YES;
                             [self sendData:nil toServer:self.recieveDataServerURI withParameters:self.requestParameters];
@@ -373,7 +374,7 @@
     }
     
     //        NSLog(@"terminal %@", terminal);
-    NSLog(@"get terminal.xid %@", terminal.xid);
+//    NSLog(@"get terminal.xid %@", terminal.xid);
 
 }
 
@@ -399,7 +400,7 @@
     task.terminal = terminal;
     
     //        NSLog(@"task %@", task);
-    NSLog(@"get task.xid %@", task.xid);
+//    NSLog(@"get task.xid %@", task.xid);
 
 }
 

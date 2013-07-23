@@ -98,6 +98,36 @@
             </objects>
             <point key="canvasLocation" x="1404" y="-60"/>
         </scene>
+        <!--TaskTVC-->
+        <scene sceneID="nNH-xf-2ya">
+            <objects>
+                <tableViewController id="cWX-EC-Fri" customClass="STTTTaskTVC" sceneMemberID="viewController">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="singleLineEtched" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="ym0-b2-EX7">
+                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="taskCell" id="EMI-NZ-WwI">
+                                <rect key="frame" x="0.0" y="46" width="320" height="46"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                    <rect key="frame" x="10" y="1" width="300" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                </view>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="cWX-EC-Fri" id="kj0-vF-h7W"/>
+                            <outlet property="delegate" destination="cWX-EC-Fri" id="xEY-Xj-fAg"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" id="OUq-hn-Sq9"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="wXe-Et-g8M" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1404" y="-653"/>
+        </scene>
         <!--TaskVC - Задание-->
         <scene sceneID="LTE-E4-MHw">
             <objects>
@@ -210,18 +240,18 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QvN-ai-QP3" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1404" y="-648"/>
+            <point key="canvasLocation" x="1969" y="-653"/>
         </scene>
         <!--CommentVC - Комментарий-->
         <scene sceneID="B6U-gb-03u">
             <objects>
                 <viewController id="1ry-OM-6W5" customClass="STTTCommentVC" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="kiQ-xv-r5k">
-                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
+                        <rect key="frame" x="0.0" y="20" width="320" height="460"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="ueh-ae-iEB">
-                                <rect key="frame" x="20" y="20" width="280" height="140"/>
+                                <rect key="frame" x="20" y="20" width="280" height="184"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</string>
@@ -238,7 +268,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8Eg-Eq-Mwq" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1876" y="-648"/>
+            <point key="canvasLocation" x="2498" y="-653"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="ial-rb-FU0">
@@ -334,7 +364,7 @@
                     <navigationItem key="navigationItem" id="OKh-bE-Pya"/>
                     <connections>
                         <segue destination="5n0-xk-O7K" kind="push" identifier="showTerminal" id="s9B-Bn-wKF"/>
-                        <segue destination="8pr-0U-HYf" kind="push" identifier="showTask" id="UoX-1c-JAT"/>
+                        <segue destination="cWX-EC-Fri" kind="push" identifier="showTask" id="ERa-2b-qyt"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="H7U-tP-r0e" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -342,52 +372,12 @@
             <point key="canvasLocation" x="957" y="-60"/>
         </scene>
     </scenes>
-    <classes>
-        <class className="STTTCommentVC" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/STTTCommentVC.h"/>
-            <relationships>
-                <relationship kind="outlet" name="commentView" candidateClass="UITextView"/>
-            </relationships>
-        </class>
-        <class className="STTTInfoTVC" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/STTTInfoTVC.h"/>
-        </class>
-        <class className="STTTMainTVC" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/STTTMainTVC.h"/>
-        </class>
-        <class className="STTTTaskVC" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/STTTTaskVC.h"/>
-            <relationships>
-                <relationship kind="outlet" name="addressLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="commentButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="doBeforeLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="geoLocationButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="mapView" candidateClass="MKMapView"/>
-                <relationship kind="outlet" name="terminalBreakNameLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="terminalButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="visitedButton" candidateClass="UIButton"/>
-            </relationships>
-        </class>
-        <class className="STTTTerminalVC" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/STTTTerminalVC.h"/>
-            <relationships>
-                <relationship kind="outlet" name="addressLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="codeLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="errorTextView" candidateClass="UITextView"/>
-                <relationship kind="outlet" name="lastActivityTimeLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="mapView" candidateClass="MKMapView"/>
-                <relationship kind="outlet" name="srcSystemNameLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="tableView" candidateClass="UITableView"/>
-            </relationships>
-        </class>
-    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="s9B-Bn-wKF"/>
-        <segue reference="UoX-1c-JAT"/>
+        <segue reference="Tha-MB-waM"/>
     </inferredMetricsTieBreakers>
 </document>

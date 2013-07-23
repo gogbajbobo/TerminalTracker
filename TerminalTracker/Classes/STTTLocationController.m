@@ -15,6 +15,7 @@
 @property (nonatomic) double requiredAccuracy;
 @property (nonatomic) CLLocationDistance distanceFilter;
 @property (nonatomic, strong) NSMutableDictionary *settings;
+@property (nonatomic) NSTimeInterval timeFilter;
 
 
 @end
@@ -32,18 +33,24 @@
 }
 
 //- (CLLocation *)currentLocation {
-//    return [[CLLocation alloc] initWithLatitude:55.806292 longitude:38.946073];
+//    NSLog(@"_currentLocation %@", _currentLocation);
+//    return _currentLocation;
 //}
-
-
-- (void)getLocation {
-    [self.locationManager startUpdatingLocation];
-//    NSLog(@"startUpdatingLocation");
-}
-
 //- (CLLocation *)currentLocation {
 //    return [[CLLocation alloc] initWithLatitude:55.732829 longitude:38.951328];
 //}
+
+
+
+- (void)getLocation {
+    if ([[NSDate date] timeIntervalSinceDate:self.currentLocation.timestamp] < self.timeFilter) {
+        NSLog(@"timeFilterLocation");
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"currentLocationUpdated" object:self.currentLocation];
+    } else {
+        [self.locationManager startUpdatingLocation];
+        NSLog(@"startUpdatingLocation");
+    }
+}
 
 - (NSMutableDictionary *)settings {
     return [self.session.settingsController currentSettingsForGroup:@"location"];
@@ -62,6 +69,10 @@
     return [[self.settings valueForKey:@"distanceFilter"] doubleValue];
 }
 
+- (NSTimeInterval)timeFilter {
+    return [[self.settings valueForKey:@"timeFilter"] doubleValue];
+}
+
 - (CLLocationManager *)locationManager {
     if (!_locationManager) {
         _locationManager = [[CLLocationManager alloc] init];
@@ -70,6 +81,8 @@
         _locationManager.desiredAccuracy = self.desiredAccuracy;
         self.locationManager.pausesLocationUpdatesAutomatically = NO;
     }
+//    NSLog(@"distanceFilter %f", _locationManager.distanceFilter);
+//    NSLog(@"desiredAccuracy %f", _locationManager.desiredAccuracy);
     return _locationManager;
 }
 
@@ -77,12 +90,13 @@
     
     CLLocation *newLocation = [locations lastObject];
     NSTimeInterval locationAge = -[newLocation.timestamp timeIntervalSinceNow];
+//    NSLog(@"newLocation %@", newLocation);
     if (locationAge < 5.0 &&
         newLocation.horizontalAccuracy > 0 &&
         newLocation.horizontalAccuracy <= self.requiredAccuracy) {
             self.currentLocation = newLocation;
             [self.locationManager stopUpdatingLocation];
-//            NSLog(@"stopUpdatingLocation");
+            NSLog(@"stopUpdatingLocation");
             self.locationManager = nil;
             [[NSNotificationCenter defaultCenter] postNotificationName:@"currentLocationUpdated" object:self.currentLocation];
     }

@@ -53,6 +53,8 @@
         [STTTLocationController sharedLC].session = [[STSessionManager sharedManager] currentSession];
         [[STTTLocationController sharedLC] getLocation];
         
+        [self.tableView reloadData];
+        
     }
     
 }
@@ -90,7 +92,9 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     NSLog(@"viewWillAppear");
-    [[STTTLocationController sharedLC] getLocation];
+    if ([self.session.status isEqualToString:@"running"]) {
+        [[STTTLocationController sharedLC] getLocation];
+    }
 }
 
 - (void)viewDidLoad
@@ -160,7 +164,7 @@
     NSArray *tasks = self.taskController.resultsController.fetchedObjects;
     
     if (tasks.count > 0) {
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+//        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
 //    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
@@ -235,7 +239,7 @@
     NSArray *terminals = self.terminalController.resultsController.fetchedObjects;
     
     if (terminals.count > 0) {
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+//        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         cell.textLabel.text = @"Ближайший:";
         cell.detailTextLabel.text = [(STTTAgentTerminal *)[self.terminalController.resultsController.fetchedObjects objectAtIndex:0] address];
 
@@ -259,7 +263,7 @@
 
 - (void)addInfoLabelWithText:(NSString *)text andAttributes:(NSDictionary *)attributes toCell:(UITableViewCell *)cell {
     
-    UIFont *font = [attributes objectForKey:NSFontAttributeName];;
+    UIFont *font = [attributes objectForKey:NSFontAttributeName];
     
     CGSize size = [text sizeWithFont:font];
     //    NSLog(@"size w %f h %f", size.width, size.height);

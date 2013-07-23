@@ -46,6 +46,8 @@
 		2CE326A4176F2F3E00BAA1D4 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE326A3176F2F3E00BAA1D4 /* MapKit.framework */; };
 		2CE7E4B5179D31B000113A6A /* STTTMainTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CE7E4B4179D31B000113A6A /* STTTMainTVC.m */; };
 		2CE7E4BA179D5CE300113A6A /* STTTInfoTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CE7E4B9179D5CE300113A6A /* STTTInfoTVC.m */; };
+		2CE7E4C1179D658100113A6A /* STTTTaskTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CE7E4C0179D658100113A6A /* STTTTaskTVC.m */; };
+		2CE7E4C4179D659700113A6A /* STTTTerminalTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CE7E4C3179D659700113A6A /* STTTTerminalTVC.m */; };
 		9E0575B8127B4EE5B37A6DF5 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F26E7DA269E4C8AB402C081 /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -123,6 +125,10 @@
 		2CE7E4B4179D31B000113A6A /* STTTMainTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTMainTVC.m; sourceTree = "<group>"; };
 		2CE7E4B8179D5CE300113A6A /* STTTInfoTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTInfoTVC.h; sourceTree = "<group>"; };
 		2CE7E4B9179D5CE300113A6A /* STTTInfoTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTInfoTVC.m; sourceTree = "<group>"; };
+		2CE7E4BF179D658100113A6A /* STTTTaskTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTTaskTVC.h; sourceTree = "<group>"; };
+		2CE7E4C0179D658100113A6A /* STTTTaskTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTTaskTVC.m; sourceTree = "<group>"; };
+		2CE7E4C2179D659700113A6A /* STTTTerminalTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTTerminalTVC.h; sourceTree = "<group>"; };
+		2CE7E4C3179D659700113A6A /* STTTTerminalTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTTerminalTVC.m; sourceTree = "<group>"; };
 		3F26E7DA269E4C8AB402C081 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD3C601463AF4A6E80FEF924 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -240,10 +246,14 @@
 		2CE32698176F2BB600BAA1D4 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				2CE7E4B8179D5CE300113A6A /* STTTInfoTVC.h */,
-				2CE7E4B9179D5CE300113A6A /* STTTInfoTVC.m */,
 				2CE7E4B3179D31B000113A6A /* STTTMainTVC.h */,
 				2CE7E4B4179D31B000113A6A /* STTTMainTVC.m */,
+				2CE7E4B8179D5CE300113A6A /* STTTInfoTVC.h */,
+				2CE7E4B9179D5CE300113A6A /* STTTInfoTVC.m */,
+				2CE7E4BF179D658100113A6A /* STTTTaskTVC.h */,
+				2CE7E4C0179D658100113A6A /* STTTTaskTVC.m */,
+				2CE7E4C2179D659700113A6A /* STTTTerminalTVC.h */,
+				2CE7E4C3179D659700113A6A /* STTTTerminalTVC.m */,
 				2C93A563177D79790014001B /* STTTTaskController.h */,
 				2C93A564177D79790014001B /* STTTTaskController.m */,
 				2C93A560177D795E0014001B /* STTTTerminalController.h */,
@@ -454,6 +464,8 @@
 				2C93A5CD1789B6180014001B /* STTTAgentTask.m in Sources */,
 				2CE7E4B5179D31B000113A6A /* STTTMainTVC.m in Sources */,
 				2CE7E4BA179D5CE300113A6A /* STTTInfoTVC.m in Sources */,
+				2CE7E4C1179D658100113A6A /* STTTTaskTVC.m in Sources */,
+				2CE7E4C4179D659700113A6A /* STTTTerminalTVC.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

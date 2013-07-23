@@ -9,8 +9,8 @@
 #import "STTTInfoTVC.h"
 #import "STTTTaskController.h"
 #import "STTTTerminalController.h"
-#import "STTTTaskVC.h"
-#import "STTTTerminalVC.h"
+#import "STTTTaskTVC.h"
+#import "STTTTerminalTVC.h"
 
 @interface STTTInfoTVC ()
 
@@ -31,6 +31,12 @@
 {
     [super viewDidLoad];
     
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    if ([self.tableView.dataSource isKindOfClass:[STTTTerminalController class]]) {
+        [(STTTTerminalController *)self.tableView.dataSource calculateDistance];
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -63,13 +69,13 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     
     if ([segue.identifier isEqualToString:@"showTask"]) {
-        if ([segue.destinationViewController isKindOfClass:[STTTTaskVC class]] && [sender isKindOfClass:[STTTAgentTask class]]) {
-            [(STTTTaskVC *)segue.destinationViewController setTask:(STTTAgentTask *)sender];
+        if ([segue.destinationViewController isKindOfClass:[STTTTaskTVC class]] && [sender isKindOfClass:[STTTAgentTask class]]) {
+            [(STTTTaskTVC *)segue.destinationViewController setTask:(STTTAgentTask *)sender];
 //            [(STTTTaskVC *)segue.destinationViewController setBackgroundColors:self.backgroundColors];
         }
     } else if ([segue.identifier isEqualToString:@"showTerminal"]) {
-        if ([segue.destinationViewController isKindOfClass:[STTTTerminalVC class]] && [sender isKindOfClass:[STTTAgentTerminal class]]) {
-            [(STTTTerminalVC *)segue.destinationViewController setTerminal:(STTTAgentTerminal *)sender];
+        if ([segue.destinationViewController isKindOfClass:[STTTTerminalTVC class]] && [sender isKindOfClass:[STTTAgentTerminal class]]) {
+            [(STTTTerminalTVC *)segue.destinationViewController setTerminal:(STTTAgentTerminal *)sender];
 //            [(STTTTerminalVC *)segue.destinationViewController setBackgroundColors:self.backgroundColors];
         }
     }
