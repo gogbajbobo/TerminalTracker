@@ -15,16 +15,37 @@
 #import "STTTMapAnnotation.h"
 #import "STTTLocationController.h"
 #import "STTTTaskLocation.h"
+#import "STTTCommentVC.h"
 
 @interface STTTTaskTVC ()
 
 @property (nonatomic) BOOL waitingLocation;
 @property (nonatomic, strong) UITableViewCell *buttonsCell;
+@property (nonatomic, strong) UITableViewCell *commentsCell;
 @property (nonatomic, strong) CLLocation *location;
 
 @end
 
 @implementation STTTTaskTVC
+
+- (void)viewInit {
+    self.title = @"Задача";
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(currentLocationUpdated:) name:@"currentLocationUpdated" object:nil];
+    [self.task addObserver:self forKeyPath:@"commentText" options:(NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld) context:nil];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    
+    if ([change valueForKey:NSKeyValueChangeNewKey] != [change valueForKey:NSKeyValueChangeOldKey]) {
+        if ([keyPath isEqualToString:@"commentText"]) {
+            [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[self.tableView indexPathForCell:self.commentsCell]] withRowAnimation:UITableViewRowAnimationAutomatic];
+
+        }
+    }
+    
+}
+
+#pragma mark - view lifecycle
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -38,8 +59,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.title = @"Задача";
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(currentLocationUpdated:) name:@"currentLocationUpdated" object:nil];
+    [self viewInit];
 }
 
 - (void)didReceiveMemoryWarning
@@ -94,7 +114,7 @@
             sectionTitle = nil;
             break;
         case 3:
-            sectionTitle = @"Терминалы";
+            sectionTitle = @"Комментарии:";
             break;
 
         default:
@@ -124,6 +144,10 @@
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
             [self addButtonsToCell:cell];
             break;
+        case 3:
+            cell = [cell initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+            [self addCommentToCell:cell];
+            break;
             
         default:
             cell = [cell initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
@@ -131,6 +155,20 @@
     }
     
     return cell;
+}
+
+- (void)addCommentToCell:(UITableViewCell *)cell {
+    if (self.task.commentText) {
+        cell.textLabel.text = self.task.commentText;
+        cell.textLabel.font = [UIFont systemFontOfSize:16];
+    } else {
+        cell.textLabel.text = @"Добавить комментарий";
+        cell.textLabel.textColor = [UIColor blueColor];
+        cell.textLabel.textAlignment = NSTextAlignmentCenter;
+    }
+    
+    self.commentsCell = cell;
+    
 }
 
 - (void)addButtonsToCell:(UITableViewCell *)cell {
@@ -258,6 +296,9 @@
         case 2:
             return 44;
             break;
+        case 3:
+            return 44;
+            break;
             
         default:
             return 0;
@@ -278,6 +319,9 @@
             if (![self.task.visited boolValue]) {
                 [self buttonsBehaviorInCell:[tableView cellForRowAtIndexPath:indexPath]];
             }
+            break;
+        case 3:
+            [self performSegueWithIdentifier:@"showComment" sender:self.task];
             break;
             
         default:
@@ -333,5 +377,19 @@
     }
 }
 
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    
+    if ([segue.identifier isEqualToString:@"showComment"]) {
+        if ([segue.destinationViewController isKindOfClass:[STTTCommentVC class]] && [sender isKindOfClass:[STTTAgentTask class]]) {
+            [(STTTCommentVC *)segue.destinationViewController setTask:(STTTAgentTask *)sender];
+        }
+//    } else if ([segue.identifier isEqualToString:@"goToTerminal"]) {
+//        if ([segue.destinationViewController isKindOfClass:[STTTTerminalVC class]] && [sender isKindOfClass:[STTTAgentTerminal class]]) {
+//            [(STTTTerminalVC *)segue.destinationViewController setTerminal:(STTTAgentTerminal *)sender];
+//            [(STTTTerminalVC *)segue.destinationViewController setBackgroundColors:self.backgroundColors];
+//        }
+    }
+    
+}
 
 @end

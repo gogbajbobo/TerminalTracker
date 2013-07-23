@@ -91,12 +91,11 @@
                         <outlet property="mapView" destination="n2p-P5-z0Y" id="bHC-cm-MQO"/>
                         <outlet property="srcSystemNameLabel" destination="6Yz-gi-a8j" id="bkr-Ea-K9R"/>
                         <outlet property="tableView" destination="wTz-1P-kUw" id="kB9-HN-1FY"/>
-                        <segue destination="8pr-0U-HYf" kind="push" identifier="goToTask" id="K5e-gh-5DM"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Cp2-Ve-mpj" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1404" y="-60"/>
+            <point key="canvasLocation" x="1802" y="-60"/>
         </scene>
         <!--TaskTVC-->
         <scene sceneID="nNH-xf-2ya">
@@ -123,135 +122,24 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" id="OUq-hn-Sq9"/>
+                    <connections>
+                        <segue destination="1ry-OM-6W5" kind="push" identifier="showComment" id="zTa-5j-RHt"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wXe-Et-g8M" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1404" y="-653"/>
-        </scene>
-        <!--TaskVC - Задание-->
-        <scene sceneID="LTE-E4-MHw">
-            <objects>
-                <viewController id="8pr-0U-HYf" customClass="STTTTaskVC" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="uxO-Ub-U7J">
-                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <subviews>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" id="D3s-1d-5me">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="160"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                            </mapView>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Terminal break name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Qnf-3I-VCQ">
-                                <rect key="frame" x="20" y="168" width="280" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Do before" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Yjv-0d-F3g">
-                                <rect key="frame" x="20" y="226" width="280" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Address" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="YI0-VZ-8I8">
-                                <rect key="frame" x="20" y="197" width="280" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="fxD-GX-9ag">
-                                <rect key="frame" x="20" y="306" width="130" height="44"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <state key="normal" title="Геометка">
-                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <state key="highlighted">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="geoLocationButtonPressed:" destination="8pr-0U-HYf" eventType="touchUpInside" id="tZw-SK-d4x"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="0wo-ba-spW">
-                                <rect key="frame" x="170" y="306" width="130" height="44"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <state key="normal" title="Выполнено">
-                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <state key="highlighted">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="visitedButtonPressed:" destination="8pr-0U-HYf" eventType="touchUpInside" id="mkR-vl-NvS"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="kqX-Nt-Re4">
-                                <rect key="frame" x="20" y="255" width="130" height="44"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <state key="normal" title="Терминал">
-                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <state key="highlighted">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="terminalButtonPressed:" destination="8pr-0U-HYf" eventType="touchUpInside" id="wwG-nH-9oQ"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="jZP-3a-tVq">
-                                <rect key="frame" x="170" y="255" width="130" height="44"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <state key="normal" title="Комментарий">
-                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <state key="highlighted">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="commentButtonPressed:" destination="8pr-0U-HYf" eventType="touchUpInside" id="joq-99-5LA"/>
-                                </connections>
-                            </button>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                    </view>
-                    <navigationItem key="navigationItem" title="Задание" id="rn6-gf-lC2"/>
-                    <connections>
-                        <outlet property="addressLabel" destination="YI0-VZ-8I8" id="rxH-Qx-Pul"/>
-                        <outlet property="commentButton" destination="jZP-3a-tVq" id="2TT-Zy-ywR"/>
-                        <outlet property="doBeforeLabel" destination="Yjv-0d-F3g" id="PCF-2I-Qxd"/>
-                        <outlet property="geoLocationButton" destination="fxD-GX-9ag" id="8kO-5s-ZHH"/>
-                        <outlet property="mapView" destination="D3s-1d-5me" id="dO1-sx-Mn9"/>
-                        <outlet property="terminalBreakNameLabel" destination="Qnf-3I-VCQ" id="kCd-tv-b6c"/>
-                        <outlet property="terminalButton" destination="kqX-Nt-Re4" id="moI-Py-jvO"/>
-                        <outlet property="visitedButton" destination="0wo-ba-spW" id="cZe-m5-MRp"/>
-                        <segue destination="5n0-xk-O7K" kind="push" identifier="goToTerminal" id="Tha-MB-waM"/>
-                        <segue destination="1ry-OM-6W5" kind="push" identifier="showComment" id="0yO-0n-bJP"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="QvN-ai-QP3" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1969" y="-653"/>
         </scene>
         <!--CommentVC - Комментарий-->
         <scene sceneID="B6U-gb-03u">
             <objects>
                 <viewController id="1ry-OM-6W5" customClass="STTTCommentVC" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="kiQ-xv-r5k">
-                        <rect key="frame" x="0.0" y="20" width="320" height="460"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="ueh-ae-iEB">
-                                <rect key="frame" x="20" y="20" width="280" height="184"/>
+                                <rect key="frame" x="20" y="20" width="280" height="140"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</string>
@@ -268,7 +156,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8Eg-Eq-Mwq" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2498" y="-653"/>
+            <point key="canvasLocation" x="1990" y="-653"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="ial-rb-FU0">
@@ -377,7 +265,4 @@
         <simulatedOrientationMetrics key="orientation"/>
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
-    <inferredMetricsTieBreakers>
-        <segue reference="Tha-MB-waM"/>
-    </inferredMetricsTieBreakers>
 </document>

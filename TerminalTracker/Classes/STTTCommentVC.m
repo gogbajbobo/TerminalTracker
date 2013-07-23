@@ -21,15 +21,15 @@
     if ([[self.backgroundColors valueForKey:@"task"] isKindOfClass:[UIColor class]]) {
         self.view.backgroundColor = [self.backgroundColors valueForKey:@"task"];
     } else {
-        self.view.backgroundColor = [UIColor whiteColor];
+        self.view.backgroundColor = [UIColor grayColor];
     }
     self.commentView.text = self.task.commentText;
     if ([self.task.visited boolValue]) {
         self.commentView.editable = NO;
         
 // _________for testing
-//        self.commentView.editable = YES;
-//        self.commentView.delegate = self;
+        self.commentView.editable = YES;
+        self.commentView.delegate = self;
 // ____________________
         
     } else {
@@ -41,28 +41,10 @@
 #pragma mark - textView delegate
 
 - (BOOL)textViewShouldEndEditing:(UITextView *)textView {
-    NSLog(@"textViewShouldEndEditing");
+//    NSLog(@"textViewShouldEndEditing");
     self.task.commentText = textView.text;
     return YES;
 }
-
-//- (BOOL)textFieldShouldEndEditing:(UITextField *)textField {
-//    if (![textField.text isEqualToString:@""]) {
-//        if (![textField.text isEqualToString:self.spot.label]) {
-//            self.spot.label = textField.text;
-//            [self.tracker.document saveToURL:self.tracker.document.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
-//                NSLog(@"spot.label UIDocumentSaveForOverwriting success");
-//            }];
-//        }
-//    }
-//    return YES;
-//}
-//
-//- (BOOL)textFieldShouldReturn:(UITextField *)textField {
-//    [textField resignFirstResponder];
-//    return YES;
-//}
-
 
 
 #pragma mark - view lifecycle
