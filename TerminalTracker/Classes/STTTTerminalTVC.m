@@ -16,9 +16,21 @@
 
 @interface STTTTerminalTVC ()
 
+@property (nonatomic, strong) NSArray *sortedTasks;
+
+
 @end
 
+
 @implementation STTTTerminalTVC
+
+- (NSArray *)sortedTasks {
+    if (!_sortedTasks) {
+        NSSortDescriptor *descriptor = [NSSortDescriptor sortDescriptorWithKey:@"doBefore" ascending:YES selector:@selector(compare:)];
+        _sortedTasks = [self.terminal.tasks sortedArrayUsingDescriptors:[NSArray arrayWithObject:descriptor]];
+    }
+    return _sortedTasks;
+}
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -122,9 +134,8 @@
             }
             break;
         case 2:
-            cell = [cell initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-            cell.selectionStyle = UITableViewCellSelectionStyleNone;
-//            [self addButtonsToCell:cell];
+            cell = [cell initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellIdentifier];
+            [self addTasksToCell:cell];
             break;
             
         default:
@@ -133,6 +144,53 @@
     }
     
     return cell;
+}
+
+- (void)addTasksToCell:(UITableViewCell *)cell {
+    NSUInteger row = [self.tableView indexPathForCell:cell].row;
+    STTTAgentTask *task = (STTTAgentTask *)[self.sortedTasks objectAtIndex:row];
+    cell.textLabel.text = task.terminalBreakName;
+    
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    NSTimeInterval timeInterval = [[NSDate date] timeIntervalSinceDate:task.doBefore];
+    
+    if (timeInterval > 0 && timeInterval <= 24 * 3600) {
+        dateFormatter.dateStyle = NSDateFormatterNoStyle;
+        dateFormatter.timeStyle = NSDateFormatterShortStyle;
+    } else if (timeInterval <= 7 * 24 * 3600) {
+        dateFormatter.dateFormat = @"EEEE";
+    } else {
+        dateFormatter.dateStyle = NSDateFormatterShortStyle;
+        dateFormatter.timeStyle = NSDateFormatterNoStyle;
+    }
+    
+    cell.detailTextLabel.text = [dateFormatter stringFromDate:task.doBefore];
+    
+    UIColor *backgroundColor = self.tableView.backgroundColor;
+    UIColor *textColor = [UIColor blueColor];
+    
+    if (![task.visited boolValue]) {
+        
+        NSTimeInterval remainingTime = [task remainingTime];
+        
+        if (remainingTime < 0) {
+            textColor = [UIColor redColor];
+        } else {
+            if (remainingTime > 0 && remainingTime <= 60*60) {
+                backgroundColor = [UIColor redColor];
+                textColor = [UIColor whiteColor];
+            } else if (remainingTime < 120*60) {
+                backgroundColor = [UIColor yellowColor];
+            } else if (remainingTime < 180*60) {
+                backgroundColor = [UIColor colorWithRed:0.56 green:0.93 blue:0.56 alpha:1];
+            }
+        }
+        
+    }
+    
+    cell.detailTextLabel.backgroundColor = backgroundColor;
+    cell.detailTextLabel.textColor = textColor;
+    
 }
 
 - (void)addErrorTextToCell:(UITableViewCell *)cell {
@@ -155,11 +213,9 @@
 
 - (void)addInfoToCell:(UITableViewCell *)cell {
 
-    NSSortDescriptor *descriptor = [NSSortDescriptor sortDescriptorWithKey:@"doBefore" ascending:YES selector:@selector(compare:)];
-    NSArray *sortedTasks = [self.terminal.tasks sortedArrayUsingDescriptors:[NSArray arrayWithObject:descriptor]];
     STTTAgentTask *lastTask;
-    if (sortedTasks.count > 0) {
-        lastTask = (STTTAgentTask *)[sortedTasks objectAtIndex:0];
+    if (self.sortedTasks.count > 0) {
+        lastTask = (STTTAgentTask *)[self.sortedTasks objectAtIndex:0];
     }
 
     NSString *code = self.terminal.code ? self.terminal.code : @"Н/Д";

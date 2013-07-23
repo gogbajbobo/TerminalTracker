@@ -277,6 +277,8 @@
         
         mapView.layer.cornerRadius = 10.0;
         
+        mapView.userInteractionEnabled = NO;
+        
         [cell.contentView addSubview:mapView];
     }
 
