@@ -13,6 +13,7 @@
 #import "STTTMapAnnotation.h"
 #import "STTTTerminalLocation.h"
 #import "STTTAgentTask+remainingTime.h"
+#import "STTTTaskTVC.h"
 
 @interface STTTTerminalTVC ()
 
@@ -44,6 +45,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.title = @"Терминал";
 }
 
 - (void)didReceiveMemoryWarning
@@ -132,6 +134,7 @@
                 default:
                     break;
             }
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
             break;
         case 2:
             cell = [cell initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellIdentifier];
@@ -298,15 +301,10 @@
             // show full map
             break;
         case 1:
-            // show terminal
+            // no action
             break;
         case 2:
-//            if (![self.task.visited boolValue]) {
-//                [self buttonsBehaviorInCell:[tableView cellForRowAtIndexPath:indexPath]];
-//            }
-            break;
-        case 3:
-//            [self performSegueWithIdentifier:@"showComment" sender:self.task];
+            [self performSegueWithIdentifier:@"goToTask" sender:[self.sortedTasks objectAtIndex:indexPath.row]];
             break;
             
         default:
@@ -314,6 +312,18 @@
     }
     
 }
+
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    
+    if ([segue.identifier isEqualToString:@"goToTask"]) {
+        if ([segue.destinationViewController isKindOfClass:[STTTTaskTVC class]] && [sender isKindOfClass:[STTTAgentTask class]]) {
+            [(STTTTaskTVC *)segue.destinationViewController setTask:(STTTAgentTask *)sender];
+        }
+    }
+    
+}
+
 
 
 @end

@@ -16,6 +16,7 @@
 #import "STTTLocationController.h"
 #import "STTTTaskLocation.h"
 #import "STTTCommentVC.h"
+#import "STTTTerminalTVC.h"
 
 @interface STTTTaskTVC ()
 
@@ -316,7 +317,7 @@
             // show full map
             break;
         case 1:
-            // show terminal
+            [self performSegueWithIdentifier:@"goToTerminal" sender:self.task.terminal];
             break;
         case 2:
             if (![self.task.visited boolValue]) {
@@ -381,11 +382,10 @@
         if ([segue.destinationViewController isKindOfClass:[STTTCommentVC class]] && [sender isKindOfClass:[STTTAgentTask class]]) {
             [(STTTCommentVC *)segue.destinationViewController setTask:(STTTAgentTask *)sender];
         }
-//    } else if ([segue.identifier isEqualToString:@"goToTerminal"]) {
-//        if ([segue.destinationViewController isKindOfClass:[STTTTerminalVC class]] && [sender isKindOfClass:[STTTAgentTerminal class]]) {
-//            [(STTTTerminalVC *)segue.destinationViewController setTerminal:(STTTAgentTerminal *)sender];
-//            [(STTTTerminalVC *)segue.destinationViewController setBackgroundColors:self.backgroundColors];
-//        }
+    } else if ([segue.identifier isEqualToString:@"goToTerminal"]) {
+        if ([segue.destinationViewController isKindOfClass:[STTTTerminalTVC class]] && [sender isKindOfClass:[STTTAgentTerminal class]]) {
+            [(STTTTerminalTVC *)segue.destinationViewController setTerminal:(STTTAgentTerminal *)sender];
+        }
     }
     
 }

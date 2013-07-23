@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2C93A53817783CC00014001B /* STTTMainVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A53717783CC00014001B /* STTTMainVC.m */; };
 		2C93A562177D795E0014001B /* STTTTerminalController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A561177D795E0014001B /* STTTTerminalController.m */; };
 		2C93A565177D79790014001B /* STTTTaskController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A564177D79790014001B /* STTTTaskController.m */; };
 		2C93A568177D79C10014001B /* STTTSyncer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A567177D79C10014001B /* STTTSyncer.m */; };
@@ -61,8 +60,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		2C93A53617783CC00014001B /* STTTMainVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTMainVC.h; sourceTree = "<group>"; };
-		2C93A53717783CC00014001B /* STTTMainVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTMainVC.m; sourceTree = "<group>"; };
 		2C93A560177D795E0014001B /* STTTTerminalController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTTerminalController.h; sourceTree = "<group>"; };
 		2C93A561177D795E0014001B /* STTTTerminalController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTTerminalController.m; sourceTree = "<group>"; };
 		2C93A563177D79790014001B /* STTTTaskController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTTaskController.h; sourceTree = "<group>"; };
@@ -257,8 +254,6 @@
 				2C93A561177D795E0014001B /* STTTTerminalController.m */,
 				2C93A5AA1781BA800014001B /* STTTLocationController.h */,
 				2C93A5AB1781BA800014001B /* STTTLocationController.m */,
-				2C93A53617783CC00014001B /* STTTMainVC.h */,
-				2C93A53717783CC00014001B /* STTTMainVC.m */,
 				2C93A5B9178450F60014001B /* STTTTerminalVC.h */,
 				2C93A5BA178450F70014001B /* STTTTerminalVC.m */,
 				2C93A5C2178597930014001B /* STTTCommentVC.h */,
@@ -441,7 +436,6 @@
 				2CE3266B176F29E800BAA1D4 /* STAppDelegate.m in Sources */,
 				2CE3269B176F2BE000BAA1D4 /* STTTSettingsController.m in Sources */,
 				2CE3269E176F2CAA00BAA1D4 /* STTTAuthBasic.m in Sources */,
-				2C93A53817783CC00014001B /* STTTMainVC.m in Sources */,
 				2C93A562177D795E0014001B /* STTTTerminalController.m in Sources */,
 				2C93A565177D79790014001B /* STTTTaskController.m in Sources */,
 				2C93A568177D79C10014001B /* STTTSyncer.m in Sources */,

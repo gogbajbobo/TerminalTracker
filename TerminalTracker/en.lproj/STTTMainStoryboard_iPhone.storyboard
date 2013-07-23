@@ -4,99 +4,6 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="2083"/>
     </dependencies>
     <scenes>
-        <!--TerminalVC - Терминал-->
-        <scene sceneID="YJA-Ir-272">
-            <objects>
-                <viewController id="5n0-xk-O7K" customClass="STTTTerminalVC" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="mCn-fM-Few">
-                        <rect key="frame" x="0.0" y="20" width="320" height="460"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <subviews>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" id="n2p-P5-z0Y">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="204"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                            </mapView>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Code" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="6Lb-Z0-Hd6">
-                                <rect key="frame" x="20" y="168" width="140" height="12"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="v3v-qA-M29">
-                                <rect key="frame" x="20" y="245" width="280" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <string key="text">Address
-1</string>
-                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Last activity time" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="ug1-9k-GeI">
-                                <rect key="frame" x="20" y="283" width="280" height="12"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="System name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="6Yz-gi-a8j">
-                                <rect key="frame" x="160" y="168" width="140" height="12"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="wTz-1P-kUw">
-                                <rect key="frame" x="0.0" y="303" width="320" height="157"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" restorationIdentifier="" selectionStyle="blue" indentationWidth="10" reuseIdentifier="terminalTaskCell" textLabel="zge-eA-Sg8" rowHeight="33" style="IBUITableViewCellStyleDefault" id="7Wk-xC-xqZ">
-                                        <rect key="frame" x="0.0" y="22" width="320" height="33"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="32"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="zge-eA-Sg8">
-                                                    <rect key="frame" x="10" y="0.0" width="300" height="32"/>
-                                                    <autoresizingMask key="autoresizingMask"/>
-                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                                    <color key="highlightedColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                                </label>
-                                            </subviews>
-                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                        </view>
-                                    </tableViewCell>
-                                </prototypes>
-                            </tableView>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" id="PRk-Tz-1cR">
-                                <rect key="frame" x="20" y="188" width="280" height="49"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                            </textView>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                    </view>
-                    <navigationItem key="navigationItem" title="Терминал" id="FAD-Of-fD9"/>
-                    <connections>
-                        <outlet property="addressLabel" destination="v3v-qA-M29" id="JXp-XB-yDd"/>
-                        <outlet property="codeLabel" destination="6Lb-Z0-Hd6" id="E5F-6V-7OO"/>
-                        <outlet property="errorTextView" destination="PRk-Tz-1cR" id="nfS-tf-ZyD"/>
-                        <outlet property="lastActivityTimeLabel" destination="ug1-9k-GeI" id="SU7-ek-xtA"/>
-                        <outlet property="mapView" destination="n2p-P5-z0Y" id="bHC-cm-MQO"/>
-                        <outlet property="srcSystemNameLabel" destination="6Yz-gi-a8j" id="bkr-Ea-K9R"/>
-                        <outlet property="tableView" destination="wTz-1P-kUw" id="kB9-HN-1FY"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Cp2-Ve-mpj" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1990" y="-60"/>
-        </scene>
         <!--TaskTVC-->
         <scene sceneID="nNH-xf-2ya">
             <objects>
@@ -124,6 +31,7 @@
                     <navigationItem key="navigationItem" id="OUq-hn-Sq9"/>
                     <connections>
                         <segue destination="1ry-OM-6W5" kind="push" identifier="showComment" id="zTa-5j-RHt"/>
+                        <segue destination="ktg-lG-8Y4" kind="push" identifier="goToTerminal" id="DhZ-Tp-nrz"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wXe-Et-g8M" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -135,11 +43,11 @@
             <objects>
                 <viewController id="1ry-OM-6W5" customClass="STTTCommentVC" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="kiQ-xv-r5k">
-                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
+                        <rect key="frame" x="0.0" y="20" width="320" height="460"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="ueh-ae-iEB">
-                                <rect key="frame" x="20" y="20" width="280" height="140"/>
+                                <rect key="frame" x="20" y="20" width="280" height="184"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</string>
@@ -284,6 +192,9 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" id="4LT-FA-5jK"/>
+                    <connections>
+                        <segue destination="cWX-EC-Fri" kind="push" identifier="goToTask" id="1LU-Zj-8Nu"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pqP-jA-J36" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -295,4 +206,8 @@
         <simulatedOrientationMetrics key="orientation"/>
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
+    <inferredMetricsTieBreakers>
+        <segue reference="1LU-Zj-8Nu"/>
+        <segue reference="DhZ-Tp-nrz"/>
+    </inferredMetricsTieBreakers>
 </document>
