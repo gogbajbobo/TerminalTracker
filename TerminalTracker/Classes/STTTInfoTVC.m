@@ -71,12 +71,10 @@
     if ([segue.identifier isEqualToString:@"showTask"]) {
         if ([segue.destinationViewController isKindOfClass:[STTTTaskTVC class]] && [sender isKindOfClass:[STTTAgentTask class]]) {
             [(STTTTaskTVC *)segue.destinationViewController setTask:(STTTAgentTask *)sender];
-//            [(STTTTaskVC *)segue.destinationViewController setBackgroundColors:self.backgroundColors];
         }
     } else if ([segue.identifier isEqualToString:@"showTerminal"]) {
         if ([segue.destinationViewController isKindOfClass:[STTTTerminalTVC class]] && [sender isKindOfClass:[STTTAgentTerminal class]]) {
             [(STTTTerminalTVC *)segue.destinationViewController setTerminal:(STTTAgentTerminal *)sender];
-//            [(STTTTerminalVC *)segue.destinationViewController setBackgroundColors:self.backgroundColors];
         }
     }
     

@@ -9,6 +9,7 @@
 #import "STTTTerminalController.h"
 #import "STTTTerminalLocation.h"
 #import "STTTLocationController.h"
+#import "STTTAgentTask+remainingTime.h"
 
 @interface STTTTerminalController() <NSFetchedResultsControllerDelegate>
 
@@ -64,13 +65,9 @@
     CLLocation *terminalLocation = [[CLLocation alloc] initWithLatitude:[terminal.location.latitude doubleValue] longitude:[terminal.location.longitude doubleValue]];
     
     if (!currentLocation || !terminalLocation) {
-//        NSLog(@"0");
-//        [terminal setPrimitiveValue:0 forKey:@"distance"];
         [terminal setValue:0 forKey:@"distance"];
     } else {
         CLLocationDistance distance = [currentLocation distanceFromLocation:terminalLocation];
-//        NSLog(@"%f", distance);
-//        [terminal setPrimitiveValue:[NSNumber numberWithDouble:distance] forKey:@"distance"];
         [terminal setValue:[NSNumber numberWithDouble:distance] forKey:@"distance"];
     }
 
@@ -100,43 +97,13 @@
         
         if (type == NSFetchedResultsChangeDelete) {
             
-            //        NSLog(@"NSFetchedResultsChangeDelete");
-//            [self calculateDistanceFor:(STTTAgentTerminal *)anObject];
-//            [self.tableView reloadData];
-
-            
-//            if ([self.tableView numberOfRowsInSection:indexPath.section] == 1) {
-//                [self.tableView reloadData];
-//            } else {
-//                [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:YES];
-//                [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationNone];
-//            }
-            
-//            [[NSNotificationCenter defaultCenter] postNotificationName:@"trackDeleted" object:self.currentSession userInfo:[NSDictionary dictionaryWithObject:anObject forKey:@"track"]];
-            
             
         } else if (type == NSFetchedResultsChangeInsert) {
-            
-            //        NSLog(@"NSFetchedResultsChangeInsert");
-//            [self calculateDistanceFor:(STTTAgentTerminal *)anObject];
-//            [self.tableView reloadData];
-//            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
-            //        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationNone];
-            
-//            [[NSNotificationCenter defaultCenter] postNotificationName:@"trackInserted" object:self.currentSession userInfo:[NSDictionary dictionaryWithObject:anObject forKey:@"track"]];
             
             
         } else if (type == NSFetchedResultsChangeUpdate) {
             
-            //        NSLog(@"NSFetchedResultsChangeUpdate");
-//            [self calculateDistanceFor:(STTTAgentTerminal *)anObject];
-//            [self.tableView reloadData];
-//            [self calculateDistanceFor:(STTTAgentTerminal *)anObject];
-//            [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-//            [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationNone];
-            
-//            [[NSNotificationCenter defaultCenter] postNotificationName:@"trackUpdated" object:self.currentSession userInfo:[NSDictionary dictionaryWithObject:anObject forKey:@"track"]];
-            
+
         }
         
     }
@@ -185,66 +152,72 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *cellIdentifier = @"terminalCell";
-    //    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
     UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
 
     id <NSFetchedResultsSectionInfo> sectionInfo = [[self.resultsController sections] objectAtIndex:indexPath.section];
     STTTAgentTerminal *terminal = (STTTAgentTerminal *)[[sectionInfo objects] objectAtIndex:indexPath.row];
     
-//    NSLog(@"terminal.location.latitude %@, terminal.location.longitude %@", terminal.location.latitude, terminal.location.longitude);
-    
-    NSString *code = terminal.code ? terminal.code : @"Нет данных";
-    NSString *errorText = terminal.errorText ? terminal.errorText : @"";
-    NSString *address = terminal.address ? terminal.address : @"Нет данных";
+//    NSLog(@"terminal.location.latitude %@, terminal.location.longitude %@", terminal.location.latitude, terminal.location.longitude);    
+//    NSString *errorText = terminal.errorText ? terminal.errorText : @"";
 
-    cell.textLabel.text = [NSString stringWithFormat:@"%@\t%@", code, errorText];
-    cell.detailTextLabel.text = address;
+    NSSortDescriptor *descriptor = [NSSortDescriptor sortDescriptorWithKey:@"doBefore" ascending:YES selector:@selector(compare:)];
+    NSArray *sortedTasks = [terminal.tasks sortedArrayUsingDescriptors:[NSArray arrayWithObject:descriptor]];
+    STTTAgentTask *lastTask;
+    if (sortedTasks.count > 0) {
+         lastTask = (STTTAgentTask *)[sortedTasks objectAtIndex:0];
+    }
+    
+    NSString *code = terminal.code ? terminal.code : @"Н/Д";
+    NSString *breakName = lastTask.terminalBreakName ? [NSString stringWithFormat:@" / %@", lastTask.terminalBreakName] : @"";
+    
+    cell.textLabel.text = [NSString stringWithFormat:@"%@%@", code, breakName];
+    cell.detailTextLabel.text = terminal.address ? terminal.address : @"Нет данных";;
+    
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    NSString *infoText;
+    NSTimeInterval timeInterval = [[NSDate date] timeIntervalSinceDate:terminal.lastActivityTime];
+    
+    if (timeInterval > 0 && timeInterval <= 24 * 3600) {
+        dateFormatter.dateStyle = NSDateFormatterNoStyle;
+        dateFormatter.timeStyle = NSDateFormatterShortStyle;
+    } else if (timeInterval <= 7 * 24 * 3600) {
+        dateFormatter.dateFormat = @"EEEE";
+    } else {
+        dateFormatter.dateStyle = NSDateFormatterShortStyle;
+        dateFormatter.timeStyle = NSDateFormatterNoStyle;
+    }
+    
+//    infoText = [NSString stringWithFormat:@"LAT: %@", [dateFormatter stringFromDate:terminal.lastActivityTime]];
+    infoText = [dateFormatter stringFromDate:terminal.lastActivityTime];
+    
+    UIFont *font = [UIFont systemFontOfSize:16];
+    CGSize size = [infoText sizeWithFont:font];
+    
+    CGFloat paddingX = 0;
+    CGFloat paddingY = 0;
+    CGFloat marginX = 10;
+    
+    CGFloat x = cell.contentView.frame.size.width - size.width - 2 * paddingX - marginX;
+    CGFloat y = cell.textLabel.bounds.origin.y;
+    
+    CGRect frame = CGRectMake(x, y, size.width + 2 * paddingX, size.height + 2 * paddingY);
+    
+    UILabel *infoLabel = [[UILabel alloc] initWithFrame:frame];
+    infoLabel.text = infoText;
+    infoLabel.font = font;
+    infoLabel.textColor = [UIColor blueColor];
+    infoLabel.tag = 666;
+    
+    [[cell.contentView viewWithTag:666] removeFromSuperview];
+    [cell.contentView addSubview:infoLabel];
+
     
 //    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     return cell;
 }
 
 
-
-/*
- // Override to support conditional editing of the table view.
- - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
- {
- // Return NO if you do not want the specified item to be editable.
- return YES;
- }
- */
-
-/*
- // Override to support editing the table view.
- - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
- {
- if (editingStyle == UITableViewCellEditingStyleDelete) {
- // Delete the row from the data source
- [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
- }
- else if (editingStyle == UITableViewCellEditingStyleInsert) {
- // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
- }
- }
- */
-
-/*
- // Override to support rearranging the table view.
- - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
- {
- }
- */
-
-/*
- // Override to support conditional rearranging of the table view.
- - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
- {
- // Return NO if you do not want the item to be re-orderable.
- return YES;
- }
- */
 
 
 @end
