@@ -33,12 +33,13 @@
                                      @"100", @"desiredAccuracy",
                                      @"100", @"requiredAccuracy",
                                      @"-1", @"distanceFilter",
-                                     @"300.0", @"timeFilter",
+                                     @"60.0", @"timeFilter",
                                      @"50", @"fetchLimit",
                                      @"STTTDataModel", @"dataModelName",
                                      @"https://system.unact.ru/iproxy/testdata/megaport", @"recieveDataServerURI",
+                                     @"https://system.unact.ru/iproxy/chest/test", @"sendDataServerURI",
                                      nil];
-    
+
     NSDictionary *controllers = [NSDictionary dictionaryWithObjectsAndKeys:
                               [[STTTSettingsController alloc] init], @"settingsController",
                               [[STTTSyncer alloc] init], @"syncer",
