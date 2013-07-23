@@ -57,11 +57,13 @@
 }
 
 - (CLLocationAccuracy) desiredAccuracy {
-    return [[self.settings valueForKey:@"desiredAccuracy"] doubleValue];
+    return 100.0;
+//    return [[self.settings valueForKey:@"desiredAccuracy"] doubleValue];
 }
 
 - (double)requiredAccuracy {
-    return [[self.settings valueForKey:@"requiredAccuracy"] doubleValue];
+    return 100.0;
+//    return [[self.settings valueForKey:@"requiredAccuracy"] doubleValue];
 }
 
 

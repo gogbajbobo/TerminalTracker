@@ -13,8 +13,14 @@
 #import "STTTAgentTerminal.h"
 #import "STTTTerminalLocation.h"
 #import "STTTMapAnnotation.h"
+#import "STTTLocationController.h"
+#import "STTTTaskLocation.h"
 
 @interface STTTTaskTVC ()
+
+@property (nonatomic) BOOL waitingLocation;
+@property (nonatomic, strong) UITableViewCell *buttonsCell;
+@property (nonatomic, strong) CLLocation *location;
 
 @end
 
@@ -32,6 +38,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.title = @"Задача";
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(currentLocationUpdated:) name:@"currentLocationUpdated" object:nil];
 }
 
 - (void)didReceiveMemoryWarning
@@ -83,7 +91,7 @@
             sectionTitle = nil;
             break;
         case 2:
-            sectionTitle = @"Терминалы";
+            sectionTitle = nil;
             break;
         case 3:
             sectionTitle = @"Терминалы";
@@ -111,6 +119,11 @@
             cell = [cell initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
             [self addInfoToCell:cell];
             break;
+        case 2:
+            cell = [cell initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+            [self addButtonsToCell:cell];
+            break;
             
         default:
             cell = [cell initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
@@ -120,9 +133,29 @@
     return cell;
 }
 
+- (void)addButtonsToCell:(UITableViewCell *)cell {
+
+    cell.textLabel.textAlignment = NSTextAlignmentCenter;
+
+    if (self.task.visited) {
+        cell.textLabel.text = @"Выполнено";
+        cell.textLabel.textColor = [UIColor colorWithRed:0.16 green:0.53 blue:0.16 alpha:1];
+    } else {
+        cell.textLabel.textColor = [UIColor blueColor];
+        if (self.location) {
+            cell.textLabel.text = @"Отметить выполнение";
+        } else {
+            cell.textLabel.text = @"Поставить геометку";
+        }
+    }
+    
+    self.buttonsCell = cell;
+    
+}
+
 - (void)addInfoToCell:(UITableViewCell *)cell {
     
-    cell.textLabel.text = self.task.terminalBreakName;
+    cell.textLabel.text = [NSString stringWithFormat:@"%@ / %@", self.task.terminal.code, self.task.terminalBreakName];
     
     if (self.task.terminal) {
         cell.detailTextLabel.text = self.task.terminal.address;
@@ -222,6 +255,9 @@
         case 1:
             return 44;
             break;
+        case 2:
+            return 44;
+            break;
             
         default:
             return 0;
@@ -231,6 +267,71 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
+    switch (indexPath.section) {
+        case 0:
+            // show full map
+            break;
+        case 1:
+            // show terminal
+            break;
+        case 2:
+            if (![self.task.visited boolValue]) {
+                [self buttonsBehaviorInCell:[tableView cellForRowAtIndexPath:indexPath]];
+            }
+            break;
+            
+        default:
+            break;
+    }
+    
 }
+
+- (void)buttonsBehaviorInCell:(UITableViewCell *)cell {
+    
+    if (!self.location) {
+        if (!self.waitingLocation) {
+            self.waitingLocation = YES;
+            cell.textLabel.text = @"";
+            UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+            spinner.tag = 1;
+            [spinner startAnimating];
+            spinner.frame = cell.textLabel.bounds;
+            [cell.contentView addSubview:spinner];
+            [[STTTLocationController sharedLC] getLocation];
+        }
+    } else {
+        [self addTaskLocation];
+        [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[self.tableView indexPathForCell:cell]] withRowAnimation:UITableViewRowAnimationAutomatic];
+
+    }
+
+}
+
+- (void)currentLocationUpdated:(NSNotification *)notification {
+    if (self.waitingLocation) {
+        self.location = [[STTTLocationController sharedLC] currentLocation];
+        self.waitingLocation = NO;
+        [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[self.tableView indexPathForCell:self.buttonsCell]] withRowAnimation:UITableViewRowAnimationAutomatic];
+    }
+}
+
+- (void)addTaskLocation {
+    if (self.location) {
+        STTTTaskLocation *taskLocation = (STTTTaskLocation *)[NSEntityDescription insertNewObjectForEntityForName:NSStringFromClass([STTTTaskLocation class]) inManagedObjectContext:[[STSessionManager sharedManager] currentSession].document.managedObjectContext];
+        taskLocation.latitude = [NSNumber numberWithDouble:self.location.coordinate.latitude];
+        taskLocation.longitude = [NSNumber numberWithDouble:self.location.coordinate.longitude];
+        self.task.visitLocation = taskLocation;
+        self.task.visited = [NSNumber numberWithBool:YES];
+        
+        [[[STSessionManager sharedManager] currentSession].document saveDocument:^(BOOL success) {
+            if (!success) {
+                NSLog(@"save task fail");
+            }
+        }];
+    } else {
+        NSLog(@"No task location");
+    }
+}
+
 
 @end
