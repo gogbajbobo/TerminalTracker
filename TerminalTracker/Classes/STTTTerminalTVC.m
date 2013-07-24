@@ -45,7 +45,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.title = @"Терминал";
+    self.title = self.terminal.code;
 }
 
 - (void)didReceiveMemoryWarning
@@ -59,7 +59,7 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     
-    return 3;
+    return 2;
     
 }
 
@@ -68,12 +68,9 @@
     
     switch (section) {
         case 0:
-            return 1;
+            return 5;
             break;
         case 1:
-            return 3;
-            break;
-        case 2:
             return self.terminal.tasks.count;
             break;
             
@@ -91,10 +88,8 @@
         case 0:
             break;
         case 1:
-            break;
-        case 2:
             if (self.terminal.tasks.count > 0) {
-                sectionTitle = @"Список задач:";
+                sectionTitle = @"Задачи:";
             }
             break;
             
@@ -113,20 +108,24 @@
     
     switch (indexPath.section) {
         case 0:
-            cell = [cell initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-            [self addMapToCell:cell];
-            break;
-        case 1:
             switch (indexPath.row) {
                 case 0:
-                    cell = [cell initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellIdentifier];
-                    [self addInfoToCell:cell];
+                    cell = [cell initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:cellIdentifier];
+                    [self addSrcSystemNameToCell:cell];
                     break;
                 case 1:
+                    cell = [cell initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:cellIdentifier];
+                    [self addLastActivityTimeToCell:cell];
+                    break;
+                case 2:
+                    cell = [cell initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+                    [self addMapToCell:cell];
+                    break;
+                case 3:
                     cell = [cell initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
                     [self addAddressToCell:cell];
                     break;
-                case 2:
+                case 4:
                     cell = [cell initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
                     [self addErrorTextToCell:cell];
                     break;
@@ -134,9 +133,8 @@
                 default:
                     break;
             }
-            cell.selectionStyle = UITableViewCellSelectionStyleNone;
             break;
-        case 2:
+        case 1:
             cell = [cell initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellIdentifier];
             [self addTasksToCell:cell];
             break;
@@ -146,7 +144,37 @@
             break;
     }
     
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    
     return cell;
+}
+
+- (void)addLastActivityTimeToCell:(UITableViewCell *)cell {
+    
+    cell.textLabel.text = @"L.A.T.:";
+    
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    NSTimeInterval timeInterval = [[NSDate date] timeIntervalSinceDate:self.terminal.lastActivityTime];
+    
+    if (timeInterval > 0 && timeInterval <= 24 * 3600) {
+        dateFormatter.dateStyle = NSDateFormatterNoStyle;
+        dateFormatter.timeStyle = NSDateFormatterShortStyle;
+    } else if (timeInterval <= 7 * 24 * 3600) {
+        //        dateFormatter.dateFormat = @"EEEE, H:mm a";
+        dateFormatter.dateStyle = NSDateFormatterFullStyle;
+        dateFormatter.timeStyle = NSDateFormatterShortStyle;
+    } else {
+        dateFormatter.dateStyle = NSDateFormatterShortStyle;
+        dateFormatter.timeStyle = NSDateFormatterShortStyle;
+    }
+    
+    cell.detailTextLabel.text = [dateFormatter stringFromDate:self.terminal.lastActivityTime];
+
+}
+
+- (void)addSrcSystemNameToCell:(UITableViewCell *)cell {
+    cell.textLabel.text = @"Система:";
+    cell.detailTextLabel.text = self.terminal.srcSystemName;
 }
 
 - (void)addTasksToCell:(UITableViewCell *)cell {
@@ -155,16 +183,25 @@
     cell.textLabel.text = task.terminalBreakName;
     
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    NSTimeInterval timeInterval = [[NSDate date] timeIntervalSinceDate:task.doBefore];
     
-    if (timeInterval > 0 && timeInterval <= 24 * 3600) {
+    dateFormatter.dateStyle = NSDateFormatterShortStyle;
+    dateFormatter.timeStyle = NSDateFormatterNoStyle;
+    
+    if ([[dateFormatter stringFromDate:[NSDate date]] isEqualToString:[dateFormatter stringFromDate:task.doBefore]]) {
+        
         dateFormatter.dateStyle = NSDateFormatterNoStyle;
         dateFormatter.timeStyle = NSDateFormatterShortStyle;
-    } else if (timeInterval <= 7 * 24 * 3600) {
-        dateFormatter.dateFormat = @"EEEE";
+        
     } else {
-        dateFormatter.dateStyle = NSDateFormatterShortStyle;
-        dateFormatter.timeStyle = NSDateFormatterNoStyle;
+        
+        if ([[NSDate date] timeIntervalSinceDate:task.doBefore] <= 7 * 24 * 3600 &&
+            [[NSDate date] timeIntervalSinceDate:task.doBefore] >= -7 * 24 * 3600) {
+            dateFormatter.dateFormat = @"EEEE";
+        } else {
+            dateFormatter.dateStyle = NSDateFormatterShortStyle;
+            dateFormatter.timeStyle = NSDateFormatterNoStyle;
+        }
+        
     }
     
     cell.detailTextLabel.text = [dateFormatter stringFromDate:task.doBefore];
@@ -214,36 +251,6 @@
     
 }
 
-- (void)addInfoToCell:(UITableViewCell *)cell {
-
-    STTTAgentTask *lastTask;
-    if (self.sortedTasks.count > 0) {
-        lastTask = (STTTAgentTask *)[self.sortedTasks objectAtIndex:0];
-    }
-
-    NSString *code = self.terminal.code ? self.terminal.code : @"Н/Д";
-//    NSString *sysName = self.terminal.srcSystemName ? [NSString stringWithFormat:@" / %@", self.terminal.srcSystemName] : @"";
-    NSString *breakName = lastTask.terminalBreakName ? [NSString stringWithFormat:@" / %@", lastTask.terminalBreakName] : @"";
-    
-//    cell.textLabel.text = [NSString stringWithFormat:@"%@%@%@", code, sysName, breakName];
-    cell.textLabel.text = [NSString stringWithFormat:@"%@%@", code, breakName];
-    
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    NSTimeInterval timeInterval = [[NSDate date] timeIntervalSinceDate:self.terminal.lastActivityTime];
-    
-    if (timeInterval > 0 && timeInterval <= 24 * 3600) {
-        dateFormatter.dateStyle = NSDateFormatterNoStyle;
-        dateFormatter.timeStyle = NSDateFormatterShortStyle;
-    } else if (timeInterval <= 7 * 24 * 3600) {
-        dateFormatter.dateFormat = @"EEEE";
-    } else {
-        dateFormatter.dateStyle = NSDateFormatterShortStyle;
-        dateFormatter.timeStyle = NSDateFormatterNoStyle;
-    }
-    
-    cell.detailTextLabel.text = [dateFormatter stringFromDate:self.terminal.lastActivityTime];
-
-}
 
 - (void)addMapToCell:(UITableViewCell *)cell {
 
@@ -271,20 +278,19 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     switch (indexPath.section) {
         case 0:
-            return 160;
-            break;
-        case 1:
             switch (indexPath.row) {
-                case 2:
-                    return 66;
-                    break;
-                
+
                 default:
                     return 44;
                     break;
+
+                case 2:
+                    return 160;
+                    break;
+
             }
             break;
-        case 2:
+        case 1:
             return 44;
             break;
             
@@ -301,9 +307,6 @@
             // show full map
             break;
         case 1:
-            // no action
-            break;
-        case 2:
             [self performSegueWithIdentifier:@"goToTask" sender:[self.sortedTasks objectAtIndex:indexPath.row]];
             break;
             
