@@ -135,46 +135,8 @@
     cell.textLabel.text = task.terminalBreakName;
     cell.detailTextLabel.text = task.terminal.address;
     
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    NSString *infoText;
-    NSTimeInterval timeInterval = [[NSDate date] timeIntervalSinceDate:task.doBefore];
-    
-    if (timeInterval > 0 && timeInterval <= 24 * 3600) {
-        dateFormatter.dateStyle = NSDateFormatterNoStyle;
-        dateFormatter.timeStyle = NSDateFormatterShortStyle;
-    } else if (timeInterval <= 7 * 24 * 3600) {
-        dateFormatter.dateFormat = @"EEEE";
-    } else {
-        dateFormatter.dateStyle = NSDateFormatterShortStyle;
-        dateFormatter.timeStyle = NSDateFormatterNoStyle;
-    }
-    
-    infoText = [dateFormatter stringFromDate:task.doBefore];
-
-    UIFont *font = [UIFont systemFontOfSize:16];
-    CGSize size = [infoText sizeWithFont:font];
-    
-    CGFloat paddingX = 0;
-    CGFloat paddingY = 0;
-    CGFloat marginX = 10;
-    
-    CGFloat x = cell.contentView.frame.size.width - size.width - 2 * paddingX - marginX;
-    CGFloat y = cell.textLabel.bounds.origin.y;
-    
-    CGRect frame = CGRectMake(x, y, size.width + 2 * paddingX, size.height + 2 * paddingY);
-    
-    UILabel *infoLabel = [[UILabel alloc] initWithFrame:frame];
-    infoLabel.text = infoText;
-    infoLabel.font = font;
-    infoLabel.textColor = [UIColor blueColor];
-    infoLabel.tag = 666;
-    
-    [[cell.contentView viewWithTag:666] removeFromSuperview];
-    [cell.contentView addSubview:infoLabel];
-
-    
     NSTimeInterval remainingTime = [task remainingTime];
-    UIColor *backgroundColor = cell.contentView.backgroundColor;
+    UIColor *backgroundColor = [UIColor whiteColor];
     UIColor *textColor = [UIColor blackColor];
     
     if (!task.lts || [task.ts compare:task.lts] == NSOrderedDescending) {
@@ -200,56 +162,55 @@
     cell.textLabel.textColor = textColor;
     cell.detailTextLabel.textColor = textColor;
     
-//    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    NSString *infoText;
     
+    dateFormatter.dateStyle = NSDateFormatterShortStyle;
+    dateFormatter.timeStyle = NSDateFormatterNoStyle;
     
-//    NSLog(@"backgroundColor %@", backgroundColor);
-//    NSLog(@"textColor %@", textColor);
+    if ([[dateFormatter stringFromDate:[NSDate date]] isEqualToString:[dateFormatter stringFromDate:task.doBefore]]) {
     
+        dateFormatter.dateStyle = NSDateFormatterNoStyle;
+        dateFormatter.timeStyle = NSDateFormatterShortStyle;
+        
+    } else {
+        
+        if ([[NSDate date] timeIntervalSinceDate:task.doBefore] <= 7 * 24 * 3600 &&
+            [[NSDate date] timeIntervalSinceDate:task.doBefore] >= -7 * 24 * 3600) {
+            dateFormatter.dateFormat = @"EEEE";
+        } else {
+            dateFormatter.dateStyle = NSDateFormatterShortStyle;
+            dateFormatter.timeStyle = NSDateFormatterNoStyle;
+        }
+
+    }
+    
+    infoText = [dateFormatter stringFromDate:task.doBefore];
+    
+    UIFont *font = [UIFont systemFontOfSize:16];
+    CGSize size = [infoText sizeWithFont:font];
+    
+    CGFloat paddingX = 0;
+    CGFloat paddingY = 0;
+    CGFloat marginX = 10;
+    
+    CGFloat x = cell.contentView.frame.size.width - size.width - 2 * paddingX - marginX;
+    CGFloat y = cell.textLabel.bounds.origin.y;
+    
+    CGRect frame = CGRectMake(x, y, size.width + 2 * paddingX, size.height + 2 * paddingY);
+    
+    UILabel *infoLabel = [[UILabel alloc] initWithFrame:frame];
+    infoLabel.text = infoText;
+    infoLabel.font = font;
+    infoLabel.textColor = [UIColor blueColor];
+    infoLabel.backgroundColor = cell.contentView.backgroundColor;
+    infoLabel.tag = 666;
+    
+    [[cell.contentView viewWithTag:666] removeFromSuperview];
+    [cell.contentView addSubview:infoLabel];
     
     return cell;
 }
-
-
-
-/*
- // Override to support conditional editing of the table view.
- - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
- {
- // Return NO if you do not want the specified item to be editable.
- return YES;
- }
- */
-
-/*
- // Override to support editing the table view.
- - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
- {
- if (editingStyle == UITableViewCellEditingStyleDelete) {
- // Delete the row from the data source
- [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
- }
- else if (editingStyle == UITableViewCellEditingStyleInsert) {
- // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
- }
- }
- */
-
-/*
- // Override to support rearranging the table view.
- - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
- {
- }
- */
-
-/*
- // Override to support conditional rearranging of the table view.
- - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
- {
- // Return NO if you do not want the item to be re-orderable.
- return YES;
- }
- */
 
 
 @end

@@ -185,8 +185,8 @@
         
 //    NSLog(@"parseResponse");
 
-//    NSString *dataPath = [[NSBundle mainBundle] pathForResource:@"STTTtest" ofType:@"json"];
-//    responseData = [NSData dataWithContentsOfFile:dataPath];
+    NSString *dataPath = [[NSBundle mainBundle] pathForResource:@"STTTtest" ofType:@"json"];
+    responseData = [NSData dataWithContentsOfFile:dataPath];
 
 //    NSString *responseString = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
 //    NSLog(@"responseData %@", responseString);

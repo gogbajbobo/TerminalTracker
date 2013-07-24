@@ -164,17 +164,18 @@
     NSArray *tasks = self.taskController.resultsController.fetchedObjects;
     
     if (tasks.count > 0) {
-//        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        //        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
-//    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-
+    //    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.visited == %@", [NSNumber numberWithInt:0]];
     NSArray *unsolvedTasks = [tasks filteredArrayUsingPredicate:predicate];
     NSUInteger numberOfUnsolvedTasks = unsolvedTasks.count;
     cell.textLabel.text = [NSString stringWithFormat:@"Невыполненных: %d", numberOfUnsolvedTasks];
     
-    NSString *subtitle = @"Всего: ";
-    cell.detailTextLabel.text = [subtitle stringByAppendingFormat:@"%d", tasks.count];
+    //
+    //    NSString *subtitle = @"Всего: ";
+    //    cell.detailTextLabel.text = [subtitle stringByAppendingFormat:@"%d", tasks.count];
     
     int numberOfOverdueTasks = 0;
     int numberOfCriticalTasks = 0;
@@ -193,45 +194,86 @@
         }
     }
     
-    if (numberOfCautionTasks + numberOfCriticalTasks + numberOfHurryTasks + numberOfOverdueTasks + numberOfUnsolvedTasks > 0) {
+    int numberOfColoredTasks = numberOfCautionTasks + numberOfCriticalTasks + numberOfHurryTasks + numberOfOverdueTasks;
+    int numberOfUncoloredTasks = numberOfUnsolvedTasks - numberOfColoredTasks;
+    
+    UIColor *backgroundColor = cell.backgroundColor;
+    UIColor *textColor = [UIColor blackColor];
+    UIFont *font = [UIFont boldSystemFontOfSize:14];
+    
+    NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:
+                                font, NSFontAttributeName,
+                                backgroundColor, NSBackgroundColorAttributeName,
+                                textColor, NSForegroundColorAttributeName,
+                                nil];
+    
+    NSMutableAttributedString *text = [[NSMutableAttributedString alloc] initWithString:@"" attributes:attributes];
+    
+    if (numberOfOverdueTasks > 0) {
         
-        NSString *text;
-        UIColor *backgroundColor = cell.backgroundColor;
-        UIColor *textColor = [UIColor blackColor];
-        UIFont *font = [UIFont boldSystemFontOfSize:18];
-
-        if (numberOfOverdueTasks + numberOfCriticalTasks > 0) {
-            
-            text = [NSString stringWithFormat:@"%d/%d", numberOfOverdueTasks, numberOfCriticalTasks];
-            backgroundColor = [UIColor redColor];
-            textColor = [UIColor whiteColor];
-            
-        } else {
-            if (numberOfCautionTasks > 0) {
-                text = [NSString stringWithFormat:@"%d", numberOfCautionTasks];
-                backgroundColor = [UIColor yellowColor];
-                
-            } else {
-                if (numberOfHurryTasks > 0) {
-                    text = [NSString stringWithFormat:@"%d", numberOfHurryTasks];
-                    backgroundColor = [UIColor colorWithRed:0.56 green:0.93 blue:0.56 alpha:1];
-                }
-            }
-        }
+        textColor = [UIColor redColor];
+        attributes = [NSDictionary dictionaryWithObjectsAndKeys:
+                      textColor, NSForegroundColorAttributeName,
+                      nil];
+        [text appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@" %d ", numberOfOverdueTasks] attributes:attributes]];
         
-        NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:
-                                    font, NSFontAttributeName,
-                                    backgroundColor, NSBackgroundColorAttributeName,
-                                    textColor, NSForegroundColorAttributeName,
-                                    nil];
-        [self addInfoLabelWithText:text andAttributes:attributes toCell:cell];
-
     }
     
+    if (numberOfCriticalTasks > 0) {
+        
+        backgroundColor = [UIColor redColor];
+        textColor = [UIColor whiteColor];
+        
+        attributes = [NSDictionary dictionaryWithObjectsAndKeys:
+                      font, NSFontAttributeName,
+                      backgroundColor, NSBackgroundColorAttributeName,
+                      textColor, NSForegroundColorAttributeName,
+                      nil];
+        
+        [text appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@" %d ", numberOfCriticalTasks] attributes:attributes]];
+        
+    }
     
+    if (numberOfCautionTasks > 0) {
+        
+        backgroundColor = [UIColor yellowColor];
+        attributes = [NSDictionary dictionaryWithObjectsAndKeys:
+                      backgroundColor, NSBackgroundColorAttributeName,
+                      nil];
+        [text appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@" %d ", numberOfCautionTasks] attributes:attributes]];
+        
+    }
     
+    if (numberOfHurryTasks > 0) {
+        backgroundColor = [UIColor colorWithRed:0.56 green:0.93 blue:0.56 alpha:1];
+        attributes = [NSDictionary dictionaryWithObjectsAndKeys:
+                      backgroundColor, NSBackgroundColorAttributeName,
+                      nil];
+        [text appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@" %d ", numberOfHurryTasks] attributes:attributes]];
+    }
     
+    if (numberOfUncoloredTasks > 0) {
+        backgroundColor = cell.backgroundColor;
+        attributes = [NSDictionary dictionaryWithObjectsAndKeys:
+                      backgroundColor, NSBackgroundColorAttributeName,
+                      nil];
+        [text appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@" %d ", numberOfUncoloredTasks] attributes:attributes]];
+    }
+    
+    cell.detailTextLabel.attributedText = text;
 
+    
+    backgroundColor = cell.backgroundColor;
+    textColor = [UIColor blackColor];
+    font = [UIFont boldSystemFontOfSize:18];
+    attributes = [NSDictionary dictionaryWithObjectsAndKeys:
+                                font, NSFontAttributeName,
+                                backgroundColor, NSBackgroundColorAttributeName,
+                                textColor, NSForegroundColorAttributeName,
+                                nil];
+    
+    [self addInfoLabelWithText:[NSString stringWithFormat:@"%d", tasks.count] andAttributes:attributes toCell:cell];
+    
 }
 
 - (void)configureTerminalCell:(UITableViewCell *)cell {

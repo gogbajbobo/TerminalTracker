@@ -170,10 +170,10 @@
     
     NSString *code = terminal.code ? terminal.code : @"Н/Д";
 //    NSString *sysName = terminal.srcSystemName ? [NSString stringWithFormat:@" / %@", terminal.srcSystemName] : @"";
-    NSString *breakName = lastTask.terminalBreakName ? [NSString stringWithFormat:@" / %@", lastTask.terminalBreakName] : @"";
+//    NSString *breakName = lastTask.terminalBreakName ? [NSString stringWithFormat:@" / %@", lastTask.terminalBreakName] : @"";
     
 //    cell.textLabel.text = [NSString stringWithFormat:@"%@%@%@", code, sysName, breakName];
-    cell.textLabel.text = [NSString stringWithFormat:@"%@%@", code, breakName];
+    cell.textLabel.text = [NSString stringWithFormat:@"%@", code];
     cell.detailTextLabel.text = terminal.address ? terminal.address : @"Нет данных";;
     
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
@@ -184,14 +184,20 @@
         dateFormatter.dateStyle = NSDateFormatterNoStyle;
         dateFormatter.timeStyle = NSDateFormatterShortStyle;
     } else if (timeInterval <= 7 * 24 * 3600) {
-        dateFormatter.dateFormat = @"EEEE";
+//        dateFormatter.dateFormat = @"EEEE, H:mm a";
+        dateFormatter.dateStyle = NSDateFormatterFullStyle;
+        dateFormatter.timeStyle = NSDateFormatterShortStyle;
     } else {
         dateFormatter.dateStyle = NSDateFormatterShortStyle;
-        dateFormatter.timeStyle = NSDateFormatterNoStyle;
+        dateFormatter.timeStyle = NSDateFormatterShortStyle;
     }
     
-//    infoText = [NSString stringWithFormat:@"LAT: %@", [dateFormatter stringFromDate:terminal.lastActivityTime]];
     infoText = [dateFormatter stringFromDate:terminal.lastActivityTime];
+    
+    NSArray *components = [infoText componentsSeparatedByString:@","];
+    if (components.count > 2) {
+        infoText = [NSString stringWithFormat:@"%@,%@", [components objectAtIndex:0], [components lastObject]];
+    }
     
     UIFont *font = [UIFont systemFontOfSize:16];
     CGSize size = [infoText sizeWithFont:font];

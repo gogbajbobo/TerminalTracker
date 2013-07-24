@@ -45,6 +45,7 @@
 		2CE7E4BA179D5CE300113A6A /* STTTInfoTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CE7E4B9179D5CE300113A6A /* STTTInfoTVC.m */; };
 		2CE7E4C1179D658100113A6A /* STTTTaskTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CE7E4C0179D658100113A6A /* STTTTaskTVC.m */; };
 		2CE7E4C4179D659700113A6A /* STTTTerminalTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CE7E4C3179D659700113A6A /* STTTTerminalTVC.m */; };
+		2CE7E4CA179FC98800113A6A /* STTTtest.json in Resources */ = {isa = PBXBuildFile; fileRef = 2CE7E4C9179FC98800113A6A /* STTTtest.json */; };
 		9E0575B8127B4EE5B37A6DF5 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F26E7DA269E4C8AB402C081 /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -120,6 +121,7 @@
 		2CE7E4C0179D658100113A6A /* STTTTaskTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTTaskTVC.m; sourceTree = "<group>"; };
 		2CE7E4C2179D659700113A6A /* STTTTerminalTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTTerminalTVC.h; sourceTree = "<group>"; };
 		2CE7E4C3179D659700113A6A /* STTTTerminalTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTTerminalTVC.m; sourceTree = "<group>"; };
+		2CE7E4C9179FC98800113A6A /* STTTtest.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = STTTtest.json; sourceTree = "<group>"; };
 		3F26E7DA269E4C8AB402C081 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD3C601463AF4A6E80FEF924 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -190,6 +192,7 @@
 		2CE32660176F29E800BAA1D4 /* TerminalTracker */ = {
 			isa = PBXGroup;
 			children = (
+				2CE7E4C9179FC98800113A6A /* STTTtest.json */,
 				2CE326A5176F2FED00BAA1D4 /* Data Model */,
 				2CE32698176F2BB600BAA1D4 /* Classes */,
 				2CE32669176F29E800BAA1D4 /* STAppDelegate.h */,
@@ -365,6 +368,7 @@
 				2CE32671176F29E800BAA1D4 /* Default-568h@2x.png in Resources */,
 				2CE32674176F29E800BAA1D4 /* STTTMainStoryboard_iPhone.storyboard in Resources */,
 				2CE32677176F29E800BAA1D4 /* STTTMainStoryboard_iPad.storyboard in Resources */,
+				2CE7E4CA179FC98800113A6A /* STTTtest.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
