@@ -185,8 +185,8 @@
         
 //    NSLog(@"parseResponse");
 
-    NSString *dataPath = [[NSBundle mainBundle] pathForResource:@"STTTtest" ofType:@"json"];
-    responseData = [NSData dataWithContentsOfFile:dataPath];
+//    NSString *dataPath = [[NSBundle mainBundle] pathForResource:@"STTTtest" ofType:@"json"];
+//    responseData = [NSData dataWithContentsOfFile:dataPath];
 
 //    NSString *responseString = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
 //    NSLog(@"responseData %@", responseString);
@@ -272,7 +272,7 @@
     NSString *xidString = [xid stringByReplacingOccurrencesOfString:@"-" withString:@""];
     NSData *xidData = [self dataFromString:xidString];
 
-    if (result && ![result isEqualToString:@"ok"]) {
+    if (!result || ![result isEqualToString:@"ok"]) {
         
         [[(STSession *)self.session logger] saveLogMessageWithText:[NSString stringWithFormat:@"Sync result not ok xid: %@", xid] type:@"error"];
         
@@ -297,7 +297,7 @@
                 
             } else {
                 
-                [[(STSession *)self.session logger] saveLogMessageWithText:[NSString stringWithFormat:@"Sync: object wrong xid: %@", xid] type:@"error"];
+                [[(STSession *)self.session logger] saveLogMessageWithText:[NSString stringWithFormat:@"Sync: no object with xid: %@", xid] type:@"error"];
                 
             }
 
@@ -383,6 +383,11 @@
     STTTAgentTask *task = [self taskByXid:xidData];
     
     task.terminalBreakName = [properties valueForKey:@"terminal_break_name"];
+    
+    NSLog(@"valueForKey:visited %@", [properties valueForKey:@"visited"]);
+    NSLog(@"boolValue %d", [[properties valueForKey:@"visited"] boolValue]);
+    NSLog(@"numberWithBool %@", [NSNumber numberWithBool:[[properties valueForKey:@"visited"] boolValue]]);
+    
     task.visited = [NSNumber numberWithBool:[[properties valueForKey:@"visited"] boolValue]];
     
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];

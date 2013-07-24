@@ -37,6 +37,7 @@
     if ([self.tableView.dataSource isKindOfClass:[STTTTerminalController class]]) {
         [(STTTTerminalController *)self.tableView.dataSource calculateDistance];
     }
+//    [self.tableView reloadData];
 }
 
 - (void)didReceiveMemoryWarning

@@ -12,7 +12,6 @@
 
 @property (nonatomic, strong) CLLocationManager *locationManager;
 @property (nonatomic) CLLocationAccuracy desiredAccuracy;
-@property (nonatomic) double requiredAccuracy;
 @property (nonatomic) CLLocationDistance distanceFilter;
 @property (nonatomic, strong) NSMutableDictionary *settings;
 @property (nonatomic) NSTimeInterval timeFilter;
@@ -61,7 +60,7 @@
 //    return [[self.settings valueForKey:@"desiredAccuracy"] doubleValue];
 }
 
-- (double)requiredAccuracy {
+- (CLLocationAccuracy)requiredAccuracy {
     return 100.0;
 //    return [[self.settings valueForKey:@"requiredAccuracy"] doubleValue];
 }
@@ -93,14 +92,18 @@
     CLLocation *newLocation = [locations lastObject];
     NSTimeInterval locationAge = -[newLocation.timestamp timeIntervalSinceNow];
 //    NSLog(@"newLocation %@", newLocation);
-    if (locationAge < 5.0 &&
-        newLocation.horizontalAccuracy > 0 &&
-        newLocation.horizontalAccuracy <= self.requiredAccuracy) {
-            self.currentLocation = newLocation;
-            [self.locationManager stopUpdatingLocation];
-//            NSLog(@"stopUpdatingLocation");
-            self.locationManager = nil;
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"currentLocationUpdated" object:self.currentLocation];
+    if (locationAge < 5.0) {
+        if (newLocation.horizontalAccuracy > 0){
+            self.currentAccuracy = newLocation.horizontalAccuracy;
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"currentAccuracyUpdated" object:nil];
+            if (newLocation.horizontalAccuracy <= self.requiredAccuracy) {
+                self.currentLocation = newLocation;
+                [self.locationManager stopUpdatingLocation];
+                //            NSLog(@"stopUpdatingLocation");
+                self.locationManager = nil;
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"currentLocationUpdated" object:self.currentLocation];
+            }        
+        }
     }
     
 }

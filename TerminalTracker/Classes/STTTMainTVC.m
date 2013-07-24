@@ -53,9 +53,19 @@
         [STTTLocationController sharedLC].session = [[STSessionManager sharedManager] currentSession];
         [[STTTLocationController sharedLC] getLocation];
         
+        UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(navBarDoubleTap)];
+        doubleTap.numberOfTapsRequired = 2;
+        [self.navigationController.navigationBar addGestureRecognizer:doubleTap];
+        
         [self.tableView reloadData];
         
     }
+    
+}
+
+- (void)navBarDoubleTap {
+    
+    [self.session.syncer syncData];
     
 }
 
@@ -342,13 +352,26 @@
         if ([segue.destinationViewController isKindOfClass:[STTTInfoTVC class]]) {
             STTTInfoTVC *infoTVC = (STTTInfoTVC *)segue.destinationViewController;
             if ([sender isKindOfClass:[NSIndexPath class]]) {
+                
                 if ([(NSIndexPath *)sender section] == 0) {
+                    
+                    NSLog(@"infoTVC.tableView %@", infoTVC.tableView);
+                    
                     infoTVC.tableView.dataSource = self.taskController;
+                    
+                    NSLog(@"taskController.tableView %@", self.taskController.tableView);
+                    
                     self.taskController.tableView = infoTVC.tableView;
+
+                    NSLog(@"taskController.tableView %@", self.taskController.tableView);
+                    
                     infoTVC.title = @"Задачи";
+                    
                 } else if ([(NSIndexPath *)sender section] == 1) {
+                    
                     infoTVC.tableView.dataSource = self.terminalController;
                     infoTVC.title = @"Терминалы";
+                    
                 }
             }
         }

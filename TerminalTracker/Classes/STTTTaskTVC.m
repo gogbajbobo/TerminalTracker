@@ -30,8 +30,9 @@
 @implementation STTTTaskTVC
 
 - (void)viewInit {
-    self.title = @"Задача";
+    self.title = self.task.terminalBreakName;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(currentLocationUpdated:) name:@"currentLocationUpdated" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(currentAccuracyUpdated:) name:@"currentAccuracyUpdated" object:nil];
     [self.task addObserver:self forKeyPath:@"commentText" options:(NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld) context:nil];
 }
 
@@ -92,7 +93,7 @@
             return 1;
             break;
         case 3:
-            return 1;
+            return 2;
             break;
             
         default:
@@ -113,10 +114,10 @@
             sectionTitle = nil;
             break;
         case 2:
-            sectionTitle = nil;
+            sectionTitle = @"Комментарии:";
             break;
         case 3:
-            sectionTitle = @"Комментарии:";
+            sectionTitle = @"Терминал:";
             break;
 
         default:
@@ -134,21 +135,31 @@
     
     switch (indexPath.section) {
         case 0:
-            cell = [cell initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-            [self addMapToCell:cell];
+            cell = [cell initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:cellIdentifier];
+            [self addDoBeforeToCell:cell];
             break;
         case 1:
-            cell = [cell initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
-            [self addInfoToCell:cell];
+            cell = [cell initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+            [self addButtonsToCell:cell];
             break;
         case 2:
             cell = [cell initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-            cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            [self addButtonsToCell:cell];
+            [self addCommentToCell:cell];
             break;
         case 3:
-            cell = [cell initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-            [self addCommentToCell:cell];
+            switch (indexPath.row) {
+                case 0:
+                    cell = [cell initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
+                    [self addInfoToCell:cell];
+                    break;
+                case 1:
+                    cell = [cell initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+                    [self addMapToCell:cell];
+                    break;
+                    
+                default:
+                    break;
+            }
             break;
             
         default:
@@ -156,7 +167,74 @@
             break;
     }
     
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    
     return cell;
+}
+
+- (void)addDoBeforeToCell:(UITableViewCell *)cell {
+    
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    
+    dateFormatter.dateStyle = NSDateFormatterShortStyle;
+    dateFormatter.timeStyle = NSDateFormatterNoStyle;
+    
+    if ([[dateFormatter stringFromDate:[NSDate date]] isEqualToString:[dateFormatter stringFromDate:self.task.doBefore]]) {
+        
+        dateFormatter.dateStyle = NSDateFormatterNoStyle;
+        dateFormatter.timeStyle = NSDateFormatterShortStyle;
+        
+    } else {
+        
+        if ([[NSDate date] timeIntervalSinceDate:self.task.doBefore] <= 7 * 24 * 3600 &&
+            [[NSDate date] timeIntervalSinceDate:self.task.doBefore] >= -7 * 24 * 3600) {
+            dateFormatter.dateFormat = @"EEEE";
+        } else {
+            dateFormatter.dateStyle = NSDateFormatterShortStyle;
+            dateFormatter.timeStyle = NSDateFormatterNoStyle;
+        }
+        
+    }
+
+    cell.textLabel.text = @"Срок:";
+//    cell.textLabel.numberOfLines = 2;
+    
+//    CGSize size = [@"Срок выполнения:" sizeWithFont:[UIFont boldSystemFontOfSize:12]];
+//    NSLog(@"size.width %f, size.height %f", size.width, size.height);
+    
+    
+    cell.detailTextLabel.text = [dateFormatter stringFromDate:self.task.doBefore];
+    
+    
+    UIColor *backgroundColor = [UIColor whiteColor];
+    UIColor *textColor = [UIColor blueColor];
+    
+    if (![self.task.visited boolValue]) {
+        
+        NSTimeInterval remainingTime = [self.task remainingTime];
+        
+        if (remainingTime < 0) {
+            textColor = [UIColor redColor];
+        } else {
+            if (remainingTime > 0 && remainingTime <= 60*60) {
+                backgroundColor = [UIColor redColor];
+                textColor = [UIColor whiteColor];
+                cell.textLabel.textColor = textColor;
+            } else if (remainingTime < 120*60) {
+                backgroundColor = [UIColor yellowColor];
+            } else if (remainingTime < 180*60) {
+                backgroundColor = [UIColor colorWithRed:0.56 green:0.93 blue:0.56 alpha:1];
+            }
+        }
+        
+    }
+    
+    cell.backgroundColor = backgroundColor;
+    cell.detailTextLabel.textColor = textColor;
+    
+//    NSLog(@"cell.textLabel %@", cell.textLabel);
+//    NSLog(@"cell.detailTextLabel %@", cell.detailTextLabel);
+    
 }
 
 - (void)addCommentToCell:(UITableViewCell *)cell {
@@ -195,29 +273,36 @@
 
 - (void)addInfoToCell:(UITableViewCell *)cell {
     
-    cell.textLabel.text = [NSString stringWithFormat:@"%@ / %@", self.task.terminal.code, self.task.terminalBreakName];
+    cell.textLabel.text = self.task.terminal.code ? self.task.terminal.code : @"Н/Д";
     
     if (self.task.terminal) {
-        cell.detailTextLabel.text = self.task.terminal.address;
+        cell.detailTextLabel.text = self.task.terminal.address ? self.task.terminal.address : @"Нет данных";
     }
     
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    NSTimeInterval timeInterval = [[NSDate date] timeIntervalSinceDate:self.task.doBefore];
+    NSTimeInterval timeInterval = [[NSDate date] timeIntervalSinceDate:self.task.terminal.lastActivityTime];
     
     if (timeInterval > 0 && timeInterval <= 24 * 3600) {
         dateFormatter.dateStyle = NSDateFormatterNoStyle;
         dateFormatter.timeStyle = NSDateFormatterShortStyle;
     } else if (timeInterval <= 7 * 24 * 3600) {
-        dateFormatter.dateFormat = @"EEEE";
+        //        dateFormatter.dateFormat = @"EEEE, H:mm a";
+        dateFormatter.dateStyle = NSDateFormatterFullStyle;
+        dateFormatter.timeStyle = NSDateFormatterShortStyle;
     } else {
         dateFormatter.dateStyle = NSDateFormatterShortStyle;
-        dateFormatter.timeStyle = NSDateFormatterNoStyle;
+        dateFormatter.timeStyle = NSDateFormatterShortStyle;
+    }
+    
+    NSString *lastActivity = [dateFormatter stringFromDate:self.task.terminal.lastActivityTime];
+    
+    NSArray *components = [lastActivity componentsSeparatedByString:@","];
+    if (components.count > 2) {
+        lastActivity = [NSString stringWithFormat:@"%@,%@", [components objectAtIndex:0], [components lastObject]];
     }
 
-    NSString *doBeforeString = [dateFormatter stringFromDate:self.task.doBefore];
-    
     UIFont *font = [UIFont systemFontOfSize:16];
-    CGSize size = [doBeforeString sizeWithFont:font];
+    CGSize size = [lastActivity sizeWithFont:font];
     
     CGFloat paddingX = 0;
     CGFloat paddingY = 0;
@@ -229,38 +314,13 @@
     
     CGRect frame = CGRectMake(x, y, size.width + 2 * paddingX, size.height + 2 * paddingY);
     
-    UILabel *doBeforeLabel = [[UILabel alloc] initWithFrame:frame];
-    doBeforeLabel.text = doBeforeString;
-    doBeforeLabel.font = font;
-    doBeforeLabel.tag = 666;
-    
-    UIColor *backgroundColor = self.tableView.backgroundColor;
-    UIColor *textColor = [UIColor blueColor];
-
-    if (![self.task.visited boolValue]) {
-        
-        NSTimeInterval remainingTime = [self.task remainingTime];
-        
-        if (remainingTime < 0) {
-            textColor = [UIColor redColor];
-        } else {
-            if (remainingTime > 0 && remainingTime <= 60*60) {
-                backgroundColor = [UIColor redColor];
-                textColor = [UIColor whiteColor];
-            } else if (remainingTime < 120*60) {
-                backgroundColor = [UIColor yellowColor];
-            } else if (remainingTime < 180*60) {
-                backgroundColor = [UIColor colorWithRed:0.56 green:0.93 blue:0.56 alpha:1];
-            }
-        }
-        
-    }
-    
-    doBeforeLabel.backgroundColor = backgroundColor;
-    doBeforeLabel.textColor = textColor;
+    UILabel *lastActivityLabel = [[UILabel alloc] initWithFrame:frame];
+    lastActivityLabel.text = lastActivity;
+    lastActivityLabel.font = font;
+    lastActivityLabel.tag = 666;
     
     [[cell.contentView viewWithTag:666] removeFromSuperview];
-    [cell.contentView addSubview:doBeforeLabel];
+    [cell.contentView addSubview:lastActivityLabel];
     
 }
 
@@ -292,7 +352,7 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     switch (indexPath.section) {
         case 0:
-            return 160;
+            return 44;
             break;
         case 1:
             return 44;
@@ -301,7 +361,18 @@
             return 44;
             break;
         case 3:
-            return 44;
+            switch (indexPath.row) {
+                case 0:
+                    return 44;
+                    break;
+                case 1:
+                    return 160;
+                    break;
+                    
+                default:
+                    return 0;
+                    break;
+            }
             break;
             
         default:
@@ -314,18 +385,18 @@
 
     switch (indexPath.section) {
         case 0:
-            // show full map
+            // do nothing
             break;
         case 1:
-            [self performSegueWithIdentifier:@"goToTerminal" sender:self.task.terminal];
-            break;
-        case 2:
             if (![self.task.visited boolValue]) {
                 [self buttonsBehaviorInCell:[tableView cellForRowAtIndexPath:indexPath]];
             }
             break;
-        case 3:
+        case 2:
             [self performSegueWithIdentifier:@"showComment" sender:self.task];
+            break;
+        case 3:
+            [self performSegueWithIdentifier:@"goToTerminal" sender:self.task.terminal];
             break;
             
         default:
@@ -353,6 +424,15 @@
 
     }
 
+}
+
+- (void)currentAccuracyUpdated:(NSNotification *)notification {
+    if (self.waitingLocation) {
+        NSString *currentAccuracy = [NSString stringWithFormat:@"%.f", [STTTLocationController sharedLC].currentAccuracy];
+        NSString *requiredAccuracy = [NSString stringWithFormat:@"%.f", [STTTLocationController sharedLC].requiredAccuracy];
+//        self.buttonsCell.textLabel.text = [NSString stringWithFormat:@"%@ -> %@", currentAccuracy, requiredAccuracy];
+        NSLog(@"accuracy %@", [NSString stringWithFormat:@"%@ -> %@", currentAccuracy, requiredAccuracy]);
+    }
 }
 
 - (void)currentLocationUpdated:(NSNotification *)notification {

@@ -13,6 +13,8 @@
 @interface STTTLocationController : NSObject
 
 @property (nonatomic, strong) CLLocation *currentLocation;
+@property (nonatomic) CLLocationAccuracy currentAccuracy;
+@property (nonatomic) CLLocationAccuracy requiredAccuracy;
 @property (nonatomic, strong) STSession *session;
 
 + (STTTLocationController *)sharedLC;

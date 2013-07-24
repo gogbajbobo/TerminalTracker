@@ -59,32 +59,65 @@
 }
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
-//    NSLog(@"controllerDidChangeContent");
+//    NSLog(@"taskControllerDidChangeContent");
     [self.tableView reloadData];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"taskControllerDidChangeContent" object:self];
+    
+//    NSLog(@"controller.sections.count %d", controller.sections.count);
+//    for (id <NSFetchedResultsSectionInfo> section in controller.sections) {
+//        NSLog(@"section objects.count %d", [(id <NSFetchedResultsSectionInfo>)section objects].count);
+//        for (STTTAgentTask *task in [(id <NSFetchedResultsSectionInfo>)section objects]) {
+//            NSLog(@"task.visited %@", task.visited);
+//        }
+//    }
+    
 }
 
 - (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath {
     
-    //    NSLog(@"controller didChangeObject");
+//    NSLog(@"controller didChangeObject");
+//    NSLog(@"indexPath %@, newIndexPath %@", indexPath, newIndexPath);
     
     if ([[self.session status] isEqualToString:@"running"]) {
         
         
         if (type == NSFetchedResultsChangeDelete) {
             
+//            NSLog(@"NSFetchedResultsChangeDelete");
             
         } else if (type == NSFetchedResultsChangeInsert) {
             
+//            NSLog(@"NSFetchedResultsChangeInsert");
             
         } else if (type == NSFetchedResultsChangeUpdate) {
             
+//            NSLog(@"NSFetchedResultsChangeUpdate");
             
-//            [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-
+        } else if (type == NSFetchedResultsChangeMove) {
+            
+//            NSLog(@"NSFetchedResultsChangeMove");
+            
         }
         
     }
+}
+
+- (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type {
+    
+//    NSLog(@"controller didChangeSection");
+//    NSLog(@"sectionIndex %d", sectionIndex);
+    
+    if (type == NSFetchedResultsChangeDelete) {
+        
+//        NSLog(@"NSFetchedResultsChangeDelete");
+    
+    } else if (type == NSFetchedResultsChangeInsert) {
+        
+//        NSLog(@"NSFetchedResultsChangeInsert");
+        
+        
+    }
+    
 }
 
 #pragma mark - Table view data source
@@ -131,6 +164,11 @@
     STTTAgentTask *task = (STTTAgentTask *)[[sectionInfo objects] objectAtIndex:indexPath.row];
     
 //    NSLog(@"task.visited %@", task.visited);
+//    NSLog(@"indexPath %@", indexPath);
+//    NSLog(@"fetchedObjects.count %d", self.resultsController.fetchedObjects.count);
+//    NSLog(@"sections.count %d", [self.resultsController sections].count);
+//    NSLog(@"[sectionInfo objects].count %d", [sectionInfo objects].count);
+
     
     cell.textLabel.text = task.terminalBreakName;
     cell.detailTextLabel.text = task.terminal.address;
