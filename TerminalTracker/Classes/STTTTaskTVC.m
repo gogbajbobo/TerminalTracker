@@ -177,7 +177,7 @@
 
     cell.textLabel.textAlignment = NSTextAlignmentCenter;
 
-    if (self.task.visited) {
+    if ([self.task.visited boolValue]) {
         cell.textLabel.text = @"Выполнено";
         cell.textLabel.textColor = [UIColor colorWithRed:0.16 green:0.53 blue:0.16 alpha:1];
     } else {
