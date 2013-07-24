@@ -16,7 +16,6 @@
 		2C93A5AC1781BA800014001B /* STTTLocationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A5AB1781BA800014001B /* STTTLocationController.m */; };
 		2C93A5AF178209AD0014001B /* STTTAgentTerminal+distance.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A5AE178209AD0014001B /* STTTAgentTerminal+distance.m */; };
 		2C93A5B8178420DC0014001B /* STTTAgentTask+remainingTime.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A5B7178420DC0014001B /* STTTAgentTask+remainingTime.m */; };
-		2C93A5BB178450F70014001B /* STTTTerminalVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A5BA178450F70014001B /* STTTTerminalVC.m */; };
 		2C93A5C1178471B60014001B /* STTTMapAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A5C0178471B50014001B /* STTTMapAnnotation.m */; };
 		2C93A5C4178597940014001B /* STTTCommentVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A5C3178597930014001B /* STTTCommentVC.m */; };
 		2C93A5C717859F880014001B /* STTTAgentTerminal.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A5C617859F880014001B /* STTTAgentTerminal.m */; };
@@ -77,8 +76,6 @@
 		2C93A5AE178209AD0014001B /* STTTAgentTerminal+distance.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "STTTAgentTerminal+distance.m"; sourceTree = "<group>"; };
 		2C93A5B6178420DB0014001B /* STTTAgentTask+remainingTime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "STTTAgentTask+remainingTime.h"; sourceTree = "<group>"; };
 		2C93A5B7178420DC0014001B /* STTTAgentTask+remainingTime.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "STTTAgentTask+remainingTime.m"; sourceTree = "<group>"; };
-		2C93A5B9178450F60014001B /* STTTTerminalVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTTerminalVC.h; sourceTree = "<group>"; };
-		2C93A5BA178450F70014001B /* STTTTerminalVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTTerminalVC.m; sourceTree = "<group>"; };
 		2C93A5BF178471B50014001B /* STTTMapAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTMapAnnotation.h; sourceTree = "<group>"; };
 		2C93A5C0178471B50014001B /* STTTMapAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTMapAnnotation.m; sourceTree = "<group>"; };
 		2C93A5C2178597930014001B /* STTTCommentVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTCommentVC.h; sourceTree = "<group>"; };
@@ -254,8 +251,6 @@
 				2C93A561177D795E0014001B /* STTTTerminalController.m */,
 				2C93A5AA1781BA800014001B /* STTTLocationController.h */,
 				2C93A5AB1781BA800014001B /* STTTLocationController.m */,
-				2C93A5B9178450F60014001B /* STTTTerminalVC.h */,
-				2C93A5BA178450F70014001B /* STTTTerminalVC.m */,
 				2C93A5C2178597930014001B /* STTTCommentVC.h */,
 				2C93A5C3178597930014001B /* STTTCommentVC.m */,
 				2C93A5BF178471B50014001B /* STTTMapAnnotation.h */,
@@ -445,7 +440,6 @@
 				2C93A5AC1781BA800014001B /* STTTLocationController.m in Sources */,
 				2C93A5AF178209AD0014001B /* STTTAgentTerminal+distance.m in Sources */,
 				2C93A5B8178420DC0014001B /* STTTAgentTask+remainingTime.m in Sources */,
-				2C93A5BB178450F70014001B /* STTTTerminalVC.m in Sources */,
 				2C93A5C1178471B60014001B /* STTTMapAnnotation.m in Sources */,
 				2C93A5C4178597940014001B /* STTTCommentVC.m in Sources */,
 				2C93A5C717859F880014001B /* STTTAgentTerminal.m in Sources */,
