@@ -27,7 +27,7 @@
 
 - (NSArray *)sortedTasks {
     if (!_sortedTasks) {
-        NSSortDescriptor *descriptor = [NSSortDescriptor sortDescriptorWithKey:@"doBefore" ascending:YES selector:@selector(compare:)];
+        NSSortDescriptor *descriptor = [NSSortDescriptor sortDescriptorWithKey:@"doBefore" ascending:NO selector:@selector(compare:)];
         _sortedTasks = [self.terminal.tasks sortedArrayUsingDescriptors:[NSArray arrayWithObject:descriptor]];
     }
     return _sortedTasks;
@@ -135,8 +135,13 @@
             }
             break;
         case 1:
-            cell = [cell initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellIdentifier];
-            [self addTasksToCell:cell];
+            switch (indexPath.row) {
+                default:
+                    cell = [cell initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellIdentifier];
+                    STTTAgentTask *task = (STTTAgentTask *)[self.sortedTasks objectAtIndex:indexPath.row];
+                    [self addTask:task toCell:cell];
+                    break;
+            }
             break;
             
         default:
@@ -169,7 +174,7 @@
     }
     
     cell.detailTextLabel.text = [dateFormatter stringFromDate:self.terminal.lastActivityTime];
-
+    
 }
 
 - (void)addSrcSystemNameToCell:(UITableViewCell *)cell {
@@ -177,9 +182,8 @@
     cell.detailTextLabel.text = self.terminal.srcSystemName;
 }
 
-- (void)addTasksToCell:(UITableViewCell *)cell {
-    NSUInteger row = [self.tableView indexPathForCell:cell].row;
-    STTTAgentTask *task = (STTTAgentTask *)[self.sortedTasks objectAtIndex:row];
+- (void)addTask:(STTTAgentTask *)task toCell:(UITableViewCell *)cell {
+    
     cell.textLabel.text = task.terminalBreakName;
     
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
@@ -241,9 +245,9 @@
     cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
     
 }
-    
-- (void)addAddressToCell:(UITableViewCell *)cell {
 
+- (void)addAddressToCell:(UITableViewCell *)cell {
+    
     cell.textLabel.text = self.terminal.address;
     cell.textLabel.font = [UIFont systemFontOfSize:14];
     cell.textLabel.numberOfLines = 2;
@@ -253,7 +257,7 @@
 
 
 - (void)addMapToCell:(UITableViewCell *)cell {
-
+    
     CLLocationCoordinate2D terminalCoordinate = CLLocationCoordinate2DMake([self.terminal.location.latitude doubleValue], [self.terminal.location.longitude doubleValue]);
     MKCoordinateSpan span;
     span.longitudeDelta = 0.01;
@@ -279,15 +283,15 @@
     switch (indexPath.section) {
         case 0:
             switch (indexPath.row) {
-
+                    
                 default:
                     return 44;
                     break;
-
+                    
                 case 2:
                     return 160;
                     break;
-
+                    
             }
             break;
         case 1:
