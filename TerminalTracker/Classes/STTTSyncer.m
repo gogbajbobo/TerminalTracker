@@ -384,9 +384,9 @@
     
     task.terminalBreakName = [properties valueForKey:@"terminal_break_name"];
     
-    NSLog(@"valueForKey:visited %@", [properties valueForKey:@"visited"]);
-    NSLog(@"boolValue %d", [[properties valueForKey:@"visited"] boolValue]);
-    NSLog(@"numberWithBool %@", [NSNumber numberWithBool:[[properties valueForKey:@"visited"] boolValue]]);
+//    NSLog(@"valueForKey:visited %@", [properties valueForKey:@"visited"]);
+//    NSLog(@"boolValue %d", [[properties valueForKey:@"visited"] boolValue]);
+//    NSLog(@"numberWithBool %@", [NSNumber numberWithBool:[[properties valueForKey:@"visited"] boolValue]]);
     
     task.visited = [NSNumber numberWithBool:[[properties valueForKey:@"visited"] boolValue]];
     

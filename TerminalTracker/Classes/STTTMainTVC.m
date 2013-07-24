@@ -354,17 +354,9 @@
             if ([sender isKindOfClass:[NSIndexPath class]]) {
                 
                 if ([(NSIndexPath *)sender section] == 0) {
-                    
-                    NSLog(@"infoTVC.tableView %@", infoTVC.tableView);
-                    
-                    infoTVC.tableView.dataSource = self.taskController;
-                    
-                    NSLog(@"taskController.tableView %@", self.taskController.tableView);
-                    
-                    self.taskController.tableView = infoTVC.tableView;
 
-                    NSLog(@"taskController.tableView %@", self.taskController.tableView);
-                    
+                    infoTVC.tableView.dataSource = self.taskController;
+                    self.taskController.tableView = infoTVC.tableView;
                     infoTVC.title = @"Задачи";
                     
                 } else if ([(NSIndexPath *)sender section] == 1) {
