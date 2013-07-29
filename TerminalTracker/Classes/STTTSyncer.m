@@ -413,7 +413,8 @@
     
     NSString *group = [properties valueForKey:@"group"];
     NSString *name = [properties valueForKey:@"name"];
-    NSString *value = [properties valueForKey:@"value"];
+    id newValue = [properties valueForKey:@"value"];
+    NSString *value = [newValue isKindOfClass:[NSString class]] ? newValue : [newValue stringValue];
     
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:NSStringFromClass([STSettings class])];
     request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"ts" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
