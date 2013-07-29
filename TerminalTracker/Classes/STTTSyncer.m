@@ -353,8 +353,12 @@
     terminal.address = [NSString stringWithUTF8String:[[properties valueForKey:@"address"] UTF8String]];
     
     terminal.lts = [NSDate date];
-    terminal.location.latitude = [NSNumber numberWithDouble:[[properties valueForKey:@"latitude"] doubleValue]];
-    terminal.location.longitude = [NSNumber numberWithDouble:[[properties valueForKey:@"longitude"] doubleValue]];
+//    terminal.location.latitude = [NSNumber numberWithDouble:[[properties valueForKey:@"latitude"] doubleValue]];
+//    terminal.location.longitude = [NSNumber numberWithDouble:[[properties valueForKey:@"longitude"] doubleValue]];
+    id latitude = [properties valueForKey:@"latitude"];
+    id longitude = [properties valueForKey:@"longitude"];
+    terminal.location.latitude = [latitude isKindOfClass:[NSNumber class]] ? latitude : [NSNumber numberWithDouble:[latitude doubleValue]];
+    terminal.location.longitude = [longitude isKindOfClass:[NSNumber class]] ? longitude : [NSNumber numberWithDouble:[longitude doubleValue]];;
     
     if (!terminal.location.latitude || !terminal.location.longitude) {
         CLGeocoder *geoCoder = [[CLGeocoder alloc] init];
@@ -374,7 +378,7 @@
     }
     
     //        NSLog(@"terminal %@", terminal);
-//    NSLog(@"get terminal.xid %@", terminal.xid);
+    NSLog(@"get terminal.xid %@", terminal.xid);
 
 }
 
@@ -388,7 +392,9 @@
 //    NSLog(@"boolValue %d", [[properties valueForKey:@"visited"] boolValue]);
 //    NSLog(@"numberWithBool %@", [NSNumber numberWithBool:[[properties valueForKey:@"visited"] boolValue]]);
     
-    task.visited = [NSNumber numberWithBool:[[properties valueForKey:@"visited"] boolValue]];
+//    task.visited = [NSNumber numberWithBool:[[properties valueForKey:@"visited"] boolValue]];
+    id visited = [properties valueForKey:@"visited"];
+    task.visited = [visited isKindOfClass:[NSNumber class]] ? visited : [NSNumber numberWithBool:[visited boolValue]];
     
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss.SSS"];
@@ -405,7 +411,7 @@
     task.terminal = terminal;
     
     //        NSLog(@"task %@", task);
-//    NSLog(@"get task.xid %@", task.xid);
+    NSLog(@"get task.xid %@", task.xid);
 
 }
 
