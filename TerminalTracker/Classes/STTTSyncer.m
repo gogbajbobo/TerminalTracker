@@ -202,12 +202,14 @@
                         
                     } else {
 //                        NSLog(@"object %@", object);
+                        
+                        NSString *originalRequestURL = [NSString stringWithFormat:@"%@", connection.originalRequest.URL];
 
-                        if ([[NSString stringWithFormat:@"%@", connection.originalRequest.URL] isEqualToString:self.recieveDataServerURI]) {
+                        if ([originalRequestURL isEqualToString:self.recieveDataServerURI] || [originalRequestURL hasPrefix:self.restServerURI]) {
                             
                             [self newObject:(NSDictionary *)object];
                             
-                        } else if ([[NSString stringWithFormat:@"%@", connection.originalRequest.URL] isEqualToString:self.sendDataServerURI]) {
+                        } else if ([originalRequestURL isEqualToString:self.sendDataServerURI]) {
                             
                             [self syncObject:object];
                             
