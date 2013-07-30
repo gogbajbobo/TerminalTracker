@@ -51,18 +51,7 @@
     if (!_dataOffset) {
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         _dataOffset = [defaults objectForKey:@"dataOffset"];
-//        NSString *dataOffset = [defaults objectForKey:@"dataOffset"];
-//        if (!dataOffset) {
-//            NSDate *date = [NSDate date];
-//            NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-//            dateFormatter.dateFormat = @"yyyyMMdd";
-//            dataOffset = [dateFormatter stringFromDate:date];
-//            [defaults setObject:dataOffset forKey:@"dataOffset"];
-//            [defaults synchronize];
-//        }
-//        _dataOffset = dataOffset;
     }
-//    NSLog(@"_dataOffset %@", _dataOffset);
     return _dataOffset;
 }
 
@@ -78,15 +67,8 @@
 - (NSString *)requestParameters {
     NSString *dataOffsetString = self.dataOffset ? [NSString stringWithFormat:@"offset:=%@&", self.dataOffset] : @"";
     NSString *requestParameters = [NSString stringWithFormat:@"%@page-size:=%d", dataOffsetString, self.fetchLimit];
-//    NSLog(@"requestParameters %@", requestParameters);
     return requestParameters;
 }
-
-//- (void)onTimerTick:(NSTimer *)timer {
-//    [self setRequestType:@"megaport.iAgentTerminal"];
-//    [self setRequestType:@"megaport.iAgentTask"];
-//    [super onTimerTick:timer];
-//}
 
 - (void)syncData {
     
@@ -109,21 +91,15 @@
         } else {
             NSLog(@"fetchResult.count %d", fetchResult.count);
             if (fetchResult.count == 0) {
-//                [self sendData:[self JSONFrom:fetchResult] toServer:self.sendDataServerURI withParameters:nil];
                 [self sendData:nil toServer:self.recieveDataServerURI withParameters:self.requestParameters];
             } else {
                 [self sendData:[self JSONFrom:fetchResult] toServer:self.sendDataServerURI withParameters:nil];
-//                [self sendData:nil toServer:self.recieveDataServerURI withParameters:self.requestParameters];
             }
             
         }
     }
         
 }
-
-//- (void)sendData:(NSData *)requestData toServer:(NSString *)serverUrlString withParameters:(NSString *)parameters {
-//        [super sendData:requestData toServer:serverUrlString withParameters:parameters];
-//}
 
 - (NSData *)JSONFrom:(NSArray *)dataForSyncing {
     

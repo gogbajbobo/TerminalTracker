@@ -74,7 +74,7 @@
     
     NSArray *boolValue = [NSArray arrayWithObjects:@"TrackerAutoStart", @"localAccessToSettings", @"deviceMotionUpdate", @"getLocationsWithNegativeSpeed", @"showLocationInsteadOfMap", nil];
     
-    NSArray *URIValue = [NSArray arrayWithObjects:@"syncServerURI", @"xmlNamespace", @"recieveDataServerURI", @"sendDataServerURI", nil];
+    NSArray *URIValue = [NSArray arrayWithObjects:@"restServerURI", @"xmlNamespace", @"recieveDataServerURI", @"sendDataServerURI", nil];
     
     if ([positiveDouble containsObject:key]) {
         if ([self isPositiveDouble:value]) {
