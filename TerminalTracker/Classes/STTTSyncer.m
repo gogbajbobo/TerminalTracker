@@ -191,7 +191,8 @@
         } else {
             id objectsArray = [(NSDictionary *)responseJSON valueForKey:@"data"];
             if ([objectsArray isKindOfClass:[NSArray class]]) {
-                NSLog(@"recieve %d objects", [(NSArray *)objectsArray count]);
+                NSUInteger objectsCount = [(NSArray *)objectsArray count];
+                NSLog(@"recieve %d objects", objectsCount);
                 for (id object in (NSArray *)objectsArray) {
                     
                     if (![object isKindOfClass:[NSDictionary class]]) {
@@ -225,15 +226,31 @@
                         NSString *pageSize = [(NSDictionary *)responseJSON valueForKey:@"pageSize"];
                         //                    NSLog(@"pageRowCount %@", pageRowCount);
                         if ([pageRowCount intValue] < [pageSize intValue]) {
+
                             NSLog(@"All recieved data were stored");
+                            [[NSNotificationCenter defaultCenter] postNotificationName:@"syncerRecievedAllData" object:self];
+
                         } else {
+
                             self.syncing = YES;
                             [self sendData:nil toServer:self.recieveDataServerURI withParameters:self.requestParameters];
+
                         }
 
                     } else if ([[NSString stringWithFormat:@"%@", connection.originalRequest.URL] isEqualToString:self.sendDataServerURI]) {
                         
                         [self syncData];
+                        
+                    } else if ([[NSString stringWithFormat:@"%@", connection.originalRequest.URL] hasPrefix:self.restServerURI]) {
+                        
+                        if (objectsCount > 0) {
+
+                            NSLog(@"recieved object was stored");
+                            [[NSNotificationCenter defaultCenter] postNotificationName:@"syncerRecievedAllData" object:self];
+
+                        } else {
+                            NSLog(@"no requested object recieved");
+                        }
                         
                     }
                 }
