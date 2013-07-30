@@ -26,6 +26,13 @@
 
 @synthesize dataOffset = _dataOffset;
 
+- (NSString *)restServerURI {
+    if (!_restServerURI) {
+        _restServerURI = [self.settings valueForKey:@"restServerURI"];
+    }
+    return _restServerURI;
+}
+
 - (NSString *)recieveDataServerURI {
     if (!_recieveDataServerURI) {
         _recieveDataServerURI = [self.settings valueForKey:@"recieveDataServerURI"];

@@ -42,7 +42,7 @@
     NSMutableDictionary *syncerSettings = [NSMutableDictionary dictionary];
     [syncerSettings setValue:@"20" forKey:@"fetchLimit"];
     [syncerSettings setValue:@"240.0" forKey:@"syncInterval"];
-    [syncerSettings setValue:@"https://system.unact.ru/iproxy/rest/test" forKey:@"syncServerURI"];
+    [syncerSettings setValue:@"https://system.unact.ru/iproxy/rest" forKey:@"restServerURI"];
     [syncerSettings setValue:@"https://system.unact.ru/iproxy/news/megaport" forKey:@"recieveDataServerURI"];
     [syncerSettings setValue:@"https://system.unact.ru/iproxy/chest/test" forKey:@"sendDataServerURI"];
     [syncerSettings setValue:@"https://github.com/sys-team/ASA.chest" forKey:@"xmlNamespace"];

@@ -12,5 +12,6 @@
 
 @property (nonatomic, strong) NSString *requestParameters;
 @property (nonatomic, strong) NSString *requestType;
+@property (nonatomic, strong) NSString *restServerURI;
 
 @end

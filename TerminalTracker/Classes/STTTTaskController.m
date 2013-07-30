@@ -8,8 +8,13 @@
 
 #import "STTTTaskController.h"
 #import "STTTTaskLocation.h"
+#import <STManagedTracker/STQueue.h>
+#import "STTTSyncer.h"
 
 @interface STTTTaskController() <NSFetchedResultsControllerDelegate>
+
+@property (nonatomic, strong) STQueue *noAddressTerminals;
+@property (nonatomic, weak) STTTSyncer *syncer;
 
 @end
 
@@ -22,9 +27,58 @@
     if (session != _session) {
         _session = session;
         [self performFetch];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(checkNoAddressTasks) name:@"syncerRecievedAllData" object:self.syncer];
+        [self checkNoAddressTasks];
     }
     
 }
+
+- (STQueue *)noAddressTerminals {
+    if (!_noAddressTerminals) {
+        _noAddressTerminals = [[STQueue alloc] init];
+        _noAddressTerminals.queueLength = 1;
+    }
+    return _noAddressTerminals;
+}
+
+- (void)checkNoAddressTasks {
+    [self.tableView reloadData];
+    NSLog(@"fetchedObjects.count %d", self.resultsController.fetchedObjects.count);
+    for (STTTAgentTask *task in self.resultsController.fetchedObjects) {
+        NSLog(@"terminal.address %@", task.terminal.address);
+        if (!task.terminal.address) {
+            if (![self.noAddressTerminals containsObject:task.terminal]) {
+                if (self.noAddressTerminals.queueLength == self.noAddressTerminals.count) {
+                    self.noAddressTerminals.queueLength += 1;
+                }
+                [self.noAddressTerminals enqueue:task.terminal];
+            }
+        }
+    }
+    if (self.noAddressTerminals.queueLength > 0) {
+        NSLog(@"queueLength %d", self.noAddressTerminals.queueLength);
+        [self getAddressForNoAddressTasks];
+    }
+    NSLog(@"noAddressTasks.count %d", self.noAddressTerminals.count);
+}
+
+-(void)getAddressForNoAddressTasks {
+    
+    if (!self.syncer.syncing) {
+        STTTAgentTerminal *terminal = [self.noAddressTerminals dequeue];
+        NSLog(@"terminal %@", terminal);
+        if (!terminal) {
+            self.noAddressTerminals = nil;
+        } else {
+            self.syncer.syncing = YES;
+            NSString *serverURL = [NSString stringWithFormat:@"%@/megaport.iAgentTerminal/%@", self.syncer.restServerURI, CFUUIDCreateString(nil, CFUUIDCreateFromUUIDBytes(nil, *(CFUUIDBytes *)[terminal.xid bytes]))];
+            NSLog(@"serverURL %@", serverURL);
+            [self.session.syncer sendData:nil toServer:serverURL withParameters:nil];
+        }
+    }
+    
+}
+
 
 - (NSFetchedResultsController *)resultsController {
     if (!_resultsController) {
@@ -62,6 +116,8 @@
 //    NSLog(@"taskControllerDidChangeContent");
     [self.tableView reloadData];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"taskControllerDidChangeContent" object:self];
+    [self checkNoAddressTasks];
+
     
 //    NSLog(@"controller.sections.count %d", controller.sections.count);
 //    for (id <NSFetchedResultsSectionInfo> section in controller.sections) {
