@@ -46,6 +46,7 @@
 		2CE7E4C1179D658100113A6A /* STTTTaskTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CE7E4C0179D658100113A6A /* STTTTaskTVC.m */; };
 		2CE7E4C4179D659700113A6A /* STTTTerminalTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CE7E4C3179D659700113A6A /* STTTTerminalTVC.m */; };
 		2CE7E4CA179FC98800113A6A /* STTTtest.json in Resources */ = {isa = PBXBuildFile; fileRef = 2CE7E4C9179FC98800113A6A /* STTTtest.json */; };
+		2CE7E51717A93E7100113A6A /* STTTInfoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CE7E51617A93E7100113A6A /* STTTInfoCell.m */; };
 		9E0575B8127B4EE5B37A6DF5 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F26E7DA269E4C8AB402C081 /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -122,6 +123,8 @@
 		2CE7E4C2179D659700113A6A /* STTTTerminalTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTTerminalTVC.h; sourceTree = "<group>"; };
 		2CE7E4C3179D659700113A6A /* STTTTerminalTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTTerminalTVC.m; sourceTree = "<group>"; };
 		2CE7E4C9179FC98800113A6A /* STTTtest.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = STTTtest.json; sourceTree = "<group>"; };
+		2CE7E51517A93E7100113A6A /* STTTInfoCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTInfoCell.h; sourceTree = "<group>"; };
+		2CE7E51617A93E7100113A6A /* STTTInfoCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTInfoCell.m; sourceTree = "<group>"; };
 		3F26E7DA269E4C8AB402C081 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD3C601463AF4A6E80FEF924 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -264,6 +267,8 @@
 				2CE3269D176F2CAA00BAA1D4 /* STTTAuthBasic.m */,
 				2C93A566177D79C10014001B /* STTTSyncer.h */,
 				2C93A567177D79C10014001B /* STTTSyncer.m */,
+				2CE7E51517A93E7100113A6A /* STTTInfoCell.h */,
+				2CE7E51617A93E7100113A6A /* STTTInfoCell.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -452,6 +457,7 @@
 				2CE7E4BA179D5CE300113A6A /* STTTInfoTVC.m in Sources */,
 				2CE7E4C1179D658100113A6A /* STTTTaskTVC.m in Sources */,
 				2CE7E4C4179D659700113A6A /* STTTTerminalTVC.m in Sources */,
+				2CE7E51717A93E7100113A6A /* STTTInfoCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
