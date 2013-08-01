@@ -155,7 +155,7 @@
     NSMutableDictionary *propertiesDictionary = [NSMutableDictionary dictionary];
     
     [propertiesDictionary setValue:[NSString stringWithFormat:@"%@", [object valueForKey:@"ts"]] forKey:@"ts"];
-    [propertiesDictionary setValue:[object valueForKey:@"visited"] forKey:@"visited"];
+    [propertiesDictionary setValue:[object valueForKey:@"servstatus"] forKey:@"servstatus"];
     [propertiesDictionary setValue:[object valueForKey:@"commentText"] forKey:@"commentText"];
     [propertiesDictionary setValue:[NSNumber numberWithDouble:latitude] forKey:@"latitude"];
     [propertiesDictionary setValue:[NSNumber numberWithDouble:longitude] forKey:@"longitude"];
@@ -395,8 +395,8 @@
 //    NSLog(@"numberWithBool %@", [NSNumber numberWithBool:[[properties valueForKey:@"visited"] boolValue]]);
     
 //    task.visited = [NSNumber numberWithBool:[[properties valueForKey:@"visited"] boolValue]];
-    id visited = [properties valueForKey:@"visited"];
-    task.visited = [visited isKindOfClass:[NSNumber class]] ? visited : [NSNumber numberWithBool:[visited boolValue]];
+    id servstatus = [properties valueForKey:@"servstatus"];
+    task.servstatus = [servstatus isKindOfClass:[NSNumber class]] ? servstatus : [NSNumber numberWithBool:[servstatus boolValue]];
     
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss.SSS"];

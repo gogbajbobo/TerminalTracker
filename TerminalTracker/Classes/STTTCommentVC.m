@@ -24,7 +24,7 @@
         self.view.backgroundColor = [UIColor lightGrayColor];
     }
     self.commentView.text = self.task.commentText;
-    if ([self.task.visited boolValue]) {
+    if ([self.task.servstatus boolValue]) {
         self.commentView.editable = NO;
         
 // _________for testing

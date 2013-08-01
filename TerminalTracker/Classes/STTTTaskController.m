@@ -83,11 +83,11 @@
 - (NSFetchedResultsController *)resultsController {
     if (!_resultsController) {
         NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:NSStringFromClass([STTTAgentTask class])];
-        request.sortDescriptors = [NSArray arrayWithObjects:[NSSortDescriptor sortDescriptorWithKey:@"visited" ascending:YES selector:@selector(compare:)], [NSSortDescriptor sortDescriptorWithKey:@"doBefore" ascending:YES selector:@selector(compare:)], nil];
+        request.sortDescriptors = [NSArray arrayWithObjects:[NSSortDescriptor sortDescriptorWithKey:@"servstatus" ascending:YES selector:@selector(compare:)], [NSSortDescriptor sortDescriptorWithKey:@"doBefore" ascending:YES selector:@selector(compare:)], nil];
         if (self.terminal) {
             request.predicate = [NSPredicate predicateWithFormat:@"SELF.terminal == %@", self.terminal];
         }
-        _resultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request managedObjectContext:self.session.document.managedObjectContext sectionNameKeyPath:@"visited" cacheName:nil];
+        _resultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request managedObjectContext:self.session.document.managedObjectContext sectionNameKeyPath:@"servstatus" cacheName:nil];
         _resultsController.delegate = self;
     }
     return _resultsController;
@@ -226,7 +226,7 @@
     if (!task.lts || [task.ts compare:task.lts] == NSOrderedDescending) {
         textColor = [UIColor grayColor];
     } else {
-        if (![task.visited boolValue]) {
+        if (![task.servstatus boolValue]) {
             if (remainingTime < 0) {
                 textColor = [UIColor redColor];
             } else if (remainingTime > 0 && remainingTime <= 60*60) {

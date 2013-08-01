@@ -229,7 +229,7 @@
     UIColor *backgroundColor = [UIColor whiteColor];
     UIColor *textColor = [UIColor blueColor];
     
-    if (![self.task.visited boolValue]) {
+    if (![self.task.servstatus boolValue]) {
         
         NSTimeInterval remainingTime = [self.task remainingTime];
         
@@ -275,7 +275,7 @@
 
     cell.textLabel.textAlignment = NSTextAlignmentCenter;
 
-    if ([self.task.visited boolValue]) {
+    if ([self.task.servstatus boolValue]) {
         cell.textLabel.text = @"Выполнено";
         cell.textLabel.textColor = [UIColor colorWithRed:0.16 green:0.53 blue:0.16 alpha:1];
     } else {
@@ -408,7 +408,7 @@
             // do nothing
             break;
         case 1:
-            if (![self.task.visited boolValue]) {
+            if (![self.task.servstatus boolValue]) {
                 [self buttonsBehaviorInCell:[tableView cellForRowAtIndexPath:indexPath]];
             }
             break;
@@ -469,7 +469,7 @@
         taskLocation.latitude = [NSNumber numberWithDouble:self.location.coordinate.latitude];
         taskLocation.longitude = [NSNumber numberWithDouble:self.location.coordinate.longitude];
         self.task.visitLocation = taskLocation;
-        self.task.visited = [NSNumber numberWithBool:YES];
+        self.task.servstatus = [NSNumber numberWithBool:YES];
         [self saveDocument];
     } else {
         NSLog(@"No task location");

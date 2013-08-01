@@ -183,7 +183,7 @@
     }
     //    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.visited == %@", [NSNumber numberWithInt:0]];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.servstatus == %@", [NSNumber numberWithInt:0]];
     NSArray *unsolvedTasks = [tasks filteredArrayUsingPredicate:predicate];
     NSUInteger numberOfUnsolvedTasks = unsolvedTasks.count;
     cell.textLabel.text = [NSString stringWithFormat:@"Невыполненных: %d", numberOfUnsolvedTasks];

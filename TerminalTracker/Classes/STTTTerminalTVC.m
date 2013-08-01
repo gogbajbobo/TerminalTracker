@@ -213,7 +213,7 @@
     UIColor *backgroundColor = self.tableView.backgroundColor;
     UIColor *textColor = [UIColor blueColor];
     
-    if (![task.visited boolValue]) {
+    if (![task.servstatus boolValue]) {
         
         NSTimeInterval remainingTime = [task remainingTime];
         
