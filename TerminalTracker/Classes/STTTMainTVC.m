@@ -153,6 +153,22 @@
     
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+
+    CGFloat headerHeight;
+    switch (section) {
+        case 2:
+            headerHeight = 20;
+            break;
+
+        default:
+            headerHeight = 10;
+            break;
+    }
+    return headerHeight;
+    
+}
+
 - (STTTInfoCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     static NSString *cellIdentifier = @"mainViewCell";
@@ -183,6 +199,7 @@
 - (void)configureDeleteCell:(STTTInfoCell *)cell {
     
     cell.textLabel.text = @"Очистить базу данных";
+    cell.textLabel.textAlignment = NSTextAlignmentCenter;
     
 }
 
