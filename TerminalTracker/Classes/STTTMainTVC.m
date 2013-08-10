@@ -13,9 +13,10 @@
 #import "STTTInfoTVC.h"
 #import "STTTInfoCell.h"
 
-@interface STTTMainTVC ()
+@interface STTTMainTVC () <UIAlertViewDelegate>
 
 @property (nonatomic, strong) STSession *session;
+@property (nonatomic, strong) STTTInfoCell *deleteCell;
 
 
 @end
@@ -158,7 +159,7 @@
     CGFloat headerHeight;
     switch (section) {
         case 2:
-            headerHeight = 140;
+            headerHeight = 60;
             break;
 
         default:
@@ -172,12 +173,14 @@
 - (STTTInfoCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     static NSString *cellIdentifier = @"mainViewCell";
-    //    STTTInfoCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier forIndexPath:indexPath];
+
     STTTInfoCell *cell = [[STTTInfoCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
+    
     //    if (!cell) {
     //        cell = [[STTTInfoCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
     //    }
     
+        
     switch (indexPath.section) {
         case 0:
             [self configureTaskCell:cell];
@@ -187,6 +190,7 @@
             break;
         case 2:
             [self configureDeleteCell:cell];
+            self.deleteCell = cell;
             break;
             
         default:
@@ -199,7 +203,6 @@
 - (void)configureDeleteCell:(STTTInfoCell *)cell {
     
     cell.textLabel.text = @"Очистить базу данных";
-    cell.textLabel.textAlignment = NSTextAlignmentCenter;
     
 }
 
@@ -361,8 +364,56 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    [self performSegueWithIdentifier:@"showInfoTVC" sender:indexPath];
+    if (indexPath.section == 0 || indexPath.section == 1) {
+        [self performSegueWithIdentifier:@"showInfoTVC" sender:indexPath];
+    } else if (indexPath.section == 2) {
+        [self showDeleteAlert];
+    }
+
+}
+
+- (void)showDeleteAlert {
     
+    UIAlertView *deleteAlert = [[UIAlertView alloc] initWithTitle:@"Очистка базы данных" message:@"Вы уверены?" delegate:self cancelButtonTitle:@"Отмена" otherButtonTitles:@"Уверен!", nil];
+    deleteAlert.tag = 1;
+    [deleteAlert show];
+
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (alertView.tag == 1) {
+        
+        if (buttonIndex == 0) {
+            // Cancel
+            
+        } else if (buttonIndex == 1) {
+            // Delete
+            
+        }
+        
+        self.deleteCell.selected = NO;
+        
+    }
+}
+
+- (void)clearDataBase {
+    
+    [self removeObjectWithName:NSStringFromClass([STTTAgentTask class])];
+    [self removeObjectWithName:NSStringFromClass([STTTAgentTerminal class])];
+
+}
+
+- (void)removeObjectWithName:(NSString *)name {
+
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:name];
+    request.sortDescriptors = [NSArray arrayWithObjects:[NSSortDescriptor sortDescriptorWithKey:@"ts" ascending:YES selector:@selector(compare:)], nil];
+    NSError *error;
+    NSArray *fetchResult = [self.session.document.managedObjectContext executeFetchRequest:request error:&error];
+    for (NSManagedObject *object in fetchResult) {
+        [self.session.document.managedObjectContext deleteObject:object];
+    }
+
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
