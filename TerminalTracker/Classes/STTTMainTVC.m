@@ -33,7 +33,7 @@
     if ([self.session.status isEqualToString:@"running"]) {
         [self sessionStatusChanged:nil];
     }
-
+    
 }
 
 - (void)sessionStatusChanged:(NSNotification *)notification {
@@ -112,7 +112,7 @@
 {
     [super viewDidLoad];
     [self viewInit];
-
+    
 }
 
 - (void)didReceiveMemoryWarning
@@ -125,7 +125,7 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     
-    return 2;
+    return 3;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -143,6 +143,9 @@
         case 1:
             sectionTitle = @"Терминалы";
             break;
+        case 2:
+            sectionTitle = @"Управление";
+            break;
         default:
             break;
     }
@@ -153,11 +156,11 @@
 - (STTTInfoCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     static NSString *cellIdentifier = @"mainViewCell";
-//    STTTInfoCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier forIndexPath:indexPath];
+    //    STTTInfoCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier forIndexPath:indexPath];
     STTTInfoCell *cell = [[STTTInfoCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
-//    if (!cell) {
-//        cell = [[STTTInfoCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
-//    }
+    //    if (!cell) {
+    //        cell = [[STTTInfoCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
+    //    }
     
     switch (indexPath.section) {
         case 0:
@@ -166,12 +169,21 @@
         case 1:
             [self configureTerminalCell:cell];
             break;
+        case 2:
+            [self configureDeleteCell:cell];
+            break;
             
         default:
             break;
     }
-        
+    
     return cell;
+}
+
+- (void)configureDeleteCell:(STTTInfoCell *)cell {
+    
+    cell.textLabel.text = @"Очистить базу данных";
+    
 }
 
 - (void)configureTaskCell:(STTTInfoCell *)cell {
@@ -282,7 +294,7 @@
     if (tasks.count > 0) {
         cell.infoLabel.text = [NSString stringWithFormat:@"%d", tasks.count];
     }
-
+    
 }
 
 - (void)configureTerminalCell:(STTTInfoCell *)cell {
@@ -290,10 +302,10 @@
     NSArray *terminals = self.terminalController.resultsController.fetchedObjects;
     
     if (terminals.count > 0) {
-//        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        //        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         cell.textLabel.text = @"Ближайший:";
         cell.detailTextLabel.text = [(STTTAgentTerminal *)[self.terminalController.resultsController.fetchedObjects objectAtIndex:0] address];
-
+        
         cell.infoLabel.text = [NSString stringWithFormat:@"%d", terminals.count];
         
     } else {
@@ -325,7 +337,7 @@
     
     [[cell.contentView viewWithTag:666] removeFromSuperview];
     [cell.contentView addSubview:infoLabel];
-
+    
 }
 
 #pragma mark - Table view delegate
@@ -333,7 +345,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
     [self performSegueWithIdentifier:@"showInfoTVC" sender:indexPath];
-
+    
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
@@ -343,7 +355,7 @@
             if ([sender isKindOfClass:[NSIndexPath class]]) {
                 
                 if ([(NSIndexPath *)sender section] == 0) {
-
+                    
                     infoTVC.tableView.dataSource = self.taskController;
                     self.taskController.tableView = infoTVC.tableView;
                     infoTVC.title = @"Задачи";
