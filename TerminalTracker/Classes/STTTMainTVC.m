@@ -158,7 +158,7 @@
     CGFloat headerHeight;
     switch (section) {
         case 2:
-            headerHeight = UITableViewAutomaticDimension + 40;
+            headerHeight = 140;
             break;
 
         default:
