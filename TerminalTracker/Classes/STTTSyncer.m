@@ -17,7 +17,6 @@
 
 @property (nonatomic, strong) NSString *recieveDataServerURI;
 @property (nonatomic, strong) NSString *sendDataServerURI;
-@property (nonatomic, strong) NSString *dataOffset;
 
 @end
 

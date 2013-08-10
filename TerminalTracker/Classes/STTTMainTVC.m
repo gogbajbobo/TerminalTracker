@@ -12,6 +12,7 @@
 #import "STTTAgentTask+remainingTime.h"
 #import "STTTInfoTVC.h"
 #import "STTTInfoCell.h"
+#import "STTTSyncer.h"
 
 @interface STTTMainTVC () <UIAlertViewDelegate>
 
@@ -389,7 +390,7 @@
             
         } else if (buttonIndex == 1) {
             // Delete
-            
+            [self clearDatabase];
         }
         
         self.deleteCell.selected = NO;
@@ -397,11 +398,13 @@
     }
 }
 
-- (void)clearDataBase {
+- (void)clearDatabase {
     
     [self removeObjectWithName:NSStringFromClass([STTTAgentTask class])];
     [self removeObjectWithName:NSStringFromClass([STTTAgentTerminal class])];
 
+    [(STTTSyncer *)self.session.syncer setDataOffset:nil];
+    
 }
 
 - (void)removeObjectWithName:(NSString *)name {

@@ -13,5 +13,6 @@
 @property (nonatomic, strong) NSString *requestParameters;
 @property (nonatomic, strong) NSString *requestType;
 @property (nonatomic, strong) NSString *restServerURI;
+@property (nonatomic, strong) NSString *dataOffset;
 
 @end
