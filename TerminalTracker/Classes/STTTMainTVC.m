@@ -46,9 +46,6 @@
         UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
         spinner.tag = 1;
         [spinner startAnimating];
-
-        NSLog(@"self.refreshCell.contentView %@", self.refreshCell.contentView);
-        NSLog(@"spinner %@", spinner);
         
         CGFloat padding = 20;
         CGFloat x = self.refreshCell.contentView.frame.size.width - spinner.frame.size.width - padding;
@@ -420,11 +417,24 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
     if (indexPath.section == 0 || indexPath.section == 1) {
+        
         [self performSegueWithIdentifier:@"showInfoTVC" sender:indexPath];
+        
     } else if (indexPath.section == 2) {
-        if (!self.session.syncer.syncing) {
-            [self showDeleteAlert];
+        
+        if (indexPath.row == 0) {
+            
+            [self.session.syncer syncData];
+            
+        } else if (indexPath.row == 1) {
+            
+            if (!self.session.syncer.syncing) {
+                
+                [self showDeleteAlert];
+                
+            }
         }
+    
     }
 
 }
