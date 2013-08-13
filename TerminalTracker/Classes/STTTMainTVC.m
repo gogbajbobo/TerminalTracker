@@ -56,9 +56,13 @@
         CGRect frame = CGRectMake(x, y, spinner.frame.size.width, spinner.frame.size.height);
         spinner.frame = frame;
         [self.refreshCell.contentView addSubview:spinner];
-//        [self.refreshCell.infoLabel addSubview:spinner];
+        
+        self.deleteCell.textLabel.textColor = [UIColor grayColor];
 
     } else {
+        
+        [[self.refreshCell.contentView viewWithTag:1] removeFromSuperview];
+        self.deleteCell.textLabel.textColor = [UIColor blackColor];
         
     }
 }
@@ -418,7 +422,9 @@
     if (indexPath.section == 0 || indexPath.section == 1) {
         [self performSegueWithIdentifier:@"showInfoTVC" sender:indexPath];
     } else if (indexPath.section == 2) {
-        [self showDeleteAlert];
+        if (!self.session.syncer.syncing) {
+            [self showDeleteAlert];
+        }
     }
 
 }
