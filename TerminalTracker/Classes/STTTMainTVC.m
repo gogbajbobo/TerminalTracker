@@ -18,6 +18,7 @@
 
 @property (nonatomic, strong) STSession *session;
 @property (nonatomic, strong) STTTInfoCell *deleteCell;
+@property (nonatomic, strong) STTTInfoCell *refreshCell;
 
 
 @end
@@ -31,11 +32,35 @@
 - (void)viewInit {
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sessionStatusChanged:) name:@"sessionStatusChanged" object:self.session];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(syncStatusChanged:) name:@"syncStatusChanged" object:self.session.syncer];
     
     if ([self.session.status isEqualToString:@"running"]) {
         [self sessionStatusChanged:nil];
     }
     
+}
+
+- (void)syncStatusChanged:(NSNotification *)notification {
+    if (self.session.syncer.syncing) {
+        
+        UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+        spinner.tag = 1;
+        [spinner startAnimating];
+
+        NSLog(@"self.refreshCell.contentView %@", self.refreshCell.contentView);
+        NSLog(@"spinner %@", spinner);
+        
+        CGFloat padding = 20;
+        CGFloat x = self.refreshCell.contentView.frame.size.width - spinner.frame.size.width - padding;
+        CGFloat y = (self.refreshCell.contentView.frame.size.height - spinner.frame.size.width) / 2;
+        CGRect frame = CGRectMake(x, y, spinner.frame.size.width, spinner.frame.size.height);
+        spinner.frame = frame;
+        [self.refreshCell.contentView addSubview:spinner];
+//        [self.refreshCell.infoLabel addSubview:spinner];
+
+    } else {
+        
+    }
 }
 
 - (void)sessionStatusChanged:(NSNotification *)notification {
@@ -132,7 +157,15 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     
-    return 1;
+    switch (section) {
+        case 2:
+            return 2;
+            break;
+        default:
+            return 1;
+            break;
+    }
+
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
@@ -160,7 +193,7 @@
     CGFloat headerHeight;
     switch (section) {
         case 2:
-            headerHeight = 60;
+            headerHeight = UITableViewAutomaticDimension;
             break;
 
         default:
@@ -190,8 +223,19 @@
             [self configureTerminalCell:cell];
             break;
         case 2:
-            [self configureDeleteCell:cell];
-            self.deleteCell = cell;
+            switch (indexPath.row) {
+                case 0:
+                    [self configureRefreshCell:cell];
+                    self.refreshCell = cell;
+                    break;
+                case 1:
+                    [self configureDeleteCell:cell];
+                    self.deleteCell = cell;
+                    break;
+                    
+                default:
+                    break;
+            }
             break;
             
         default:
@@ -199,6 +243,12 @@
     }
     
     return cell;
+}
+
+- (void)configureRefreshCell:(STTTInfoCell *)cell {
+    
+    cell.textLabel.text = @"Обновить данные";
+    
 }
 
 - (void)configureDeleteCell:(STTTInfoCell *)cell {
