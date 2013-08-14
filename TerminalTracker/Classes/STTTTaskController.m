@@ -87,7 +87,10 @@
 
 - (void)deleteRottenTasks {
     
-    NSLog(@"fetchedObjects.count before %d", self.resultsController.fetchedObjects.count);
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:NSStringFromClass([STTTAgentTask class])];
+    request.sortDescriptors = [NSArray arrayWithObjects:[NSSortDescriptor sortDescriptorWithKey:@"doBefore" ascending:YES selector:@selector(compare:)], nil];
+    NSError *error;
+    NSArray *allTasks = [self.session.document.managedObjectContext executeFetchRequest:request error:&error];
     
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     NSDate *nowDate = [NSDate date];
@@ -95,11 +98,9 @@
     NSDate *today = [dateFormatter dateFromString:[dateFormatter stringFromDate:nowDate]];
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.doBefore <= %@ && SELF.servstatus == 0", today];
     
-    for (STTTAgentTask *task in [self.resultsController.fetchedObjects filteredArrayUsingPredicate:predicate]) {
+    for (STTTAgentTask *task in [allTasks filteredArrayUsingPredicate:predicate]) {
         [self.session.document.managedObjectContext deleteObject:task];
     }
-
-    NSLog(@"fetchedObjects.count after %d", self.resultsController.fetchedObjects.count);
     
 }
 
