@@ -27,10 +27,15 @@
     if (session != _session) {
         _session = session;
         [self performFetch];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(checkNoAddressTasks) name:@"syncerRecievedAllData" object:self.session.syncer];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(syncerRecievedAllData:) name:@"syncerRecievedAllData" object:self.session.syncer];
         [self checkNoAddressTasks];
     }
     
+}
+
+- (void)syncerRecievedAllData:(NSNotification *)notification {
+    [self deleteRottenTasks];
+    [self checkNoAddressTasks];
 }
 
 - (STQueue *)noAddressTerminals {
@@ -42,6 +47,7 @@
 }
 
 - (void)checkNoAddressTasks {
+        
     [self.tableView reloadData];
 //    NSLog(@"fetchedObjects.count %d", self.resultsController.fetchedObjects.count);
     for (STTTAgentTask *task in self.resultsController.fetchedObjects) {
@@ -79,6 +85,23 @@
     
 }
 
+- (void)deleteRottenTasks {
+    
+    NSLog(@"fetchedObjects.count before %d", self.resultsController.fetchedObjects.count);
+    
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    NSDate *nowDate = [NSDate date];
+    dateFormatter.dateStyle = NSDateFormatterShortStyle;
+    NSDate *today = [dateFormatter dateFromString:[dateFormatter stringFromDate:nowDate]];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.doBefore <= %@ && SELF.servstatus == 0", today];
+    
+    for (STTTAgentTask *task in [self.resultsController.fetchedObjects filteredArrayUsingPredicate:predicate]) {
+        [self.session.document.managedObjectContext deleteObject:task];
+    }
+
+    NSLog(@"fetchedObjects.count after %d", self.resultsController.fetchedObjects.count);
+    
+}
 
 - (NSFetchedResultsController *)resultsController {
     if (!_resultsController) {
