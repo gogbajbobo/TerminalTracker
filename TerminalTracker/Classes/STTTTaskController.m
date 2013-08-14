@@ -86,6 +86,12 @@
         request.sortDescriptors = [NSArray arrayWithObjects:[NSSortDescriptor sortDescriptorWithKey:@"servstatus" ascending:YES selector:@selector(compare:)], [NSSortDescriptor sortDescriptorWithKey:@"doBefore" ascending:YES selector:@selector(compare:)], nil];
         if (self.terminal) {
             request.predicate = [NSPredicate predicateWithFormat:@"SELF.terminal == %@", self.terminal];
+        } else {
+            NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+            NSDate *nowDate = [NSDate date];
+            dateFormatter.dateStyle = NSDateFormatterShortStyle;
+            NSDate *today = [dateFormatter dateFromString:[dateFormatter stringFromDate:nowDate]];
+            request.predicate = [NSPredicate predicateWithFormat:@"SELF.doBefore >= %@", today];
         }
         _resultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request managedObjectContext:self.session.document.managedObjectContext sectionNameKeyPath:@"servstatus" cacheName:nil];
         _resultsController.delegate = self;
@@ -105,6 +111,7 @@
         }
     }
 }
+
 
 #pragma mark - NSFetchedResultsController delegate
 
