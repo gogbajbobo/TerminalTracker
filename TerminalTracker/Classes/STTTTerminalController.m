@@ -184,10 +184,10 @@
     if (timeInterval > 0 && timeInterval <= 24 * 3600) {
         dateFormatter.dateStyle = NSDateFormatterNoStyle;
         dateFormatter.timeStyle = NSDateFormatterShortStyle;
-    } else if (timeInterval <= 7 * 24 * 3600) {
+//    } else if (timeInterval <= 7 * 24 * 3600) {
 //        dateFormatter.dateFormat = @"EEEE, H:mm a";
-        dateFormatter.dateStyle = NSDateFormatterFullStyle;
-        dateFormatter.timeStyle = NSDateFormatterShortStyle;
+//        dateFormatter.dateStyle = NSDateFormatterFullStyle;
+//        dateFormatter.timeStyle = NSDateFormatterShortStyle;
     } else {
         dateFormatter.dateStyle = NSDateFormatterShortStyle;
         dateFormatter.timeStyle = NSDateFormatterShortStyle;
@@ -195,10 +195,10 @@
     
     infoText = [dateFormatter stringFromDate:terminal.lastActivityTime];
     
-    NSArray *components = [infoText componentsSeparatedByString:@","];
-    if (components.count > 2) {
-        infoText = [NSString stringWithFormat:@"%@,%@", [components objectAtIndex:0], [components lastObject]];
-    }
+//    NSArray *components = [infoText componentsSeparatedByString:@","];
+//    if (components.count > 2) {
+//        infoText = [NSString stringWithFormat:@"%@,%@", [components objectAtIndex:0], [components lastObject]];
+//    }
     
     UIFont *font = [UIFont systemFontOfSize:16];
     CGSize size = [infoText sizeWithFont:font];
