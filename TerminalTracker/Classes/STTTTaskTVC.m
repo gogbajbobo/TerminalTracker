@@ -470,7 +470,7 @@
         taskLocation.longitude = [NSNumber numberWithDouble:self.location.coordinate.longitude];
         self.task.visitLocation = taskLocation;
         self.task.servstatus = [NSNumber numberWithBool:YES];
-        self.task.terminal.errorText = nil;
+//        self.task.terminal.errorText = nil;
         [self saveDocument];
     } else {
         NSLog(@"No task location");
