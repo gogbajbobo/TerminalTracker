@@ -84,6 +84,7 @@
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
     //    NSLog(@"controllerDidChangeContent");
 //    [self.tableView endUpdates];
+    [self.tableView reloadData];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"terminalControllerDidChangeContent" object:self];
 }
 

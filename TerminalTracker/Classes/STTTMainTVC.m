@@ -500,6 +500,7 @@
                 } else if ([(NSIndexPath *)sender section] == 1) {
                     
                     infoTVC.tableView.dataSource = self.terminalController;
+                    self.terminalController.tableView = infoTVC.tableView;
                     infoTVC.title = @"Терминалы";
                     
                 }
