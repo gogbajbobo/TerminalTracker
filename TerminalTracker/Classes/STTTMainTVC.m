@@ -31,11 +31,11 @@
 
 - (void)viewInit {
     
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"sessionStatusChanged" object:self.session];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sessionStatusChanged:) name:@"sessionStatusChanged" object:self.session];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(syncStatusChanged:) name:@"syncStatusChanged" object:self.session.syncer];
-    
     if ([self.session.status isEqualToString:@"running"]) {
         [self sessionStatusChanged:nil];
+        [self syncStatusChanged:nil];
     }
     
 }
@@ -74,10 +74,8 @@
         self.taskController = [[STTTTaskController alloc] init];
         self.taskController.session = self.session;
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(currentLocationUpdated:) name:@"currentLocationUpdated" object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(taskControllerDidChangeContent:) name:@"taskControllerDidChangeContent" object:self.taskController];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(terminalControllerDidChangeContent:) name:@"terminalControllerDidChangeContent" object:self.terminalController];
-        
+        [self removeObservers];
+        [self addObservers];
         
         [STTTLocationController sharedLC].session = [[STSessionManager sharedManager] currentSession];
         [[STTTLocationController sharedLC] getLocation];
@@ -90,6 +88,20 @@
         
     }
     
+}
+
+- (void)addObservers {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(currentLocationUpdated:) name:@"currentLocationUpdated" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(taskControllerDidChangeContent:) name:@"taskControllerDidChangeContent" object:self.taskController];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(terminalControllerDidChangeContent:) name:@"terminalControllerDidChangeContent" object:self.terminalController];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(syncStatusChanged:) name:@"syncStatusChanged" object:self.session.syncer];
+}
+
+- (void)removeObservers {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"currentLocationUpdated" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"taskControllerDidChangeContent" object:self.taskController];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"terminalControllerDidChangeContent" object:self.terminalController];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"syncStatusChanged" object:self.session.syncer];
 }
 
 - (void)navBarDoubleTap {
