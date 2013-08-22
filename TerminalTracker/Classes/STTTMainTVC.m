@@ -31,6 +31,7 @@
 
 - (void)viewInit {
     
+    [self addLogButton];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"sessionStatusChanged" object:self.session];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sessionStatusChanged:) name:@"sessionStatusChanged" object:self.session];
     if ([self.session.status isEqualToString:@"running"]) {
@@ -38,6 +39,19 @@
         [self syncStatusChanged:nil];
     }
     
+}
+
+- (void)addLogButton {
+    UIBarButtonItem *logButton = [[UIBarButtonItem alloc] initWithTitle:@"Log" style:UIBarButtonItemStyleBordered target:self action:@selector(logButtonPressed)];
+    self.navigationItem.rightBarButtonItem = logButton;
+}
+
+- (void)logButtonPressed {
+    UITableViewController *logTVC = [[UITableViewController alloc] init];
+    logTVC.tableView.delegate = self.session.logger;
+    logTVC.tableView.dataSource = self.session.logger;
+    self.session.logger.tableView = logTVC.tableView;
+    [self.navigationController pushViewController:logTVC animated:YES];
 }
 
 - (void)syncStatusChanged:(NSNotification *)notification {
