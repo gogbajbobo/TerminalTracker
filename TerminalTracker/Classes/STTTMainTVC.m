@@ -127,7 +127,7 @@
 }
 
 - (void)currentLocationUpdated:(NSNotification *)notification {
-    NSLog(@"currentLocation %@", notification.object);
+//    NSLog(@"currentLocation %@", notification.object);
     [self.terminalController calculateDistance];
     [self.tableView reloadData];
 }

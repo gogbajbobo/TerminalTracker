@@ -43,7 +43,7 @@
 
 - (void)getLocation {
     if ([[NSDate date] timeIntervalSinceDate:self.currentLocation.timestamp] < self.timeFilter) {
-        NSLog(@"timeFilterLocation");
+//        NSLog(@"timeFilterLocation");
         [[NSNotificationCenter defaultCenter] postNotificationName:@"currentLocationUpdated" object:self.currentLocation];
     } else {
         [self.locationManager startUpdatingLocation];
@@ -101,6 +101,10 @@
                 [self.locationManager stopUpdatingLocation];
                 //            NSLog(@"stopUpdatingLocation");
                 self.locationManager = nil;
+                
+                NSString *logMessage = [NSString stringWithFormat:@"Location %@", self.currentLocation];
+                [[(STSession *)self.session logger] saveLogMessageWithText:logMessage type:@""];
+
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"currentLocationUpdated" object:self.currentLocation];
             }        
         }
