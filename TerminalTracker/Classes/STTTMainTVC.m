@@ -52,6 +52,7 @@
         CGFloat y = (self.refreshCell.contentView.frame.size.height - spinner.frame.size.width) / 2;
         CGRect frame = CGRectMake(x, y, spinner.frame.size.width, spinner.frame.size.height);
         spinner.frame = frame;
+        [[self.refreshCell.contentView viewWithTag:1] removeFromSuperview];
         [self.refreshCell.contentView addSubview:spinner];
         
         self.deleteCell.textLabel.textColor = [UIColor grayColor];
@@ -249,6 +250,7 @@
                 default:
                     break;
             }
+            [self syncStatusChanged:nil];
             break;
             
         default:
