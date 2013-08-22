@@ -88,7 +88,8 @@
         if (error) {
             NSLog(@"syncer executeFetchRequest error: %@", error);
         } else {
-            NSLog(@"fetchResult.count %d", fetchResult.count);
+            NSString *logMessage = [NSString stringWithFormat:@"unsynced object count %d", fetchResult.count];
+            [[(STSession *)self.session logger] saveLogMessageWithText:logMessage type:@""];
             if (fetchResult.count == 0) {
                 [self sendData:nil toServer:self.recieveDataServerURI withParameters:self.requestParameters];
             } else {
@@ -191,7 +192,10 @@
             id objectsArray = [(NSDictionary *)responseJSON valueForKey:@"data"];
             if ([objectsArray isKindOfClass:[NSArray class]]) {
                 NSUInteger objectsCount = [(NSArray *)objectsArray count];
-                NSLog(@"recieve %d objects", objectsCount);
+                
+                NSString *logMessage = [NSString stringWithFormat:@"recieve %d objects", objectsCount];
+                [[(STSession *)self.session logger] saveLogMessageWithText:logMessage type:@"error"];
+                
                 for (id object in (NSArray *)objectsArray) {
                     
                     if (![object isKindOfClass:[NSDictionary class]]) {
@@ -228,7 +232,8 @@
                         //                    NSLog(@"pageRowCount %@", pageRowCount);
                         if ([pageRowCount intValue] < [pageSize intValue]) {
 
-                            NSLog(@"All recieved data were stored");
+                            [[(STSession *)self.session logger] saveLogMessageWithText:@"All data recieved" type:@"error"];
+
                             [[NSNotificationCenter defaultCenter] postNotificationName:@"syncerRecievedAllData" object:self];
 
                         } else {

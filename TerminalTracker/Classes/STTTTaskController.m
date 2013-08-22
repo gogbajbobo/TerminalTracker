@@ -62,8 +62,10 @@
         }
     }
     if (self.noAddressTerminals.count > 0) {
-        NSLog(@"noAddressTasks.count %d", self.noAddressTerminals.count);
-//        NSLog(@"queueLength %d", self.noAddressTerminals.queueLength);
+        
+        NSString *logMessage = [NSString stringWithFormat:@"No terminal data tasks count %d", self.noAddressTerminals.count];
+        [[(STSession *)self.session logger] saveLogMessageWithText:logMessage type:@""];
+
         [self getAddressForNoAddressTasks];
     }
 }
@@ -77,7 +79,12 @@
             self.noAddressTerminals = nil;
         } else {
             self.session.syncer.syncing = YES;
-            NSString *serverURL = [NSString stringWithFormat:@"%@/megaport.iAgentTerminal/%@", [(STTTSyncer *)self.session.syncer restServerURI], CFUUIDCreateString(nil, CFUUIDCreateFromUUIDBytes(nil, *(CFUUIDBytes *)[terminal.xid bytes]))];
+            NSString *terminalXid = [NSString stringWithFormat:@"%@", CFUUIDCreateString(nil, CFUUIDCreateFromUUIDBytes(nil, *(CFUUIDBytes *)[terminal.xid bytes]))];
+            NSString *serverURL = [NSString stringWithFormat:@"%@/megaport.iAgentTerminal/%@", [(STTTSyncer *)self.session.syncer restServerURI], terminalXid];
+            
+            NSString *logMessage = [NSString stringWithFormat:@"Get data for terminal %@", terminalXid];
+            [[(STSession *)self.session logger] saveLogMessageWithText:logMessage type:@""];
+
 //            NSLog(@"serverURL %@", serverURL);
             [self.session.syncer sendData:nil toServer:serverURL withParameters:nil];
         }
