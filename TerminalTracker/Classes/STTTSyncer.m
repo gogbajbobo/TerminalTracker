@@ -194,7 +194,7 @@
                 NSUInteger objectsCount = [(NSArray *)objectsArray count];
                 
                 NSString *logMessage = [NSString stringWithFormat:@"recieve %d objects", objectsCount];
-                [[(STSession *)self.session logger] saveLogMessageWithText:logMessage type:@"error"];
+                [[(STSession *)self.session logger] saveLogMessageWithText:logMessage type:@""];
                 
                 for (id object in (NSArray *)objectsArray) {
                     
@@ -232,7 +232,7 @@
                         //                    NSLog(@"pageRowCount %@", pageRowCount);
                         if ([pageRowCount intValue] < [pageSize intValue]) {
 
-                            [[(STSession *)self.session logger] saveLogMessageWithText:@"All data recieved" type:@"error"];
+                            [[(STSession *)self.session logger] saveLogMessageWithText:@"All data recieved" type:@""];
 
                             [[NSNotificationCenter defaultCenter] postNotificationName:@"syncerRecievedAllData" object:self];
 
