@@ -77,6 +77,7 @@
         
     } else {
         
+        self.noAddressTerminals = nil;
         self.checkingTasks = NO;
         
     }
