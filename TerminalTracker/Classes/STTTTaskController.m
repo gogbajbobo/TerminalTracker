@@ -14,6 +14,7 @@
 @interface STTTTaskController() <NSFetchedResultsControllerDelegate>
 
 @property (nonatomic, strong) STQueue *noAddressTerminals;
+@property (nonatomic) BOOL checkingTasks;
 //@property (nonatomic, weak) STTTSyncer *syncer;
 
 @end
@@ -50,23 +51,34 @@
         
     [self.tableView reloadData];
 //    NSLog(@"fetchedObjects.count %d", self.resultsController.fetchedObjects.count);
-    for (STTTAgentTask *task in self.resultsController.fetchedObjects) {
-//        NSLog(@"terminal.address %@", task.terminal.address);
-        if (!task.terminal.address) {
-            if (![self.noAddressTerminals containsObject:task.terminal]) {
-                if (self.noAddressTerminals.queueLength == self.noAddressTerminals.count) {
-                    self.noAddressTerminals.queueLength += 1;
+
+    if (!self.checkingTasks) {
+        self.checkingTasks = YES;
+        for (STTTAgentTask *task in self.resultsController.fetchedObjects) {
+            //        NSLog(@"terminal.address %@", task.terminal.address);
+            if (!task.terminal.address) {
+                if (![self.noAddressTerminals containsObject:task.terminal]) {
+                    if (self.noAddressTerminals.queueLength == self.noAddressTerminals.count) {
+                        self.noAddressTerminals.queueLength += 1;
+                    }
+                    [self.noAddressTerminals enqueue:task.terminal];
                 }
-                [self.noAddressTerminals enqueue:task.terminal];
             }
         }
     }
+    
+    
     if (self.noAddressTerminals.count > 0) {
         
         NSString *logMessage = [NSString stringWithFormat:@"No terminal data tasks count %d", self.noAddressTerminals.count];
         [[(STSession *)self.session logger] saveLogMessageWithText:logMessage type:@""];
 
         [self getAddressForNoAddressTasks];
+        
+    } else {
+        
+        self.checkingTasks = NO;
+        
     }
 }
 
