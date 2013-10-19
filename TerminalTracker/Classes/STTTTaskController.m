@@ -340,6 +340,7 @@
     infoLabel.textColor = [UIColor blueColor];
     infoLabel.backgroundColor = cell.contentView.backgroundColor;
     infoLabel.tag = 666;
+    infoLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
     
     [[cell.contentView viewWithTag:666] removeFromSuperview];
     [cell.contentView addSubview:infoLabel];
