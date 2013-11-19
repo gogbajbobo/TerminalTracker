@@ -267,7 +267,7 @@
 //    NSLog(@"[sectionInfo objects].count %d", [sectionInfo objects].count);
 
     
-    cell.textLabel.text = task.terminalBreakName;
+    cell.textLabel.text = [NSString stringWithFormat:@"%@ : %@",task.terminal.code,task.terminalBreakName];
     cell.detailTextLabel.text = task.terminal.address;
     
     NSTimeInterval remainingTime = [task remainingTime];
