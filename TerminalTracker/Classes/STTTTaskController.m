@@ -10,6 +10,7 @@
 #import "STTTTaskLocation.h"
 #import <STManagedTracker/STQueue.h>
 #import "STTTSyncer.h"
+#import "STUtilities.h"
 
 @interface STTTTaskController() <NSFetchedResultsControllerDelegate>
 
@@ -296,32 +297,8 @@
     cell.detailTextLabel.backgroundColor = backgroundColor;
     cell.textLabel.textColor = textColor;
     cell.detailTextLabel.textColor = textColor;
-    
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    NSString *infoText;
-    
-    dateFormatter.dateStyle = NSDateFormatterShortStyle;
-    dateFormatter.timeStyle = NSDateFormatterNoStyle;
-    
-    if ([[dateFormatter stringFromDate:[NSDate date]] isEqualToString:[dateFormatter stringFromDate:task.doBefore]]) {
-    
-        dateFormatter.dateStyle = NSDateFormatterNoStyle;
-        dateFormatter.timeStyle = NSDateFormatterShortStyle;
-        
-    } else {
-        
-        if ([[NSDate date] timeIntervalSinceDate:task.doBefore] <= 7 * 24 * 3600 &&
-            [[NSDate date] timeIntervalSinceDate:task.doBefore] >= -7 * 24 * 3600) {
-            dateFormatter.dateFormat = @"EEEE";
-        } else {
-            dateFormatter.dateStyle = NSDateFormatterShortStyle;
-            dateFormatter.timeStyle = NSDateFormatterNoStyle;
-        }
 
-    }
-    
-    infoText = [dateFormatter stringFromDate:task.doBefore];
-    
+    NSString *infoText = [STUtilities stringWithRelativeDateFromDate:task.doBefore];
     UIFont *font = [UIFont systemFontOfSize:16];
     CGSize size = [infoText sizeWithFont:font];
     
@@ -347,6 +324,5 @@
     
     return cell;
 }
-
 
 @end

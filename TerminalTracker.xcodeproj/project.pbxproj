@@ -48,6 +48,7 @@
 		2CE7E51717A93E7100113A6A /* STTTInfoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CE7E51617A93E7100113A6A /* STTTInfoCell.m */; };
 		2CE7E51A17AA64CB00113A6A /* STTTAgentTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CE7E51917AA64CB00113A6A /* STTTAgentTask.m */; };
 		9E0575B8127B4EE5B37A6DF5 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F26E7DA269E4C8AB402C081 /* libPods.a */; };
+		A56429BD18841A2300168724 /* STUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = A56429BC18841A2300168724 /* STUtilities.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -126,6 +127,8 @@
 		2CE7E51817AA64CB00113A6A /* STTTAgentTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTAgentTask.h; sourceTree = "<group>"; };
 		2CE7E51917AA64CB00113A6A /* STTTAgentTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTAgentTask.m; sourceTree = "<group>"; };
 		3F26E7DA269E4C8AB402C081 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		A56429BB18841A2300168724 /* STUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STUtilities.h; sourceTree = "<group>"; };
+		A56429BC18841A2300168724 /* STUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STUtilities.m; sourceTree = "<group>"; };
 		DD3C601463AF4A6E80FEF924 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -269,6 +272,8 @@
 				2C93A567177D79C10014001B /* STTTSyncer.m */,
 				2CE7E51517A93E7100113A6A /* STTTInfoCell.h */,
 				2CE7E51617A93E7100113A6A /* STTTInfoCell.m */,
+				A56429BB18841A2300168724 /* STUtilities.h */,
+				A56429BC18841A2300168724 /* STUtilities.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -450,6 +455,7 @@
 				2C93A5AF178209AD0014001B /* STTTAgentTerminal+distance.m in Sources */,
 				2C93A5B8178420DC0014001B /* STTTAgentTask+remainingTime.m in Sources */,
 				2C93A5C1178471B60014001B /* STTTMapAnnotation.m in Sources */,
+				A56429BD18841A2300168724 /* STUtilities.m in Sources */,
 				2C93A5C4178597940014001B /* STTTCommentVC.m in Sources */,
 				2C93A5C717859F880014001B /* STTTAgentTerminal.m in Sources */,
 				2CE7E4B5179D31B000113A6A /* STTTMainTVC.m in Sources */,
