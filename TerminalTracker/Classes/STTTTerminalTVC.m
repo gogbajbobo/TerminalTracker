@@ -156,7 +156,7 @@
 }
 
 - (void)addLastActivityTimeToCell:(UITableViewCell *)cell {
-    cell.textLabel.text = @"Последний сигнал:";
+    cell.textLabel.text = @"Сигнал:";
     cell.detailTextLabel.text = [STUtilities stringWithRelativeDateFromDate:self.terminal.lastActivityTime];
 }
 
