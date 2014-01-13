@@ -9,8 +9,8 @@ Pod::Spec.new do |s|
   s.source       = { :git => "https://github.com/sys-team/TerminalTracker.git", :branch => 'master'}
   s.platform     = :ios, '5.0'
 
-  s.source_files = 'TerminalTracker/*.lproj/Localizable.strings', 'TerminalTracker/Classes/STTT*.{h,m}', 'TerminalTracker/Data Model/STTT*.{h,m}'
-  s.resources = 'TerminalTracker/*.lproj/STTT*.storyboard', 'TerminalTracker/Data Model/*.{xcdatamodel,xcdatamodeld}'
+  s.source_files = 'TerminalTracker/*.lproj/Localizable.strings', 'TerminalTracker/Classes/ST*.{h,m}', 'TerminalTracker/Data Model/ST*.{h,m}'
+  s.resources = 'TerminalTracker/*.lproj/ST*.storyboard', 'TerminalTracker/Data Model/*.{xcdatamodel,xcdatamodeld}'
 
   s.frameworks = 'SystemConfiguration', 'CoreData', 'MapKit', 'CoreLocation', 'UIKit', 'Foundation', 'CoreGraphics'
 
