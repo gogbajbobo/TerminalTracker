@@ -14,6 +14,7 @@
 #import "STTTTerminalLocation.h"
 #import "STTTAgentTask+remainingTime.h"
 #import "STTTTaskTVC.h"
+#import "STUtilities.h"
 
 @interface STTTTerminalTVC ()
 
@@ -155,26 +156,8 @@
 }
 
 - (void)addLastActivityTimeToCell:(UITableViewCell *)cell {
-    
-    cell.textLabel.text = @"L.A.T.:";
-    
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    NSTimeInterval timeInterval = [[NSDate date] timeIntervalSinceDate:self.terminal.lastActivityTime];
-    
-    if (timeInterval > 0 && timeInterval <= 24 * 3600) {
-        dateFormatter.dateStyle = NSDateFormatterNoStyle;
-        dateFormatter.timeStyle = NSDateFormatterShortStyle;
-    } else if (timeInterval <= 7 * 24 * 3600) {
-        //        dateFormatter.dateFormat = @"EEEE, H:mm a";
-        dateFormatter.dateStyle = NSDateFormatterFullStyle;
-        dateFormatter.timeStyle = NSDateFormatterShortStyle;
-    } else {
-        dateFormatter.dateStyle = NSDateFormatterShortStyle;
-        dateFormatter.timeStyle = NSDateFormatterShortStyle;
-    }
-    
-    cell.detailTextLabel.text = [dateFormatter stringFromDate:self.terminal.lastActivityTime];
-    
+    cell.textLabel.text = @"Сигнал:";
+    cell.detailTextLabel.text = [STUtilities stringWithRelativeDateFromDate:self.terminal.lastActivityTime];
 }
 
 - (void)addSrcSystemNameToCell:(UITableViewCell *)cell {
@@ -185,30 +168,7 @@
 - (void)addTask:(STTTAgentTask *)task toCell:(UITableViewCell *)cell {
     
     cell.textLabel.text = task.terminalBreakName;
-    
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    
-    dateFormatter.dateStyle = NSDateFormatterShortStyle;
-    dateFormatter.timeStyle = NSDateFormatterNoStyle;
-    
-    if ([[dateFormatter stringFromDate:[NSDate date]] isEqualToString:[dateFormatter stringFromDate:task.doBefore]]) {
-        
-        dateFormatter.dateStyle = NSDateFormatterNoStyle;
-        dateFormatter.timeStyle = NSDateFormatterShortStyle;
-        
-    } else {
-        
-        if ([[NSDate date] timeIntervalSinceDate:task.doBefore] <= 7 * 24 * 3600 &&
-            [[NSDate date] timeIntervalSinceDate:task.doBefore] >= -7 * 24 * 3600) {
-            dateFormatter.dateFormat = @"EEEE";
-        } else {
-            dateFormatter.dateStyle = NSDateFormatterShortStyle;
-            dateFormatter.timeStyle = NSDateFormatterNoStyle;
-        }
-        
-    }
-    
-    cell.detailTextLabel.text = [dateFormatter stringFromDate:task.doBefore];
+    cell.detailTextLabel.text = [STUtilities stringWithRelativeDateFromDate:task.doBefore];
     
     UIColor *backgroundColor = self.tableView.backgroundColor;
     UIColor *textColor = [UIColor blueColor];

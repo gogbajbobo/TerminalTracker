@@ -17,6 +17,7 @@
 #import "STTTTaskLocation.h"
 #import "STTTCommentVC.h"
 #import "STTTTerminalTVC.h"
+#import "STUtilities.h"
 
 @interface STTTTaskTVC ()
 
@@ -194,36 +195,8 @@
 
 - (void)addDoBeforeToCell:(UITableViewCell *)cell {
     
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    
-    dateFormatter.dateStyle = NSDateFormatterShortStyle;
-    dateFormatter.timeStyle = NSDateFormatterNoStyle;
-    
-    if ([[dateFormatter stringFromDate:[NSDate date]] isEqualToString:[dateFormatter stringFromDate:self.task.doBefore]]) {
-        
-        dateFormatter.dateStyle = NSDateFormatterNoStyle;
-        dateFormatter.timeStyle = NSDateFormatterShortStyle;
-        
-    } else {
-        
-        if ([[NSDate date] timeIntervalSinceDate:self.task.doBefore] <= 7 * 24 * 3600 &&
-            [[NSDate date] timeIntervalSinceDate:self.task.doBefore] >= -7 * 24 * 3600) {
-            dateFormatter.dateFormat = @"EEEE";
-        } else {
-            dateFormatter.dateStyle = NSDateFormatterShortStyle;
-            dateFormatter.timeStyle = NSDateFormatterNoStyle;
-        }
-        
-    }
-
     cell.textLabel.text = @"Срок:";
-//    cell.textLabel.numberOfLines = 2;
-    
-//    CGSize size = [@"Срок выполнения:" sizeWithFont:[UIFont boldSystemFontOfSize:12]];
-//    NSLog(@"size.width %f, size.height %f", size.width, size.height);
-    
-    
-    cell.detailTextLabel.text = [dateFormatter stringFromDate:self.task.doBefore];
+    cell.detailTextLabel.text = [STUtilities stringWithRelativeDateFromDate:self.task.doBefore];
     
     
     UIColor *backgroundColor = [UIColor whiteColor];
@@ -299,27 +272,7 @@
         cell.detailTextLabel.text = self.task.terminal.address ? self.task.terminal.address : @"Нет данных";
     }
     
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    NSTimeInterval timeInterval = [[NSDate date] timeIntervalSinceDate:self.task.terminal.lastActivityTime];
-    
-    if (timeInterval > 0 && timeInterval <= 24 * 3600) {
-        dateFormatter.dateStyle = NSDateFormatterNoStyle;
-        dateFormatter.timeStyle = NSDateFormatterShortStyle;
-    } else if (timeInterval <= 7 * 24 * 3600) {
-        //        dateFormatter.dateFormat = @"EEEE, H:mm a";
-        dateFormatter.dateStyle = NSDateFormatterFullStyle;
-        dateFormatter.timeStyle = NSDateFormatterShortStyle;
-    } else {
-        dateFormatter.dateStyle = NSDateFormatterShortStyle;
-        dateFormatter.timeStyle = NSDateFormatterShortStyle;
-    }
-    
-    NSString *lastActivity = [dateFormatter stringFromDate:self.task.terminal.lastActivityTime];
-    
-    NSArray *components = [lastActivity componentsSeparatedByString:@","];
-    if (components.count > 2) {
-        lastActivity = [NSString stringWithFormat:@"%@,%@", [components objectAtIndex:0], [components lastObject]];
-    }
+    NSString *lastActivity = [STUtilities stringWithRelativeDateFromDate:self.task.terminal.lastActivityTime];
 
     UIFont *font = [UIFont systemFontOfSize:16];
     CGSize size = [lastActivity sizeWithFont:font];
