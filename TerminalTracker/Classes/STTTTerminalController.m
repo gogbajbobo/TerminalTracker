@@ -157,7 +157,7 @@
     static NSString *cellIdentifier = @"terminalCell";
     
     UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
-
+    
     id <NSFetchedResultsSectionInfo> sectionInfo = [[self.resultsController sections] objectAtIndex:indexPath.section];
     STTTAgentTerminal *terminal = (STTTAgentTerminal *)[[sectionInfo objects] objectAtIndex:indexPath.row];
 
@@ -171,7 +171,9 @@
     NSString *code = terminal.code ? terminal.code : @"Н/Д";
 
     cell.textLabel.text = [NSString stringWithFormat:@"%@", code];
-    cell.detailTextLabel.text = terminal.address ? terminal.address : @"Нет данных";;
+    cell.detailTextLabel.text = terminal.address ? terminal.address : @"Нет данных";
+    cell.detailTextLabel.numberOfLines = 2;
+    cell.detailTextLabel.lineBreakMode = NSLineBreakByWordWrapping;
     
     NSString *infoText = [STUtilities stringWithRelativeDateFromDate:terminal.lastActivityTime];
     UIFont *font = [UIFont systemFontOfSize:16];

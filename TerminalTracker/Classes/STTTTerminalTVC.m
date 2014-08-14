@@ -223,14 +223,13 @@
     span.longitudeDelta = 0.01;
     span.latitudeDelta = 0.01;
     
-    MKMapView *mapView = [[MKMapView alloc] initWithFrame:CGRectMake(0, 0, 300, 158)];
+    MKMapView *mapView = [[MKMapView alloc] initWithFrame:CGRectMake(0, 0, cell.frame.size.width, 160)];
     [mapView setRegion:MKCoordinateRegionMake(terminalCoordinate, span)];
     mapView.showsUserLocation = YES;
     [mapView addAnnotation:[STTTMapAnnotation initWithCoordinate:terminalCoordinate]];
     
-    mapView.layer.cornerRadius = 10.0;
-    
     mapView.userInteractionEnabled = NO;
+    mapView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
     
     [cell.contentView addSubview:mapView];
     

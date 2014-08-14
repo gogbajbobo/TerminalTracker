@@ -270,6 +270,8 @@
     
     cell.textLabel.text = [NSString stringWithFormat:@"%@ : %@",task.terminal.code,task.terminalBreakName];
     cell.detailTextLabel.text = task.terminal.address;
+    cell.detailTextLabel.numberOfLines = 2;
+    cell.detailTextLabel.lineBreakMode = NSLineBreakByWordWrapping;
     
     NSTimeInterval remainingTime = [task remainingTime];
     UIColor *backgroundColor = [UIColor whiteColor];

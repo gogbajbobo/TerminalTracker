@@ -114,7 +114,7 @@
             return 1;
             break;
         case 3:
-            return 2;
+            return 3;
             break;
             
         default:
@@ -174,6 +174,10 @@
                     [self addInfoToCell:cell];
                     break;
                 case 1:
+                    cell = [cell initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
+                    [self addAddressToCell:cell];
+                    break;
+                case 2:
                     cell = [cell initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
                     [self addMapToCell:cell];
                     break;
@@ -268,10 +272,6 @@
     
     cell.textLabel.text = self.task.terminal.code ? self.task.terminal.code : @"Н/Д";
     
-    if (self.task.terminal) {
-        cell.detailTextLabel.text = self.task.terminal.address ? self.task.terminal.address : @"Нет данных";
-    }
-    
     NSString *lastActivity = [STUtilities stringWithRelativeDateFromDate:self.task.terminal.lastActivityTime];
 
     UIFont *font = [UIFont systemFontOfSize:16];
@@ -279,11 +279,10 @@
     
     CGFloat paddingX = 0;
     CGFloat paddingY = 0;
-    CGFloat marginX = 30;
-    CGFloat marginY = 2;
+    CGFloat marginX = 10;
     
     CGFloat x = cell.contentView.frame.size.width - size.width - 2 * paddingX - marginX;
-    CGFloat y = cell.textLabel.bounds.origin.y + marginY;
+    CGFloat y = cell.textLabel.bounds.origin.y;
     
     CGRect frame = CGRectMake(x, y, size.width + 2 * paddingX, size.height + 2 * paddingY);
     
@@ -291,10 +290,18 @@
     lastActivityLabel.text = lastActivity;
     lastActivityLabel.font = font;
     lastActivityLabel.tag = 666;
+    lastActivityLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
     
     [[cell.contentView viewWithTag:666] removeFromSuperview];
     [cell.contentView addSubview:lastActivityLabel];
     
+}
+
+- (void)addAddressToCell:(UITableViewCell *)cell {
+    cell.textLabel.text = self.task.terminal.address;
+    cell.textLabel.font = [UIFont systemFontOfSize:14];
+    cell.textLabel.numberOfLines = 2;
+    cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
 }
 
 - (void)addMapToCell:(UITableViewCell *)cell {
@@ -304,14 +311,13 @@
         span.longitudeDelta = 0.01;
         span.latitudeDelta = 0.01;
         
-        MKMapView *mapView = [[MKMapView alloc] initWithFrame:CGRectMake(0, 0, 300, 158)];
+        MKMapView *mapView = [[MKMapView alloc] initWithFrame:CGRectMake(0, 0, cell.frame.size.width, 160)];
         [mapView setRegion:MKCoordinateRegionMake(terminalCoordinate, span)];
         mapView.showsUserLocation = YES;
         [mapView addAnnotation:[STTTMapAnnotation initWithCoordinate:terminalCoordinate]];
         
-        mapView.layer.cornerRadius = 10.0;
-        
         mapView.userInteractionEnabled = NO;
+        mapView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
         
         [cell.contentView addSubview:mapView];
     }
@@ -339,6 +345,9 @@
                     return 44;
                     break;
                 case 1:
+                    return 44;
+                    break;
+                case 2:
                     return 160;
                     break;
                     
