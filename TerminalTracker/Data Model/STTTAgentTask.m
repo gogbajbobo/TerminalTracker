@@ -16,6 +16,7 @@
 @dynamic doBefore;
 @dynamic terminalBreakName;
 @dynamic servstatus;
+@dynamic routePriority;
 @dynamic terminal;
 @dynamic visitLocation;
 

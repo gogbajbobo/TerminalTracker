@@ -17,6 +17,7 @@
 @property (nonatomic, retain) NSDate * doBefore;
 @property (nonatomic, retain) NSString * terminalBreakName;
 @property (nonatomic, retain) NSNumber * servstatus;
+@property (nonatomic, retain) NSNumber * routePriority;
 @property (nonatomic, retain) STTTAgentTerminal *terminal;
 @property (nonatomic, retain) STTTTaskLocation *visitLocation;
 

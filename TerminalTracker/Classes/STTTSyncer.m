@@ -379,8 +379,11 @@
 - (void)newTaskWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties {
     
     STTTAgentTask *task = [self taskByXid:xidData];
-    
+
     task.terminalBreakName = [properties valueForKey:@"terminal_break_name"];
+    
+    id routePriority = [properties valueForKey:@"route_priority"];
+    task.routePriority = [routePriority isKindOfClass:[NSNumber class]] ? routePriority : 0;
     
     id servstatus = [properties valueForKey:@"servstatus"];
     task.servstatus = [servstatus isKindOfClass:[NSNumber class]] ? servstatus : [NSNumber numberWithBool:[servstatus boolValue]];

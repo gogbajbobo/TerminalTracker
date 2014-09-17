@@ -128,7 +128,12 @@
 - (NSFetchedResultsController *)resultsController {
     if (!_resultsController) {
         NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:NSStringFromClass([STTTAgentTask class])];
-        request.sortDescriptors = [NSArray arrayWithObjects:[NSSortDescriptor sortDescriptorWithKey:@"servstatus" ascending:YES selector:@selector(compare:)], [NSSortDescriptor sortDescriptorWithKey:@"doBefore" ascending:YES selector:@selector(compare:)], nil];
+
+        request.sortDescriptors = [NSArray arrayWithObjects:
+                                   [NSSortDescriptor sortDescriptorWithKey:@"routePriority" ascending:YES selector:@selector(compare:)],
+                                   [NSSortDescriptor sortDescriptorWithKey:@"servstatus" ascending:YES selector:@selector(compare:)],
+                                   [NSSortDescriptor sortDescriptorWithKey:@"doBefore" ascending:YES selector:@selector(compare:)],
+                                   nil];
         if (self.terminal) {
             request.predicate = [NSPredicate predicateWithFormat:@"SELF.terminal == %@", self.terminal];
         } else {
@@ -260,13 +265,6 @@
     
     id <NSFetchedResultsSectionInfo> sectionInfo = [[self.resultsController sections] objectAtIndex:indexPath.section];
     STTTAgentTask *task = (STTTAgentTask *)[[sectionInfo objects] objectAtIndex:indexPath.row];
-    
-//    NSLog(@"task.visited %@", task.visited);
-//    NSLog(@"indexPath %@", indexPath);
-//    NSLog(@"fetchedObjects.count %d", self.resultsController.fetchedObjects.count);
-//    NSLog(@"sections.count %d", [self.resultsController sections].count);
-//    NSLog(@"[sectionInfo objects].count %d", [sectionInfo objects].count);
-
     
     cell.textLabel.text = [NSString stringWithFormat:@"%@ : %@",task.terminal.code,task.terminalBreakName];
     cell.detailTextLabel.text = task.terminal.address;
