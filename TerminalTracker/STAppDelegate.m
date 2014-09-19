@@ -35,7 +35,7 @@
                                      @"-1", @"distanceFilter",
                                      @"60.0", @"timeFilter",
                                      @"50", @"fetchLimit",
-                                     @"STTTDataModel2", @"dataModelName",
+                                     @"STTTDataModel", @"dataModelName",
                                      @"https://system.unact.ru/iproxy/testdata/megaport", @"recieveDataServerURI",
                                      @"https://system.unact.ru/iproxy/chest/test", @"sendDataServerURI",
                                      nil];
