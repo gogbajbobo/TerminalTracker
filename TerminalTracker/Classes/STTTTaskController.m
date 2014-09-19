@@ -130,8 +130,8 @@
         NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:NSStringFromClass([STTTAgentTask class])];
 
         request.sortDescriptors = [NSArray arrayWithObjects:
-                                   [NSSortDescriptor sortDescriptorWithKey:@"routePriority" ascending:NO selector:@selector(compare:)],
                                    [NSSortDescriptor sortDescriptorWithKey:@"servstatus" ascending:YES selector:@selector(compare:)],
+                                   [NSSortDescriptor sortDescriptorWithKey:@"routePriority" ascending:NO selector:@selector(compare:)],
                                    [NSSortDescriptor sortDescriptorWithKey:@"doBefore" ascending:YES selector:@selector(compare:)],
                                    nil];
         if (self.terminal) {
