@@ -2,8 +2,8 @@
 //  STTTAgentTask.m
 //  TerminalTracker
 //
-//  Created by Maxim Grigoriev on 8/1/13.
-//  Copyright (c) 2013 Maxim Grigoriev. All rights reserved.
+//  Created by Sergey on 18/9/2014.
+//  Copyright (c) 2014 Maxim Grigoriev. All rights reserved.
 //
 
 #import "STTTAgentTask.h"
@@ -14,8 +14,9 @@
 @implementation STTTAgentTask
 
 @dynamic doBefore;
-@dynamic terminalBreakName;
 @dynamic servstatus;
+@dynamic terminalBreakName;
+@dynamic routePriority;
 @dynamic terminal;
 @dynamic visitLocation;
 

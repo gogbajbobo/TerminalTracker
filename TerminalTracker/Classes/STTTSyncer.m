@@ -17,6 +17,7 @@
 
 @property (nonatomic, strong) NSString *recieveDataServerURI;
 @property (nonatomic, strong) NSString *sendDataServerURI;
+@property (nonatomic) NSUInteger newTasksCount;
 
 @end
 
@@ -74,7 +75,7 @@
     if (!self.syncing) {
         
         self.syncing = YES;
-        
+        self.newTasksCount = 0;
         
         NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:NSStringFromClass([STTTAgentTask class])];
         request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"sqts" ascending:YES selector:@selector(compare:)]];
@@ -165,14 +166,6 @@
 }
 
 - (void)parseResponse:(NSData *)responseData fromConnection:(NSURLConnection *)connection {
-        
-//    NSLog(@"parseResponse");
-
-//    NSString *dataPath = [[NSBundle mainBundle] pathForResource:@"STTTtest" ofType:@"json"];
-//    responseData = [NSData dataWithContentsOfFile:dataPath];
-
-//    NSString *responseString = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
-//    NSLog(@"responseData %@", responseString);
     
     NSError *error;
     id responseJSON = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingMutableContainers error:&error];
@@ -204,7 +197,6 @@
                         break;
                         
                     } else {
-//                        NSLog(@"object %@", object);
                         
                         NSString *originalRequestURL = [NSString stringWithFormat:@"%@", connection.originalRequest.URL];
 
@@ -225,15 +217,16 @@
                     self.syncing = NO;
                     if ([[NSString stringWithFormat:@"%@", connection.originalRequest.URL] isEqualToString:self.recieveDataServerURI]) {
                         
-                        //                    NSLog(@"newsNextOffset %@", [(NSDictionary *)responseJSON valueForKey:@"newsNextOffset"]);
                         self.dataOffset = [(NSDictionary *)responseJSON valueForKey:@"newsNextOffset"];
                         NSString *pageRowCount = [(NSDictionary *)responseJSON valueForKey:@"pageRowCount"];
                         NSString *pageSize = [(NSDictionary *)responseJSON valueForKey:@"pageSize"];
-                        //                    NSLog(@"pageRowCount %@", pageRowCount);
+
                         if ([pageRowCount intValue] < [pageSize intValue]) {
 
                             [[(STSession *)self.session logger] saveLogMessageWithText:@"All data recieved" type:@""];
-
+                            [self showNewTaskNotification:nil];
+                            self.newTasksCount = 0;
+            
                             [[NSNotificationCenter defaultCenter] postNotificationName:@"syncerRecievedAllData" object:self];
 
                         } else {
@@ -298,8 +291,6 @@
                 STTTAgentTask *task = [fetchResult lastObject];
                 [task setValue:[task valueForKey:@"sts"] forKey:@"lts"];
                 NSLog(@"sync object xid %@", xid);
-//                NSLog(@"ts %@", [self.syncObject valueForKey:@"ts"]);
-//                NSLog(@"lts %@", [self.syncObject valueForKey:@"lts"]);
                 
             } else {
                 
@@ -315,7 +306,6 @@
 
 - (void)newObject:(NSDictionary *)object {
     
-//    NSString *result = [(NSDictionary *)object valueForKey:@"result"];
     NSString *name = [(NSDictionary *)object valueForKey:@"name"];
     NSString *xid = [(NSDictionary *)object valueForKey:@"xid"];
     NSString *xidString = [xid stringByReplacingOccurrencesOfString:@"-" withString:@""];
@@ -359,8 +349,7 @@
     terminal.address = [NSString stringWithUTF8String:[[properties valueForKey:@"address"] UTF8String]];
     
     terminal.lts = [NSDate date];
-//    terminal.location.latitude = [NSNumber numberWithDouble:[[properties valueForKey:@"latitude"] doubleValue]];
-//    terminal.location.longitude = [NSNumber numberWithDouble:[[properties valueForKey:@"longitude"] doubleValue]];
+
     id latitude = [properties valueForKey:@"latitude"];
     id longitude = [properties valueForKey:@"longitude"];
     terminal.location.latitude = [latitude isKindOfClass:[NSNumber class]] ? latitude : [NSNumber numberWithDouble:[latitude doubleValue]];
@@ -369,7 +358,7 @@
     if (!terminal.location.latitude || !terminal.location.longitude) {
         CLGeocoder *geoCoder = [[CLGeocoder alloc] init];
         [geoCoder geocodeAddressString:terminal.address completionHandler:^(NSArray *placemarks, NSError *error) {
-            //                NSLog(@"address %@", terminal.address);
+
             if (error) {
                 NSLog(@"error %@", error.localizedDescription);
                 terminal.location = nil;
@@ -383,7 +372,6 @@
         
     }
     
-    //        NSLog(@"terminal %@", terminal);
     NSLog(@"get terminal.xid %@", terminal.xid);
 
 }
@@ -391,14 +379,12 @@
 - (void)newTaskWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties {
     
     STTTAgentTask *task = [self taskByXid:xidData];
-    
+
     task.terminalBreakName = [properties valueForKey:@"terminal_break_name"];
     
-//    NSLog(@"valueForKey:visited %@", [properties valueForKey:@"visited"]);
-//    NSLog(@"boolValue %d", [[properties valueForKey:@"visited"] boolValue]);
-//    NSLog(@"numberWithBool %@", [NSNumber numberWithBool:[[properties valueForKey:@"visited"] boolValue]]);
+    id routePriority = [properties valueForKey:@"route_priority"];
+    task.routePriority = [routePriority respondsToSelector:@selector(integerValue)] ? [NSNumber numberWithInteger:[routePriority integerValue]] : @0;
     
-//    task.visited = [NSNumber numberWithBool:[[properties valueForKey:@"visited"] boolValue]];
     id servstatus = [properties valueForKey:@"servstatus"];
     task.servstatus = [servstatus isKindOfClass:[NSNumber class]] ? servstatus : [NSNumber numberWithBool:[servstatus boolValue]];
     
@@ -407,7 +393,6 @@
     NSDate *doBeforeDate = [dateFormatter dateFromString:[properties valueForKey:@"do-before"]];
     
     task.doBefore = doBeforeDate;
-    task.lts = [NSDate date];
     
     NSDictionary *terminalData = [properties valueForKey:@"terminal"];
     NSData *terminalXid = [self dataFromString:[[terminalData valueForKey:@"xid"] stringByReplacingOccurrencesOfString:@"-" withString:@""]];
@@ -415,10 +400,29 @@
     STTTAgentTerminal *terminal = [self terminalByXid:terminalXid];
     
     task.terminal = terminal;
+    if (task.lts == nil) {
+        self.newTasksCount++;
+    }
+    task.lts = [NSDate date];
     
-    //        NSLog(@"task %@", task);
     NSLog(@"get task.xid %@", task.xid);
 
+}
+
+- (void) showNewTaskNotification:(STTTAgentTask *) task {
+    if (self.newTasksCount == 0) {
+        return;
+    }
+    UILocalNotification *localNotif = [[UILocalNotification alloc] init];
+    if (self.newTasksCount == 1) {
+        localNotif.alertBody = @"Добавлено новое задание";
+    } else {
+        localNotif.alertBody = [NSString stringWithFormat:@"Добавлено новых заданий: %i", self.newTasksCount];
+    }
+    
+    localNotif.alertAction = @"Посмотреть";
+    localNotif.soundName = UILocalNotificationDefaultSoundName;
+    [[UIApplication sharedApplication] presentLocalNotificationNow:localNotif];
 }
 
 - (void)newSettingWithProperties:(NSDictionary *)properties {

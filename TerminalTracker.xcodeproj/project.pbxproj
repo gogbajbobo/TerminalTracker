@@ -10,7 +10,6 @@
 		2C93A562177D795E0014001B /* STTTTerminalController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A561177D795E0014001B /* STTTTerminalController.m */; };
 		2C93A565177D79790014001B /* STTTTaskController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A564177D79790014001B /* STTTTaskController.m */; };
 		2C93A568177D79C10014001B /* STTTSyncer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A567177D79C10014001B /* STTTSyncer.m */; };
-		2C93A591178174900014001B /* STTTDataModel.xcdatamodel in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A590178174900014001B /* STTTDataModel.xcdatamodel */; };
 		2C93A5A317817AAE0014001B /* STTTTerminalLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A5A217817AAE0014001B /* STTTTerminalLocation.m */; };
 		2C93A5A617817AAE0014001B /* STTTTaskLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A5A517817AAE0014001B /* STTTTaskLocation.m */; };
 		2C93A5AC1781BA800014001B /* STTTLocationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A5AB1781BA800014001B /* STTTLocationController.m */; };
@@ -46,9 +45,10 @@
 		2CE7E4C4179D659700113A6A /* STTTTerminalTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CE7E4C3179D659700113A6A /* STTTTerminalTVC.m */; };
 		2CE7E4CA179FC98800113A6A /* STTTtest.json in Resources */ = {isa = PBXBuildFile; fileRef = 2CE7E4C9179FC98800113A6A /* STTTtest.json */; };
 		2CE7E51717A93E7100113A6A /* STTTInfoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CE7E51617A93E7100113A6A /* STTTInfoCell.m */; };
-		2CE7E51A17AA64CB00113A6A /* STTTAgentTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CE7E51917AA64CB00113A6A /* STTTAgentTask.m */; };
 		9E0575B8127B4EE5B37A6DF5 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F26E7DA269E4C8AB402C081 /* libPods.a */; };
 		A56429BD18841A2300168724 /* STUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = A56429BC18841A2300168724 /* STUtilities.m */; };
+		A59C60F419C92DDE0028A8F7 /* STTTDataModel2.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A59C60F119C92DDE0028A8F7 /* STTTDataModel2.xcdatamodeld */; };
+		A59C60FB19CAEF010028A8F7 /* STTTAgentTask.m in Sources */ = {isa = PBXBuildFile; fileRef = A59C60FA19CAEF010028A8F7 /* STTTAgentTask.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -68,7 +68,6 @@
 		2C93A564177D79790014001B /* STTTTaskController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTTaskController.m; sourceTree = "<group>"; };
 		2C93A566177D79C10014001B /* STTTSyncer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTSyncer.h; sourceTree = "<group>"; };
 		2C93A567177D79C10014001B /* STTTSyncer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTSyncer.m; sourceTree = "<group>"; };
-		2C93A590178174900014001B /* STTTDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = STTTDataModel.xcdatamodel; sourceTree = "<group>"; };
 		2C93A5A117817AAE0014001B /* STTTTerminalLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTTerminalLocation.h; sourceTree = "<group>"; };
 		2C93A5A217817AAE0014001B /* STTTTerminalLocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTTerminalLocation.m; sourceTree = "<group>"; };
 		2C93A5A417817AAE0014001B /* STTTTaskLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTTaskLocation.h; sourceTree = "<group>"; };
@@ -124,11 +123,13 @@
 		2CE7E4C9179FC98800113A6A /* STTTtest.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = STTTtest.json; sourceTree = "<group>"; };
 		2CE7E51517A93E7100113A6A /* STTTInfoCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTInfoCell.h; sourceTree = "<group>"; };
 		2CE7E51617A93E7100113A6A /* STTTInfoCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTInfoCell.m; sourceTree = "<group>"; };
-		2CE7E51817AA64CB00113A6A /* STTTAgentTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTAgentTask.h; sourceTree = "<group>"; };
-		2CE7E51917AA64CB00113A6A /* STTTAgentTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTAgentTask.m; sourceTree = "<group>"; };
 		3F26E7DA269E4C8AB402C081 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		A56429BB18841A2300168724 /* STUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STUtilities.h; sourceTree = "<group>"; };
 		A56429BC18841A2300168724 /* STUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STUtilities.m; sourceTree = "<group>"; };
+		A59C60F219C92DDE0028A8F7 /* STTTDataModel 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "STTTDataModel 2.xcdatamodel"; sourceTree = "<group>"; };
+		A59C60F319C92DDE0028A8F7 /* STTTDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = STTTDataModel.xcdatamodel; sourceTree = "<group>"; };
+		A59C60F919CAEF010028A8F7 /* STTTAgentTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTAgentTask.h; sourceTree = "<group>"; };
+		A59C60FA19CAEF010028A8F7 /* STTTAgentTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTAgentTask.m; sourceTree = "<group>"; };
 		DD3C601463AF4A6E80FEF924 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -281,9 +282,9 @@
 		2CE326A5176F2FED00BAA1D4 /* Data Model */ = {
 			isa = PBXGroup;
 			children = (
-				2C93A590178174900014001B /* STTTDataModel.xcdatamodel */,
-				2CE7E51817AA64CB00113A6A /* STTTAgentTask.h */,
-				2CE7E51917AA64CB00113A6A /* STTTAgentTask.m */,
+				A59C60F919CAEF010028A8F7 /* STTTAgentTask.h */,
+				A59C60FA19CAEF010028A8F7 /* STTTAgentTask.m */,
+				A59C60F119C92DDE0028A8F7 /* STTTDataModel2.xcdatamodeld */,
 				2C93A5C517859F880014001B /* STTTAgentTerminal.h */,
 				2C93A5C617859F880014001B /* STTTAgentTerminal.m */,
 				2C93A5B6178420DB0014001B /* STTTAgentTask+remainingTime.h */,
@@ -448,7 +449,7 @@
 				2C93A562177D795E0014001B /* STTTTerminalController.m in Sources */,
 				2C93A565177D79790014001B /* STTTTaskController.m in Sources */,
 				2C93A568177D79C10014001B /* STTTSyncer.m in Sources */,
-				2C93A591178174900014001B /* STTTDataModel.xcdatamodel in Sources */,
+				A59C60FB19CAEF010028A8F7 /* STTTAgentTask.m in Sources */,
 				2C93A5A317817AAE0014001B /* STTTTerminalLocation.m in Sources */,
 				2C93A5A617817AAE0014001B /* STTTTaskLocation.m in Sources */,
 				2C93A5AC1781BA800014001B /* STTTLocationController.m in Sources */,
@@ -457,13 +458,13 @@
 				2C93A5C1178471B60014001B /* STTTMapAnnotation.m in Sources */,
 				A56429BD18841A2300168724 /* STUtilities.m in Sources */,
 				2C93A5C4178597940014001B /* STTTCommentVC.m in Sources */,
+				A59C60F419C92DDE0028A8F7 /* STTTDataModel2.xcdatamodeld in Sources */,
 				2C93A5C717859F880014001B /* STTTAgentTerminal.m in Sources */,
 				2CE7E4B5179D31B000113A6A /* STTTMainTVC.m in Sources */,
 				2CE7E4BA179D5CE300113A6A /* STTTInfoTVC.m in Sources */,
 				2CE7E4C1179D658100113A6A /* STTTTaskTVC.m in Sources */,
 				2CE7E4C4179D659700113A6A /* STTTTerminalTVC.m in Sources */,
 				2CE7E51717A93E7100113A6A /* STTTInfoCell.m in Sources */,
-				2CE7E51A17AA64CB00113A6A /* STTTAgentTask.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -668,6 +669,20 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		A59C60F119C92DDE0028A8F7 /* STTTDataModel2.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				A59C60F219C92DDE0028A8F7 /* STTTDataModel 2.xcdatamodel */,
+				A59C60F319C92DDE0028A8F7 /* STTTDataModel.xcdatamodel */,
+			);
+			currentVersion = A59C60F219C92DDE0028A8F7 /* STTTDataModel 2.xcdatamodel */;
+			path = STTTDataModel2.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 2CE3264F176F29E800BAA1D4 /* Project object */;
 }
