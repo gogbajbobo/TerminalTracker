@@ -383,7 +383,7 @@
     task.terminalBreakName = [properties valueForKey:@"terminal_break_name"];
     
     id routePriority = [properties valueForKey:@"route_priority"];
-    task.routePriority = [routePriority respondsToSelector:@selector(integerValue)] ? [NSNumber numberWithInteger:[routePriority integerValue]] : @-1;
+    task.routePriority = [routePriority respondsToSelector:@selector(integerValue)] ? [NSNumber numberWithInteger:[routePriority integerValue]] : @0;
     
     id servstatus = [properties valueForKey:@"servstatus"];
     task.servstatus = [servstatus isKindOfClass:[NSNumber class]] ? servstatus : [NSNumber numberWithBool:[servstatus boolValue]];
