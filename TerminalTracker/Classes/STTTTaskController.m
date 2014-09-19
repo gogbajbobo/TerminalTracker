@@ -130,7 +130,7 @@
         NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:NSStringFromClass([STTTAgentTask class])];
 
         request.sortDescriptors = [NSArray arrayWithObjects:
-                                   [NSSortDescriptor sortDescriptorWithKey:@"routePriority" ascending:YES selector:@selector(compare:)],
+                                   [NSSortDescriptor sortDescriptorWithKey:@"routePriority" ascending:NO selector:@selector(compare:)],
                                    [NSSortDescriptor sortDescriptorWithKey:@"servstatus" ascending:YES selector:@selector(compare:)],
                                    [NSSortDescriptor sortDescriptorWithKey:@"doBefore" ascending:YES selector:@selector(compare:)],
                                    nil];
@@ -266,7 +266,7 @@
     id <NSFetchedResultsSectionInfo> sectionInfo = [[self.resultsController sections] objectAtIndex:indexPath.section];
     STTTAgentTask *task = (STTTAgentTask *)[[sectionInfo objects] objectAtIndex:indexPath.row];
     
-    cell.textLabel.text = [NSString stringWithFormat:@"%@ : %@",task.terminal.code,task.terminalBreakName];
+    cell.textLabel.text = [NSString stringWithFormat:@"%i|%@ : %@",[task.routePriority intValue],task.terminal.code,task.terminalBreakName];
     cell.detailTextLabel.text = task.terminal.address;
     cell.detailTextLabel.numberOfLines = 2;
     cell.detailTextLabel.lineBreakMode = NSLineBreakByWordWrapping;
