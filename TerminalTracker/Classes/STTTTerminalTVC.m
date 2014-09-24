@@ -15,6 +15,7 @@
 #import "STTTAgentTask+remainingTime.h"
 #import "STTTTaskTVC.h"
 #import "STUtilities.h"
+#import "STTTAgentTask+cellcoloring.h"
 
 @interface STTTTerminalTVC ()
 
@@ -166,35 +167,10 @@
 }
 
 - (void)addTask:(STTTAgentTask *)task toCell:(UITableViewCell *)cell {
-    
     cell.textLabel.text = task.terminalBreakName;
     cell.detailTextLabel.text = [STUtilities stringWithRelativeDateFromDate:task.doBefore];
-    
-    UIColor *backgroundColor = self.tableView.backgroundColor;
-    UIColor *textColor = [UIColor blueColor];
-    
-    if (![task.servstatus boolValue]) {
-        
-        NSTimeInterval remainingTime = [task remainingTime];
-        
-        if (remainingTime < 0) {
-            textColor = [UIColor redColor];
-        } else {
-            if (remainingTime > 0 && remainingTime <= 60*60) {
-                backgroundColor = [UIColor redColor];
-                textColor = [UIColor whiteColor];
-            } else if (remainingTime < 120*60) {
-                backgroundColor = [UIColor yellowColor];
-            } else if (remainingTime < 180*60) {
-                backgroundColor = [UIColor colorWithRed:0.56 green:0.93 blue:0.56 alpha:1];
-            }
-        }
-        
-    }
-    
-    cell.detailTextLabel.backgroundColor = backgroundColor;
-    cell.detailTextLabel.textColor = textColor;
-    
+    cell.detailTextLabel.backgroundColor = [task getBackgroundColorForDisplaying];
+    cell.detailTextLabel.textColor = [task getTextColorForDisplaying];
 }
 
 - (void)addErrorTextToCell:(UITableViewCell *)cell {
@@ -203,7 +179,7 @@
     cell.textLabel.font = [UIFont systemFontOfSize:12];
     cell.textLabel.numberOfLines = 3;
     cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
-    
+
 }
 
 - (void)addAddressToCell:(UITableViewCell *)cell {
