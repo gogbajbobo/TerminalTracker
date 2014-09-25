@@ -169,8 +169,9 @@
 - (void)addTask:(STTTAgentTask *)task toCell:(UITableViewCell *)cell {
     cell.textLabel.text = task.terminalBreakName;
     cell.detailTextLabel.text = [STUtilities stringWithRelativeDateFromDate:task.doBefore];
-    cell.detailTextLabel.backgroundColor = [task getBackgroundColorForDisplaying];
-    cell.detailTextLabel.textColor = [task getTextColorForDisplaying];
+    cell.backgroundColor = [task getBackgroundColorForDisplaying];
+    cell.textLabel.textColor = [task getTextColorForDisplaying];
+    cell.detailTextLabel.textColor = cell.textLabel.textColor;
 }
 
 - (void)addErrorTextToCell:(UITableViewCell *)cell {
