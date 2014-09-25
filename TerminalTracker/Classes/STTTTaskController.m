@@ -293,7 +293,7 @@
     infoLabel.text = infoText;
     infoLabel.font = font;
     infoLabel.textColor = [UIColor blueColor];
-    infoLabel.backgroundColor = cell.contentView.backgroundColor;
+    infoLabel.backgroundColor = cell.backgroundColor;
     infoLabel.tag = 666;
     infoLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
     
