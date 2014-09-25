@@ -305,27 +305,23 @@
     //    NSString *subtitle = @"Всего: ";
     //    cell.detailTextLabel.text = [subtitle stringByAppendingFormat:@"%d", tasks.count];
     
-    int numberOfOverdueTasks = 0;
-    int numberOfCriticalTasks = 0;
-    int numberOfCautionTasks = 0;
-    int numberOfHurryTasks = 0;
+    int numberOfGreenTasks = 0;
+    int numberOfYellowTasks = 0;
+    int numberOfRedTasks = 0;
     for (STTTAgentTask *task in unsolvedTasks) {
-        NSTimeInterval remainingTime = [task remainingTime];
-        if (remainingTime <= 0) {
-            numberOfOverdueTasks += 1;
-        } else if (remainingTime > 0 && remainingTime < 60*60) {
-            numberOfCriticalTasks += 1;
-        } else if (remainingTime > 60*60 && remainingTime < 120*60) {
-            numberOfCautionTasks += 1;
-        } else if (remainingTime > 120*60 && remainingTime < 180*60) {
-            numberOfHurryTasks += 1;
+        switch ([task.routePriority intValue]) {
+            case 1:
+                numberOfGreenTasks++;
+                break;
+            case 2:
+                numberOfYellowTasks++;
+                break;
+            case 3:
+                numberOfRedTasks++;
         }
     }
     
-    int numberOfColoredTasks = numberOfCautionTasks + numberOfCriticalTasks + numberOfHurryTasks + numberOfOverdueTasks;
-    int numberOfUncoloredTasks = numberOfUnsolvedTasks - numberOfColoredTasks;
-    
-    if (numberOfColoredTasks > 0) {
+    if (numberOfGreenTasks + numberOfYellowTasks + numberOfRedTasks > 0) {
         UIColor *backgroundColor = cell.backgroundColor;
         UIColor *textColor = [UIColor blackColor];
         UIFont *font = [UIFont boldSystemFontOfSize:14];
@@ -338,17 +334,7 @@
         
         NSMutableAttributedString *text = [[NSMutableAttributedString alloc] initWithString:@"" attributes:attributes];
         
-        if (numberOfOverdueTasks > 0) {
-            
-            textColor = [UIColor redColor];
-            attributes = [NSDictionary dictionaryWithObjectsAndKeys:
-                          textColor, NSForegroundColorAttributeName,
-                          nil];
-            [text appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@" %d ", numberOfOverdueTasks] attributes:attributes]];
-            
-        }
-        
-        if (numberOfCriticalTasks > 0) {
+        if (numberOfRedTasks > 0) {
             
             backgroundColor = [UIColor redColor];
             textColor = [UIColor whiteColor];
@@ -359,41 +345,33 @@
                           textColor, NSForegroundColorAttributeName,
                           nil];
             
-            [text appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@" %d ", numberOfCriticalTasks] attributes:attributes]];
+            [text appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@" %d ", numberOfRedTasks] attributes:attributes]];
             
         }
         
-        if (numberOfCautionTasks > 0) {
+        if (numberOfYellowTasks > 0) {
             
             backgroundColor = [UIColor yellowColor];
             attributes = [NSDictionary dictionaryWithObjectsAndKeys:
                           backgroundColor, NSBackgroundColorAttributeName,
                           nil];
-            [text appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@" %d ", numberOfCautionTasks] attributes:attributes]];
+            [text appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@" %d ", numberOfYellowTasks] attributes:attributes]];
             
         }
         
-        if (numberOfHurryTasks > 0) {
-            backgroundColor = [UIColor colorWithRed:0.56 green:0.93 blue:0.56 alpha:1];
+        if (numberOfGreenTasks > 0) {
+            backgroundColor = [UIColor greenColor];
             attributes = [NSDictionary dictionaryWithObjectsAndKeys:
                           backgroundColor, NSBackgroundColorAttributeName,
                           nil];
-            [text appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@" %d ", numberOfHurryTasks] attributes:attributes]];
-        }
-        
-        if (numberOfUncoloredTasks > 0) {
-            backgroundColor = cell.backgroundColor;
-            attributes = [NSDictionary dictionaryWithObjectsAndKeys:
-                          backgroundColor, NSBackgroundColorAttributeName,
-                          nil];
-            [text appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@" %d ", numberOfUncoloredTasks] attributes:attributes]];
+            [text appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@" %d ", numberOfGreenTasks] attributes:attributes]];
         }
         
         cell.detailTextLabel.attributedText = text;
     }
     
     if (tasks.count > 0) {
-        cell.infoLabel.text = [NSString stringWithFormat:@"%d", tasks.count];
+        cell.infoLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)tasks.count];
     }
     
 }
