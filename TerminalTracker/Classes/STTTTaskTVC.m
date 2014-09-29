@@ -18,6 +18,7 @@
 #import "STTTCommentVC.h"
 #import "STTTTerminalTVC.h"
 #import "STUtilities.h"
+#import "STTTAgentTask+cellcoloring.h"
 
 @interface STTTTaskTVC ()
 
@@ -198,40 +199,10 @@
 }
 
 - (void)addDoBeforeToCell:(UITableViewCell *)cell {
-    
     cell.textLabel.text = @"Срок:";
     cell.detailTextLabel.text = [STUtilities stringWithRelativeDateFromDate:self.task.doBefore];
-    
-    
-    UIColor *backgroundColor = [UIColor whiteColor];
-    UIColor *textColor = [UIColor blueColor];
-    
-    if (![self.task.servstatus boolValue]) {
-        
-        NSTimeInterval remainingTime = [self.task remainingTime];
-        
-        if (remainingTime < 0) {
-            textColor = [UIColor redColor];
-        } else {
-            if (remainingTime > 0 && remainingTime <= 60*60) {
-                backgroundColor = [UIColor redColor];
-                textColor = [UIColor whiteColor];
-                cell.textLabel.textColor = textColor;
-            } else if (remainingTime < 120*60) {
-                backgroundColor = [UIColor yellowColor];
-            } else if (remainingTime < 180*60) {
-                backgroundColor = [UIColor colorWithRed:0.56 green:0.93 blue:0.56 alpha:1];
-            }
-        }
-        
-    }
-    
-    cell.backgroundColor = backgroundColor;
-    cell.detailTextLabel.textColor = textColor;
-    
-//    NSLog(@"cell.textLabel %@", cell.textLabel);
-//    NSLog(@"cell.detailTextLabel %@", cell.detailTextLabel);
-    
+    cell.backgroundColor = [self.task getBackgroundColorForDisplaying];
+    cell.detailTextLabel.textColor = [self.task getTextColorForDisplaying];
 }
 
 - (void)addCommentToCell:(UITableViewCell *)cell {

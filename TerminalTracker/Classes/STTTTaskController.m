@@ -11,6 +11,7 @@
 #import <STManagedTracker/STQueue.h>
 #import "STTTSyncer.h"
 #import "STUtilities.h"
+#import "STTTAgentTask+cellcoloring.h"
 
 @interface STTTTaskController() <NSFetchedResultsControllerDelegate>
 
@@ -271,32 +272,9 @@
     cell.detailTextLabel.numberOfLines = 2;
     cell.detailTextLabel.lineBreakMode = NSLineBreakByWordWrapping;
     
-    NSTimeInterval remainingTime = [task remainingTime];
-    UIColor *backgroundColor = [UIColor whiteColor];
-    UIColor *textColor = [UIColor blackColor];
-    
-    if (!task.lts || [task.ts compare:task.lts] == NSOrderedDescending) {
-        textColor = [UIColor grayColor];
-    } else {
-        if (![task.servstatus boolValue]) {
-            if (remainingTime < 0) {
-                textColor = [UIColor redColor];
-            } else if (remainingTime > 0 && remainingTime <= 60*60) {
-                backgroundColor = [UIColor redColor];
-                textColor = [UIColor whiteColor];
-            } else if (remainingTime < 120*60) {
-                backgroundColor = [UIColor yellowColor];
-            } else if (remainingTime < 180*60) {
-                backgroundColor = [UIColor colorWithRed:0.56 green:0.93 blue:0.56 alpha:1];
-            }
-        }
-    }
-    
-    cell.contentView.backgroundColor = backgroundColor;
-    cell.textLabel.backgroundColor = backgroundColor;
-    cell.detailTextLabel.backgroundColor = backgroundColor;
-    cell.textLabel.textColor = textColor;
-    cell.detailTextLabel.textColor = textColor;
+    cell.backgroundColor = [task getBackgroundColorForDisplaying];
+    cell.textLabel.textColor = [task getTextColorForDisplaying];
+    cell.detailTextLabel.textColor = [task getTextColorForDisplaying];
 
     NSString *infoText = [STUtilities stringWithRelativeDateFromDate:task.doBefore];
     UIFont *font = [UIFont systemFontOfSize:16];
@@ -315,7 +293,7 @@
     infoLabel.text = infoText;
     infoLabel.font = font;
     infoLabel.textColor = [UIColor blueColor];
-    infoLabel.backgroundColor = cell.contentView.backgroundColor;
+    infoLabel.backgroundColor = cell.backgroundColor;
     infoLabel.tag = 666;
     infoLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
     
