@@ -12,5 +12,6 @@
 
 - (NSTimeInterval)remainingTime;
 - (int)numberOfTasksOnSameTerminal;
+- (BOOL)recentlyVisited;
 
 @end

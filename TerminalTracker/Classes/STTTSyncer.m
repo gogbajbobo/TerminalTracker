@@ -12,6 +12,7 @@
 #import "STTTAgentTask.h"
 #import "STTTTerminalLocation.h"
 #import "STTTTaskLocation.h"
+#import "STTTAgentTask+remainingTime.h"
 
 @interface STTTSyncer()
 
@@ -386,7 +387,7 @@
     task.routePriority = [routePriority respondsToSelector:@selector(integerValue)] ? [NSNumber numberWithInteger:[routePriority integerValue]] : @0;
     
     id servstatus = [properties valueForKey:@"servstatus"];
-    task.servstatus = [servstatus isKindOfClass:[NSNumber class]] ? servstatus : [NSNumber numberWithBool:[servstatus boolValue]];
+    task.servstatus = task.recentlyVisited ? [NSNumber numberWithBool:YES] : [NSNumber numberWithBool:[servstatus boolValue]];
     
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss.SSS"];

@@ -8,6 +8,8 @@
 
 #import "STTTAgentTask+remainingTime.h"
 #import "STTTAgentTerminal.h"
+#import "STTTTaskLocation.h"
+#import "STTTSettingsController.h"
 
 @implementation STTTAgentTask (remainingTime)
 
@@ -23,6 +25,11 @@
         }
     }
     return taskCount;
+}
+
+-(BOOL) recentlyVisited {
+    double time = [[[STTTSettingsController sharedSTTTSettingsController] getSettingValueForName:@"blockInterval" inGroup:@"general"] doubleValue];
+    return self.visitLocation.cts && (abs([self.visitLocation.cts timeIntervalSinceDate:[NSDate date]]) < time * 60);
 }
 
 @end
