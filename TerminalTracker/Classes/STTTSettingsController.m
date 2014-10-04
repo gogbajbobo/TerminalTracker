@@ -69,6 +69,7 @@
     
     NSMutableDictionary *generalSettings = [NSMutableDictionary dictionary];
     [generalSettings setValue:[NSString stringWithFormat:@"%d", YES] forKey:@"localAccessToSettings"];
+    [generalSettings setValue:@"120" forKey:@"blockInterval"];
     
     [defaultSettings setValue:generalSettings forKey:@"general"];
     
@@ -80,7 +81,7 @@
     
 //    [super normalizeValue:value forKey:key];
     
-    NSArray *positiveDouble = [NSArray arrayWithObjects:@"requiredAccuracy", @"trackDetectionTime", @"trackSeparationDistance", @"trackScale", @"fetchLimit", @"syncInterval", @"HTCheckpointInterval", @"deviceMotionUpdateInterval", nil];
+    NSArray *positiveDouble = [NSArray arrayWithObjects:@"requiredAccuracy", @"trackDetectionTime", @"trackSeparationDistance", @"trackScale", @"fetchLimit", @"syncInterval", @"HTCheckpointInterval", @"deviceMotionUpdateInterval", @"blockInterval", nil];
     
     NSArray *boolValue = [NSArray arrayWithObjects:@"TrackerAutoStart", @"localAccessToSettings", @"deviceMotionUpdate", @"getLocationsWithNegativeSpeed", @"showLocationInsteadOfMap", nil];
     
