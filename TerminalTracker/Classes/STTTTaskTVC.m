@@ -19,6 +19,7 @@
 #import "STTTTerminalTVC.h"
 #import "STUtilities.h"
 #import "STTTAgentTask+cellcoloring.h"
+#import "STTTSettingsController.h"
 
 @interface STTTTaskTVC ()
 
@@ -371,12 +372,34 @@
             [cell.contentView addSubview:spinner];
             [[STTTLocationController sharedLC] getLocation];
         }
+    } else if ([self tooFarFromTerminal]) {
+        [self showTooFarAlert];
     } else {
         [self addTaskLocation];
         [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[self.tableView indexPathForCell:cell]] withRowAnimation:UITableViewRowAnimationAutomatic];
 
     }
 
+}
+
+- (BOOL) tooFarFromTerminal {
+    CLLocation *terminalLocation = [[CLLocation alloc] initWithLatitude:[self.task.terminal.location.latitude doubleValue]
+                                                             longitude:[self.task.terminal.location.longitude doubleValue]];
+    int distanceFromTerminal = [self.location distanceFromLocation:terminalLocation];
+    return distanceFromTerminal > [[[STTTSettingsController sharedSTTTSettingsController] getSettingValueForName:@"maxOkDistanceFromTerminal" inGroup:@"general"] doubleValue];
+}
+
+- (void) showTooFarAlert {
+    double maxOkDistanceFromTerminal = [[[STTTSettingsController sharedSTTTSettingsController] getSettingValueForName:@"maxOkDistanceFromTerminal" inGroup:@"general"] doubleValue];
+    NSString *message = [NSString stringWithFormat:@"Нужно находиться не дальше %.0fм от терминала для подтверждения выполнения", maxOkDistanceFromTerminal];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Терминал слишком далеко"
+                                                    message:message
+                                                   delegate:nil
+                                          cancelButtonTitle:@"OK"
+                                          otherButtonTitles:nil];
+    [alert show];
+    self.location = nil;
+    [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[self.tableView indexPathForCell:self.buttonsCell]] withRowAnimation:UITableViewRowAnimationAutomatic];
 }
 
 - (void)currentAccuracyUpdated:(NSNotification *)notification {
