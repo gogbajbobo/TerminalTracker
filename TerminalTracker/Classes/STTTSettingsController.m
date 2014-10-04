@@ -7,8 +7,18 @@
 //
 
 #import "STTTSettingsController.h"
+#import "STSettings.h"
 
 @implementation STTTSettingsController
+
++ (id)sharedSTTTSettingsController {
+    static STTTSettingsController *sharedSTTTSettingsController = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sharedSTTTSettingsController = [[self alloc] init];
+    });
+    return sharedSTTTSettingsController;
+}
 
 - (NSDictionary *)defaultSettings {
     NSMutableDictionary *defaultSettings = [[super defaultSettings] mutableCopy];
@@ -133,9 +143,14 @@
         }
         
     }
-    
+        
     return nil;
 }
 
+-(NSString*)getSettingValueForName:(NSString *)name inGroup:(NSString*)group {
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.group == %@ && SELF.name == %@", group, name];
+    STSettings *setting = [[[self currentSettings] filteredArrayUsingPredicate:predicate] lastObject];
+    return setting.value;
+}
 
 @end
