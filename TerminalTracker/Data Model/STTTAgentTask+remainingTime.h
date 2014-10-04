@@ -11,5 +11,6 @@
 @interface STTTAgentTask (remainingTime)
 
 - (NSTimeInterval)remainingTime;
+- (int)numberOfTasksOnSameTerminal;
 
 @end
