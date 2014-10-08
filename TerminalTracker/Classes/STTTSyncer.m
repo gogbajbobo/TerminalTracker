@@ -12,6 +12,7 @@
 #import "STTTAgentTask.h"
 #import "STTTTerminalLocation.h"
 #import "STTTTaskLocation.h"
+#import "STTTAgentTask+remainingTime.h"
 
 @interface STTTSyncer()
 
@@ -381,12 +382,12 @@
     STTTAgentTask *task = [self taskByXid:xidData];
 
     task.terminalBreakName = [properties valueForKey:@"terminal_break_name"];
-    
+    task.commentText = [properties valueForKey:@"techinfo"];
     id routePriority = [properties valueForKey:@"route_priority"];
     task.routePriority = [routePriority respondsToSelector:@selector(integerValue)] ? [NSNumber numberWithInteger:[routePriority integerValue]] : @0;
     
     id servstatus = [properties valueForKey:@"servstatus"];
-    task.servstatus = [servstatus isKindOfClass:[NSNumber class]] ? servstatus : [NSNumber numberWithBool:[servstatus boolValue]];
+    task.servstatus = task.recentlyVisited ? [NSNumber numberWithBool:YES] : [NSNumber numberWithBool:[servstatus boolValue]];
     
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss.SSS"];
@@ -398,7 +399,6 @@
     NSData *terminalXid = [self dataFromString:[[terminalData valueForKey:@"xid"] stringByReplacingOccurrencesOfString:@"-" withString:@""]];
     
     STTTAgentTerminal *terminal = [self terminalByXid:terminalXid];
-    
     task.terminal = terminal;
     if (task.lts == nil) {
         self.newTasksCount++;

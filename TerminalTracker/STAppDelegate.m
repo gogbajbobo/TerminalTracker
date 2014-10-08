@@ -41,7 +41,7 @@
                                      nil];
 
     NSDictionary *controllers = [NSDictionary dictionaryWithObjectsAndKeys:
-                              [[STTTSettingsController alloc] init], @"settingsController",
+                              [STTTSettingsController sharedSTTTSettingsController], @"settingsController",
                               [[STTTSyncer alloc] init], @"syncer",
                               nil];
     

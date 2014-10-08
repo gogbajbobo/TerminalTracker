@@ -7,8 +7,18 @@
 //
 
 #import "STTTSettingsController.h"
+#import "STSettings.h"
 
 @implementation STTTSettingsController
+
++ (id)sharedSTTTSettingsController {
+    static STTTSettingsController *sharedSTTTSettingsController = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sharedSTTTSettingsController = [[self alloc] init];
+    });
+    return sharedSTTTSettingsController;
+}
 
 - (NSDictionary *)defaultSettings {
     NSMutableDictionary *defaultSettings = [[super defaultSettings] mutableCopy];
@@ -59,6 +69,8 @@
     
     NSMutableDictionary *generalSettings = [NSMutableDictionary dictionary];
     [generalSettings setValue:[NSString stringWithFormat:@"%d", YES] forKey:@"localAccessToSettings"];
+    [generalSettings setValue:@"120" forKey:@"blockInterval"];
+    [generalSettings setValue:@"1000" forKey:@"maxOkDistanceFromTerminal"];
     
     [defaultSettings setValue:generalSettings forKey:@"general"];
     
@@ -70,7 +82,7 @@
     
 //    [super normalizeValue:value forKey:key];
     
-    NSArray *positiveDouble = [NSArray arrayWithObjects:@"requiredAccuracy", @"trackDetectionTime", @"trackSeparationDistance", @"trackScale", @"fetchLimit", @"syncInterval", @"HTCheckpointInterval", @"deviceMotionUpdateInterval", nil];
+    NSArray *positiveDouble = [NSArray arrayWithObjects:@"requiredAccuracy", @"trackDetectionTime", @"trackSeparationDistance", @"trackScale", @"fetchLimit", @"syncInterval", @"HTCheckpointInterval", @"deviceMotionUpdateInterval", @"blockInterval", @"maxOkDistanceFromTerminal", nil];
     
     NSArray *boolValue = [NSArray arrayWithObjects:@"TrackerAutoStart", @"localAccessToSettings", @"deviceMotionUpdate", @"getLocationsWithNegativeSpeed", @"showLocationInsteadOfMap", nil];
     
@@ -133,9 +145,14 @@
         }
         
     }
-    
+        
     return nil;
 }
 
+-(NSString*)getSettingValueForName:(NSString *)name inGroup:(NSString*)group {
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.group == %@ && SELF.name == %@", group, name];
+    STSettings *setting = [[[self currentSettings] filteredArrayUsingPredicate:predicate] lastObject];
+    return setting.value;
+}
 
 @end

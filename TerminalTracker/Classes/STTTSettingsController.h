@@ -9,5 +9,6 @@
 #import "STSettingsController.h"
 
 @interface STTTSettingsController : STSettingsController
-
++ (id)sharedSTTTSettingsController;
+- (NSString*)getSettingValueForName:(NSString *)name inGroup:(NSString*)group;
 @end

@@ -267,7 +267,15 @@
     id <NSFetchedResultsSectionInfo> sectionInfo = [[self.resultsController sections] objectAtIndex:indexPath.section];
     STTTAgentTask *task = (STTTAgentTask *)[[sectionInfo objects] objectAtIndex:indexPath.row];
     
-    cell.textLabel.text = [NSString stringWithFormat:@"%i|%@ : %@",[task.routePriority intValue],task.terminal.code,task.terminalBreakName];
+    
+    NSString *moreTasksOnThisTerminal = @"";
+    if (task.numberOfTasksOnSameTerminal) {
+        moreTasksOnThisTerminal = [NSString stringWithFormat:@" (+%i)", task.numberOfTasksOnSameTerminal];
+    }
+    cell.textLabel.text = [NSString stringWithFormat:@"%i|%@ : %@%@",[task.routePriority intValue]
+                                ,task.terminal.code
+                                ,task.terminalBreakName
+                                ,moreTasksOnThisTerminal];
     cell.detailTextLabel.text = task.terminal.address;
     cell.detailTextLabel.numberOfLines = 2;
     cell.detailTextLabel.lineBreakMode = NSLineBreakByWordWrapping;
