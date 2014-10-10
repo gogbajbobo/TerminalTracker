@@ -46,6 +46,7 @@
 		2CE7E4CA179FC98800113A6A /* STTTtest.json in Resources */ = {isa = PBXBuildFile; fileRef = 2CE7E4C9179FC98800113A6A /* STTTtest.json */; };
 		2CE7E51717A93E7100113A6A /* STTTInfoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CE7E51617A93E7100113A6A /* STTTInfoCell.m */; };
 		9E0575B8127B4EE5B37A6DF5 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F26E7DA269E4C8AB402C081 /* libPods.a */; };
+		A505081119E7604D00632027 /* STTTAgentRepairCode.m in Sources */ = {isa = PBXBuildFile; fileRef = A505081019E7604D00632027 /* STTTAgentRepairCode.m */; };
 		A54DEE8E19D2501600D7D1C7 /* STTTAgentTask+cellcoloring.m in Sources */ = {isa = PBXBuildFile; fileRef = A54DEE8D19D2501600D7D1C7 /* STTTAgentTask+cellcoloring.m */; };
 		A56429BD18841A2300168724 /* STUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = A56429BC18841A2300168724 /* STUtilities.m */; };
 		A59C60F419C92DDE0028A8F7 /* STTTDataModel2.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A59C60F119C92DDE0028A8F7 /* STTTDataModel2.xcdatamodeld */; };
@@ -125,6 +126,9 @@
 		2CE7E51517A93E7100113A6A /* STTTInfoCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTInfoCell.h; sourceTree = "<group>"; };
 		2CE7E51617A93E7100113A6A /* STTTInfoCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTInfoCell.m; sourceTree = "<group>"; };
 		3F26E7DA269E4C8AB402C081 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		A505080E19E75F0100632027 /* STTTDataModel 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "STTTDataModel 3.xcdatamodel"; sourceTree = "<group>"; };
+		A505080F19E7604D00632027 /* STTTAgentRepairCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTAgentRepairCode.h; sourceTree = "<group>"; };
+		A505081019E7604D00632027 /* STTTAgentRepairCode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTAgentRepairCode.m; sourceTree = "<group>"; };
 		A54DEE8C19D2501600D7D1C7 /* STTTAgentTask+cellcoloring.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "STTTAgentTask+cellcoloring.h"; sourceTree = "<group>"; };
 		A54DEE8D19D2501600D7D1C7 /* STTTAgentTask+cellcoloring.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "STTTAgentTask+cellcoloring.m"; sourceTree = "<group>"; };
 		A56429BB18841A2300168724 /* STUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STUtilities.h; sourceTree = "<group>"; };
@@ -290,6 +294,8 @@
 				A59C60F919CAEF010028A8F7 /* STTTAgentTask.h */,
 				A59C60FA19CAEF010028A8F7 /* STTTAgentTask.m */,
 				A59C60F119C92DDE0028A8F7 /* STTTDataModel2.xcdatamodeld */,
+				A505080F19E7604D00632027 /* STTTAgentRepairCode.h */,
+				A505081019E7604D00632027 /* STTTAgentRepairCode.m */,
 				2C93A5C517859F880014001B /* STTTAgentTerminal.h */,
 				2C93A5C617859F880014001B /* STTTAgentTerminal.m */,
 				2C93A5B6178420DB0014001B /* STTTAgentTask+remainingTime.h */,
@@ -468,6 +474,7 @@
 				2C93A5C717859F880014001B /* STTTAgentTerminal.m in Sources */,
 				2CE7E4B5179D31B000113A6A /* STTTMainTVC.m in Sources */,
 				2CE7E4BA179D5CE300113A6A /* STTTInfoTVC.m in Sources */,
+				A505081119E7604D00632027 /* STTTAgentRepairCode.m in Sources */,
 				2CE7E4C1179D658100113A6A /* STTTTaskTVC.m in Sources */,
 				2CE7E4C4179D659700113A6A /* STTTTerminalTVC.m in Sources */,
 				2CE7E51717A93E7100113A6A /* STTTInfoCell.m in Sources */,
@@ -681,9 +688,10 @@
 			isa = XCVersionGroup;
 			children = (
 				A59C60F219C92DDE0028A8F7 /* STTTDataModel 2.xcdatamodel */,
+				A505080E19E75F0100632027 /* STTTDataModel 3.xcdatamodel */,
 				A59C60F319C92DDE0028A8F7 /* STTTDataModel.xcdatamodel */,
 			);
-			currentVersion = A59C60F219C92DDE0028A8F7 /* STTTDataModel 2.xcdatamodel */;
+			currentVersion = A505080E19E75F0100632027 /* STTTDataModel 3.xcdatamodel */;
 			path = STTTDataModel2.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
