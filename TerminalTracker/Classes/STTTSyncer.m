@@ -331,7 +331,7 @@
 
 - (void)newTerminalWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties {
     
-    STTTAgentTerminal *terminal = [self terminalByXid:xidData];
+    STTTAgentTerminal *terminal = (STTTAgentTerminal*)[self entityByClass:[STTTAgentTerminal class] andXid:xidData];
     
     if (!terminal.location) {
         STTTTerminalLocation *location = (STTTTerminalLocation *)[NSEntityDescription insertNewObjectForEntityForName:NSStringFromClass([STTTTerminalLocation class]) inManagedObjectContext:self.session.document.managedObjectContext];
@@ -379,7 +379,7 @@
 
 - (void)newTaskWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties {
     
-    STTTAgentTask *task = [self taskByXid:xidData];
+    STTTAgentTask *task = (STTTAgentTask*)[self entityByClass:[STTTAgentTask class] andXid:xidData];
 
     task.terminalBreakName = [properties valueForKey:@"terminal_break_name"];
     task.commentText = [properties valueForKey:@"techinfo"];
@@ -398,7 +398,7 @@
     NSDictionary *terminalData = [properties valueForKey:@"terminal"];
     NSData *terminalXid = [self dataFromString:[[terminalData valueForKey:@"xid"] stringByReplacingOccurrencesOfString:@"-" withString:@""]];
     
-    STTTAgentTerminal *terminal = [self terminalByXid:terminalXid];
+    STTTAgentTerminal *terminal = (STTTAgentTerminal*)[self entityByClass:[STTTAgentTerminal class] andXid:terminalXid];
     task.terminal = terminal;
     if (task.lts == nil) {
         self.newTasksCount++;
@@ -462,47 +462,23 @@
     
 }
 
-- (STTTAgentTerminal *)terminalByXid:(NSData *)xid {
-    
-    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:NSStringFromClass([STTTAgentTerminal class])];
+- (STComment*)entityByClass:(Class)entityClass andXid:(NSData *)xid {
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:NSStringFromClass(entityClass)];
     request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"ts" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
     request.predicate = [NSPredicate predicateWithFormat:@"SELF.xid == %@", xid];
     NSError *error;
     NSArray *fetchResult = [self.session.document.managedObjectContext executeFetchRequest:request error:&error];
     
-    STTTAgentTerminal *terminal;
+    STComment *entity;
     
     if ([fetchResult lastObject]) {
-        terminal = [fetchResult lastObject];
+        entity = [fetchResult lastObject];
     } else {
-        terminal = (STTTAgentTerminal *)[NSEntityDescription insertNewObjectForEntityForName:NSStringFromClass([STTTAgentTerminal class]) inManagedObjectContext:self.session.document.managedObjectContext];
-        terminal.xid = xid;
+        entity = (STComment *)[NSEntityDescription insertNewObjectForEntityForName:NSStringFromClass(entityClass) inManagedObjectContext:self.session.document.managedObjectContext];
+        entity.xid = xid;
     }
     
-    return terminal;
-
-}
-
-- (STTTAgentTask *)taskByXid:(NSData *)xid {
-    
-    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:NSStringFromClass([STTTAgentTask class])];
-    request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"ts" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
-    request.predicate = [NSPredicate predicateWithFormat:@"SELF.xid == %@", xid];
-    
-    NSError *error;
-    NSArray *fetchResult = [self.session.document.managedObjectContext executeFetchRequest:request error:&error];
-    
-    STTTAgentTask *task;
-    
-    if ([fetchResult lastObject]) {
-        task = [fetchResult lastObject];
-    } else {
-        task = (STTTAgentTask *)[NSEntityDescription insertNewObjectForEntityForName:NSStringFromClass([STTTAgentTask class]) inManagedObjectContext:self.session.document.managedObjectContext];
-        task.xid = xid;
-    }
-    
-    return task;
-
+    return entity;
 }
 
 - (void)syncerSettingsChanged:(NSNotification *)notification {
