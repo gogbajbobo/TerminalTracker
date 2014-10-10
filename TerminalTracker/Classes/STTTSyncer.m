@@ -13,6 +13,7 @@
 #import "STTTTerminalLocation.h"
 #import "STTTTaskLocation.h"
 #import "STTTAgentTask+remainingTime.h"
+#import "STTTAgentRepairCode.h"
 
 @interface STTTSyncer()
 
@@ -325,8 +326,20 @@
         
         [self newSettingWithProperties:properties];
         
+    } else if ([name isEqualToString:@"megaport.iAgentRepairCode"]) {
+        
+        [self newRepairCodeWithXid:xidData andProperties:properties];
+        
     }
 
+}
+
+- (void)newRepairCodeWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties {
+    STTTAgentRepairCode *repairCode = (STTTAgentRepairCode*)[self entityByClass:[STTTAgentRepairCode class] andXid:xidData];
+    repairCode.repairName = [properties valueForKey:@"repair_name"];
+    repairCode.active = [NSNumber numberWithBool:[[properties valueForKey:@"servstatus"] boolValue]];
+    repairCode.lts = [NSDate date];
+    NSLog(@"get repaor_code.xid %@", repairCode.xid);
 }
 
 - (void)newTerminalWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties {
