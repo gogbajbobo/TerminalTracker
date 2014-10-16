@@ -46,8 +46,14 @@
         <attribute name="routePriority" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="servstatus" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="terminalBreakName" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="repairs" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="STTTAgentTaskRepair" inverseName="task" inverseEntity="STTTAgentTaskRepair" syncable="YES"/>
         <relationship name="terminal" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="STTTAgentTerminal" inverseName="tasks" inverseEntity="STTTAgentTerminal" syncable="YES"/>
         <relationship name="visitLocation" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="STTTTaskLocation" inverseName="task" inverseEntity="STTTTaskLocation" syncable="YES"/>
+    </entity>
+    <entity name="STTTAgentTaskRepair" syncable="YES">
+        <attribute name="deleted" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <relationship name="repairCode" maxCount="1" deletionRule="Nullify" destinationEntity="STTTAgentRepairCode" syncable="YES"/>
+        <relationship name="task" maxCount="1" deletionRule="Nullify" destinationEntity="STTTAgentTask" inverseName="repairs" inverseEntity="STTTAgentTask" syncable="YES"/>
     </entity>
     <entity name="STTTAgentTerminal" representedClassName="STTTAgentTerminal" parentEntity="STComment" syncable="YES">
         <attribute name="address" optional="YES" attributeType="String" syncable="YES"/>
@@ -66,16 +72,17 @@
         <relationship name="terminal" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="STTTAgentTerminal" inverseName="location" inverseEntity="STTTAgentTerminal" syncable="YES"/>
     </entity>
     <elements>
-        <element name="STBatteryStatus" positionX="-4133" positionY="-1054" width="128" height="73"/>
+        <element name="STBatteryStatus" positionX="-4034" positionY="-1072" width="128" height="73"/>
         <element name="STComment" positionX="-3800" positionY="-1009" width="128" height="73"/>
         <element name="STDatum" positionX="-3807" positionY="-1206" width="128" height="163"/>
-        <element name="STLocation" positionX="-3926" positionY="-864" width="128" height="163"/>
-        <element name="STLogMessage" positionX="-4095" positionY="-939" width="128" height="73"/>
-        <element name="STSettings" positionX="-4068" positionY="-1161" width="128" height="88"/>
-        <element name="STTTAgentTask" positionX="-3566" positionY="-943" width="128" height="133"/>
+        <element name="STLocation" positionX="-3440" positionY="-774" width="128" height="163"/>
+        <element name="STLogMessage" positionX="-4095" positionY="-981" width="128" height="73"/>
+        <element name="STSettings" positionX="-3980" positionY="-1186" width="128" height="88"/>
+        <element name="STTTAgentRepairCode" positionX="-3890" positionY="-882" width="128" height="73"/>
+        <element name="STTTAgentTask" positionX="-3798" positionY="-792" width="128" height="148"/>
         <element name="STTTAgentTerminal" positionX="-3611" positionY="-1179" width="128" height="163"/>
-        <element name="STTTTaskLocation" positionX="-3728" positionY="-778" width="128" height="58"/>
-        <element name="STTTTerminalLocation" positionX="-3771" positionY="-873" width="128" height="58"/>
-        <element name="STTTAgentRepairCode" positionX="-3924" positionY="-1053" width="128" height="73"/>
+        <element name="STTTTaskLocation" positionX="-3620" positionY="-702" width="128" height="58"/>
+        <element name="STTTTerminalLocation" positionX="-3557" positionY="-949" width="128" height="58"/>
+        <element name="STTTAgentTaskRepair" positionX="-4059" positionY="-844" width="128" height="88"/>
     </elements>
 </model>
