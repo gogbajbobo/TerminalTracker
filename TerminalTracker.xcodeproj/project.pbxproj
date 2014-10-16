@@ -47,6 +47,9 @@
 		2CE7E51717A93E7100113A6A /* STTTInfoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CE7E51617A93E7100113A6A /* STTTInfoCell.m */; };
 		9E0575B8127B4EE5B37A6DF5 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F26E7DA269E4C8AB402C081 /* libPods.a */; };
 		A505081119E7604D00632027 /* STTTAgentRepairCode.m in Sources */ = {isa = PBXBuildFile; fileRef = A505081019E7604D00632027 /* STTTAgentRepairCode.m */; };
+		A50B027919EDFCD0008612CD /* STEditTaskRepairCodesTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = A50B027819EDFCD0008612CD /* STEditTaskRepairCodesTVC.m */; };
+		A50B027C19EF5C46008612CD /* STAgentTaskRepairCodeService.m in Sources */ = {isa = PBXBuildFile; fileRef = A50B027B19EF5C46008612CD /* STAgentTaskRepairCodeService.m */; };
+		A50B027F19EF69E9008612CD /* STTTAgentTaskRepair.m in Sources */ = {isa = PBXBuildFile; fileRef = A50B027E19EF69E9008612CD /* STTTAgentTaskRepair.m */; };
 		A54DEE8E19D2501600D7D1C7 /* STTTAgentTask+cellcoloring.m in Sources */ = {isa = PBXBuildFile; fileRef = A54DEE8D19D2501600D7D1C7 /* STTTAgentTask+cellcoloring.m */; };
 		A56429BD18841A2300168724 /* STUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = A56429BC18841A2300168724 /* STUtilities.m */; };
 		A59C60F419C92DDE0028A8F7 /* STTTDataModel2.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A59C60F119C92DDE0028A8F7 /* STTTDataModel2.xcdatamodeld */; };
@@ -129,6 +132,12 @@
 		A505080E19E75F0100632027 /* STTTDataModel 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "STTTDataModel 3.xcdatamodel"; sourceTree = "<group>"; };
 		A505080F19E7604D00632027 /* STTTAgentRepairCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTAgentRepairCode.h; sourceTree = "<group>"; };
 		A505081019E7604D00632027 /* STTTAgentRepairCode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTAgentRepairCode.m; sourceTree = "<group>"; };
+		A50B027719EDFCD0008612CD /* STEditTaskRepairCodesTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STEditTaskRepairCodesTVC.h; sourceTree = "<group>"; };
+		A50B027819EDFCD0008612CD /* STEditTaskRepairCodesTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STEditTaskRepairCodesTVC.m; sourceTree = "<group>"; };
+		A50B027A19EF5C46008612CD /* STAgentTaskRepairCodeService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STAgentTaskRepairCodeService.h; sourceTree = "<group>"; };
+		A50B027B19EF5C46008612CD /* STAgentTaskRepairCodeService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STAgentTaskRepairCodeService.m; sourceTree = "<group>"; };
+		A50B027D19EF69E9008612CD /* STTTAgentTaskRepair.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTAgentTaskRepair.h; sourceTree = "<group>"; };
+		A50B027E19EF69E9008612CD /* STTTAgentTaskRepair.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTAgentTaskRepair.m; sourceTree = "<group>"; };
 		A54DEE8C19D2501600D7D1C7 /* STTTAgentTask+cellcoloring.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "STTTAgentTask+cellcoloring.h"; sourceTree = "<group>"; };
 		A54DEE8D19D2501600D7D1C7 /* STTTAgentTask+cellcoloring.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "STTTAgentTask+cellcoloring.m"; sourceTree = "<group>"; };
 		A56429BB18841A2300168724 /* STUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STUtilities.h; sourceTree = "<group>"; };
@@ -254,6 +263,10 @@
 		2CE32698176F2BB600BAA1D4 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				A50B027719EDFCD0008612CD /* STEditTaskRepairCodesTVC.h */,
+				A50B027819EDFCD0008612CD /* STEditTaskRepairCodesTVC.m */,
+				A50B027A19EF5C46008612CD /* STAgentTaskRepairCodeService.h */,
+				A50B027B19EF5C46008612CD /* STAgentTaskRepairCodeService.m */,
 				A54DEE8C19D2501600D7D1C7 /* STTTAgentTask+cellcoloring.h */,
 				A54DEE8D19D2501600D7D1C7 /* STTTAgentTask+cellcoloring.m */,
 				2CE7E4B3179D31B000113A6A /* STTTMainTVC.h */,
@@ -294,6 +307,8 @@
 				A59C60F919CAEF010028A8F7 /* STTTAgentTask.h */,
 				A59C60FA19CAEF010028A8F7 /* STTTAgentTask.m */,
 				A59C60F119C92DDE0028A8F7 /* STTTDataModel2.xcdatamodeld */,
+				A50B027D19EF69E9008612CD /* STTTAgentTaskRepair.h */,
+				A50B027E19EF69E9008612CD /* STTTAgentTaskRepair.m */,
 				A505080F19E7604D00632027 /* STTTAgentRepairCode.h */,
 				A505081019E7604D00632027 /* STTTAgentRepairCode.m */,
 				2C93A5C517859F880014001B /* STTTAgentTerminal.h */,
@@ -466,11 +481,14 @@
 				2C93A5AC1781BA800014001B /* STTTLocationController.m in Sources */,
 				2C93A5AF178209AD0014001B /* STTTAgentTerminal+distance.m in Sources */,
 				2C93A5B8178420DC0014001B /* STTTAgentTask+remainingTime.m in Sources */,
+				A50B027C19EF5C46008612CD /* STAgentTaskRepairCodeService.m in Sources */,
 				2C93A5C1178471B60014001B /* STTTMapAnnotation.m in Sources */,
+				A50B027919EDFCD0008612CD /* STEditTaskRepairCodesTVC.m in Sources */,
 				A56429BD18841A2300168724 /* STUtilities.m in Sources */,
 				2C93A5C4178597940014001B /* STTTCommentVC.m in Sources */,
 				A54DEE8E19D2501600D7D1C7 /* STTTAgentTask+cellcoloring.m in Sources */,
 				A59C60F419C92DDE0028A8F7 /* STTTDataModel2.xcdatamodeld in Sources */,
+				A50B027F19EF69E9008612CD /* STTTAgentTaskRepair.m in Sources */,
 				2C93A5C717859F880014001B /* STTTAgentTerminal.m in Sources */,
 				2CE7E4B5179D31B000113A6A /* STTTMainTVC.m in Sources */,
 				2CE7E4BA179D5CE300113A6A /* STTTInfoTVC.m in Sources */,
