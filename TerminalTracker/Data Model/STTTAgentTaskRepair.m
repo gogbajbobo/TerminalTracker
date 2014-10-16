@@ -13,8 +13,8 @@
 
 @implementation STTTAgentTaskRepair
 
-@dynamic deleted;
-@dynamic task;
+@dynamic isdeleted;
 @dynamic repairCode;
+@dynamic task;
 
 @end

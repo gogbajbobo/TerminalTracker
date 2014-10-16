@@ -13,8 +13,8 @@
 
 @interface STTTAgentTaskRepair : NSManagedObject
 
-@property (nonatomic, retain) NSNumber * deleted;
-@property (nonatomic, retain) STTTAgentTask *task;
+@property (nonatomic, retain) NSNumber * isdeleted;
 @property (nonatomic, retain) STTTAgentRepairCode *repairCode;
+@property (nonatomic, retain) STTTAgentTask *task;
 
 @end
