@@ -10,105 +10,45 @@
 #import "STAgentTaskRepairCodeService.h"
 
 @interface STEditTaskRepairCodesTVC ()
-@property (strong, nonatomic) NSArray* repairList;
+@property (strong, nonatomic) NSMutableArray* repairList;
 @end
 
 @implementation STEditTaskRepairCodesTVC
 
 - (NSArray *)repairList {
     if(_repairList == nil) {
-        _repairList = [STAgentTaskRepairCodeService getListOfRepairsForTask:self.task];
+        _repairList = [[NSMutableArray alloc] init];
+        for(NSDictionary *repair in [STAgentTaskRepairCodeService getListOfRepairsForTask:self.task]) {
+            [_repairList addObject:[repair mutableCopy]];
+        }
     }
     return _repairList;
 }
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
-    
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+- (void)viewWillDisappear:(BOOL)animated {
+    [STAgentTaskRepairCodeService updateRepairsForTask:self.task fromList:self.repairList];
+    [super viewWillDisappear:animated];
 }
 
 #pragma mark - Table view data source
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-#warning Potentially incomplete method implementation.
-    // Return the number of sections.
-    return 0;
-}
-
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-#warning Incomplete method implementation.
-    // Return the number of rows in the section.
-    return 0;
+    return self.repairList.count;
 }
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"breakType" forIndexPath:indexPath];
-    if (indexPath.row == self.repairList.count) {
-        // remove this logic - it belongs to a TaskVC
-        cell.textLabel.text = @"test";
-    } else if (indexPath.row < self.repairList.count) {
-        cell.textLabel.text = [self.repairList[indexPath.row] objectForKey:@"repairName"];
-    } else {
-        cell = nil;
-    }
-    
+    cell.textLabel.text = [self.repairList[indexPath.row] objectForKey:@"repairName"];
+    BOOL isChecked = [[self.repairList[indexPath.row] objectForKey:@"isChecked"] boolValue];
+    cell.accessoryType =  isChecked ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
     return cell;
 }
 
-
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    BOOL isChecked = [[self.repairList[indexPath.row] objectForKey:@"isChecked"] boolValue];
+    [self.repairList[indexPath.row] setObject:[NSNumber numberWithBool:!isChecked] forKey:@"isChecked"];
+    [tableView cellForRowAtIndexPath:indexPath].accessoryType = !isChecked ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
 }
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end
