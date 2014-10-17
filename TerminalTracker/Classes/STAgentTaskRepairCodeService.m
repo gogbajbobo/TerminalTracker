@@ -14,6 +14,19 @@
 
 @implementation STAgentTaskRepairCodeService
 
++ (STTTAgentRepairCode*) findRepairCodeByXid:(NSData*)xid inContext:(NSManagedObjectContext*)context{
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"STTTAgentRepairCode"];
+    request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"ts" ascending:YES]];
+    request.predicate = [NSPredicate predicateWithFormat:@"SELF.xid == %@", xid];
+    NSError *error;
+    NSArray *fetchResult = [context executeFetchRequest:request error:&error];
+    
+    if(error) {
+        return nil;
+    }
+    return [fetchResult lastObject];
+}
+
 + (NSArray *)getListOfRepairsForTask:(STTTAgentTask *)task {
     NSMutableArray* resultArray = [NSMutableArray array];
     
@@ -31,22 +44,48 @@
         NSMutableDictionary* repairData = [NSMutableDictionary dictionary];
         [repairData setObject:repair.repairName forKey:@"repairName"];
         [repairData setObject:repair.xid forKey:@"repairXid"];
-        [repairData setObject:[NSNumber numberWithBool:[task.repairs containsObject:repair]] forKey:@"isChecked"];
+        NSNumber* isChesked = @NO;
+        for(STTTAgentTaskRepair* taskRepair in task.repairs) {
+            if(taskRepair.repairCode == repair && ![taskRepair.isdeleted boolValue]) {
+                isChesked = @YES;
+                break;
+            }
+        }
+        [repairData setObject:isChesked forKey:@"isChecked"];
+        [resultArray addObject:[repairData copy]];
     }
     
-    // get all repairs
-    // get repairs for task
-    // intersect and fill Array
     
-    // Array of Dictionaries -> keys: repairName, repairXid, isChecked
-    
-    return [resultArray copy];//@[@{@"repairName": @"Не работает", @"repairXid": @"11111111", @"isChecked": [NSNumber numberWithBool:YES]}];
+    return [resultArray copy];
 }
 
 + (void)updateRepairsForTask:(STTTAgentTask *)task fromList:(NSArray *)repairsList {
-    // read data, modify DB
+    
+    NSManagedObjectContext* managedObjectContext = [[STSessionManager sharedManager] currentSession].document.managedObjectContext;
+    
+    for (NSDictionary* repairData in repairsList) {
+        BOOL addNew = YES;
+        for (STTTAgentTaskRepair* taskRepair in task.repairs) {
+            if(![taskRepair.repairCode.xid isEqualToData:[repairData objectForKey:@"repairXid"]]) {
+                continue;
+            }
+            addNew = NO;
+            taskRepair.isdeleted = [NSNumber numberWithBool:![[repairData objectForKey:@"isChecked"] boolValue]];
+            break;
+        }
+        if(addNew && [[repairData objectForKey:@"isChecked"] boolValue]) {
+            STTTAgentTaskRepair* entity = (STTTAgentTaskRepair *)[NSEntityDescription insertNewObjectForEntityForName:@"STTTAgentTaskRepair" inManagedObjectContext:managedObjectContext];
+            entity.task = task;
+            entity.repairCode = [STAgentTaskRepairCodeService findRepairCodeByXid:[repairData objectForKey:@"repairXid"] inContext:managedObjectContext];
+            
+        }
+    }
+    
+    if (managedObjectContext.hasChanges) {
+        NSError* error;
+        [managedObjectContext save:&error];
+    }
 }
-
 
 @end
 
