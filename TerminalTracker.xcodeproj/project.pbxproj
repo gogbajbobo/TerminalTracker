@@ -50,10 +50,10 @@
 		A50B027919EDFCD0008612CD /* STEditTaskRepairCodesTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = A50B027819EDFCD0008612CD /* STEditTaskRepairCodesTVC.m */; };
 		A50B027C19EF5C46008612CD /* STAgentTaskRepairCodeService.m in Sources */ = {isa = PBXBuildFile; fileRef = A50B027B19EF5C46008612CD /* STAgentTaskRepairCodeService.m */; };
 		A50B028219EF6E98008612CD /* STTTAgentTaskRepair.m in Sources */ = {isa = PBXBuildFile; fileRef = A50B028119EF6E98008612CD /* STTTAgentTaskRepair.m */; };
+		A50B028819F09E83008612CD /* STTTAgentTask.m in Sources */ = {isa = PBXBuildFile; fileRef = A50B028719F09E83008612CD /* STTTAgentTask.m */; };
 		A54DEE8E19D2501600D7D1C7 /* STTTAgentTask+cellcoloring.m in Sources */ = {isa = PBXBuildFile; fileRef = A54DEE8D19D2501600D7D1C7 /* STTTAgentTask+cellcoloring.m */; };
 		A56429BD18841A2300168724 /* STUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = A56429BC18841A2300168724 /* STUtilities.m */; };
 		A59C60F419C92DDE0028A8F7 /* STTTDataModel2.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A59C60F119C92DDE0028A8F7 /* STTTDataModel2.xcdatamodeld */; };
-		A59C60FB19CAEF010028A8F7 /* STTTAgentTask.m in Sources */ = {isa = PBXBuildFile; fileRef = A59C60FA19CAEF010028A8F7 /* STTTAgentTask.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -138,14 +138,14 @@
 		A50B027B19EF5C46008612CD /* STAgentTaskRepairCodeService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STAgentTaskRepairCodeService.m; sourceTree = "<group>"; };
 		A50B028019EF6E98008612CD /* STTTAgentTaskRepair.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTAgentTaskRepair.h; sourceTree = "<group>"; };
 		A50B028119EF6E98008612CD /* STTTAgentTaskRepair.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTAgentTaskRepair.m; sourceTree = "<group>"; };
+		A50B028619F09E83008612CD /* STTTAgentTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTAgentTask.h; sourceTree = "<group>"; };
+		A50B028719F09E83008612CD /* STTTAgentTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTAgentTask.m; sourceTree = "<group>"; };
 		A54DEE8C19D2501600D7D1C7 /* STTTAgentTask+cellcoloring.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "STTTAgentTask+cellcoloring.h"; sourceTree = "<group>"; };
 		A54DEE8D19D2501600D7D1C7 /* STTTAgentTask+cellcoloring.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "STTTAgentTask+cellcoloring.m"; sourceTree = "<group>"; };
 		A56429BB18841A2300168724 /* STUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STUtilities.h; sourceTree = "<group>"; };
 		A56429BC18841A2300168724 /* STUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STUtilities.m; sourceTree = "<group>"; };
 		A59C60F219C92DDE0028A8F7 /* STTTDataModel 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "STTTDataModel 2.xcdatamodel"; sourceTree = "<group>"; };
 		A59C60F319C92DDE0028A8F7 /* STTTDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = STTTDataModel.xcdatamodel; sourceTree = "<group>"; };
-		A59C60F919CAEF010028A8F7 /* STTTAgentTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTAgentTask.h; sourceTree = "<group>"; };
-		A59C60FA19CAEF010028A8F7 /* STTTAgentTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTAgentTask.m; sourceTree = "<group>"; };
 		DD3C601463AF4A6E80FEF924 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -306,9 +306,9 @@
 			children = (
 				A50B028019EF6E98008612CD /* STTTAgentTaskRepair.h */,
 				A50B028119EF6E98008612CD /* STTTAgentTaskRepair.m */,
-				A59C60F919CAEF010028A8F7 /* STTTAgentTask.h */,
-				A59C60FA19CAEF010028A8F7 /* STTTAgentTask.m */,
 				A59C60F119C92DDE0028A8F7 /* STTTDataModel2.xcdatamodeld */,
+				A50B028619F09E83008612CD /* STTTAgentTask.h */,
+				A50B028719F09E83008612CD /* STTTAgentTask.m */,
 				A505080F19E7604D00632027 /* STTTAgentRepairCode.h */,
 				A505081019E7604D00632027 /* STTTAgentRepairCode.m */,
 				2C93A5C517859F880014001B /* STTTAgentTerminal.h */,
@@ -475,7 +475,6 @@
 				2C93A562177D795E0014001B /* STTTTerminalController.m in Sources */,
 				2C93A565177D79790014001B /* STTTTaskController.m in Sources */,
 				2C93A568177D79C10014001B /* STTTSyncer.m in Sources */,
-				A59C60FB19CAEF010028A8F7 /* STTTAgentTask.m in Sources */,
 				2C93A5A317817AAE0014001B /* STTTTerminalLocation.m in Sources */,
 				2C93A5A617817AAE0014001B /* STTTTaskLocation.m in Sources */,
 				2C93A5AC1781BA800014001B /* STTTLocationController.m in Sources */,
@@ -496,6 +495,7 @@
 				2CE7E4C1179D658100113A6A /* STTTTaskTVC.m in Sources */,
 				2CE7E4C4179D659700113A6A /* STTTTerminalTVC.m in Sources */,
 				2CE7E51717A93E7100113A6A /* STTTInfoCell.m in Sources */,
+				A50B028819F09E83008612CD /* STTTAgentTask.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
