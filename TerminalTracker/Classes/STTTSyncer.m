@@ -14,6 +14,7 @@
 #import "STTTTaskLocation.h"
 #import "STTTAgentTask+remainingTime.h"
 #import "STTTAgentRepairCode.h"
+#import "STTTAgentTaskRepair.h"
 
 @interface STTTSyncer()
 
@@ -116,6 +117,7 @@
             
             [objectDictionary setObject:propertiesDictionary forKey:@"properties"];
             [syncDataArray addObject:objectDictionary];
+            [syncDataArray addObjectsFromArray:[self arrayWithTaskRepaisToSync:(STTTAgentTask*)object]];
         }
     }
     
@@ -125,6 +127,28 @@
     NSData *JSONData = [NSJSONSerialization dataWithJSONObject:dataDictionary options:0 error:&error];
     
     return JSONData;
+}
+
+-(NSString*)stringWithXid:(NSData*)xid {
+    NSString *result = [NSString stringWithFormat:@"%@", xid];
+    NSCharacterSet *charsToRemove = [NSCharacterSet characterSetWithCharactersInString:@"< >"];
+    return [[result stringByTrimmingCharactersInSet:charsToRemove] stringByReplacingOccurrencesOfString:@" " withString:@""];
+}
+
+- (NSArray*)arrayWithTaskRepaisToSync:(STTTAgentTask*)task {
+    NSMutableArray* results = [NSMutableArray array];
+    for(STTTAgentTaskRepair *repair in task.repairs) {
+        NSMutableDictionary *objectDictionary = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"megaport.iAgentTaskRepair", @"name", [self stringWithXid:repair.xid], @"xid", nil];
+        
+        [objectDictionary setObject:@{@"isdeleted": repair.isdeleted,
+                                      @"taskxid": [self stringWithXid:task.xid],
+                                      @"repairxid": [self stringWithXid:repair.repairCode.xid],
+                                      @"ts":[NSString stringWithFormat:@"%@", repair.ts]}
+                             forKey:@"properties"];
+        
+        [results addObject:objectDictionary];
+    }
+    return results;
 }
 
 - (NSMutableDictionary *)dictionaryForObject:(NSManagedObject *)object {
