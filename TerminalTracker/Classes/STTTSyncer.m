@@ -122,13 +122,7 @@
     NSDictionary *dataDictionary = [NSDictionary dictionaryWithObject:syncDataArray forKey:@"data"];
     
     NSError *error;
-//    NSData *JSONData = [NSJSONSerialization dataWithJSONObject:dataDictionary options:NSJSONWritingPrettyPrinted error:&error];
     NSData *JSONData = [NSJSONSerialization dataWithJSONObject:dataDictionary options:0 error:&error];
-    
-//    NSLog(@"JSONData %@", JSONData);
-    
-//    NSString *JSONString = [[NSString alloc] initWithData:JSONData encoding:NSUTF8StringEncoding];
-//    NSLog(@"JSONString %@", JSONString);
     
     return JSONData;
 }
@@ -146,12 +140,6 @@
 
 - (NSMutableDictionary *)propertiesDictionaryForObject:(NSManagedObject *)object {
     
-//    NSLog(@"object %@", object);
-//
-//    NSLog(@"ts %@", [object valueForKey:@"ts"]);
-//    NSLog(@"visited %@", [object valueForKey:@"visited"]);
-//    NSLog(@"commentText %@", [object valueForKey:@"commentText"]);
-    
     double latitude = [[(STTTAgentTask *)object visitLocation].latitude doubleValue];
     double longitude = [[(STTTAgentTask *)object visitLocation].longitude doubleValue];
 
@@ -163,7 +151,6 @@
     [propertiesDictionary setValue:[NSNumber numberWithDouble:latitude] forKey:@"latitude"];
     [propertiesDictionary setValue:[NSNumber numberWithDouble:longitude] forKey:@"longitude"];
     
-//    NSLog(@"propertiesDictionary %@", propertiesDictionary);
     return propertiesDictionary;
 }
 
@@ -337,7 +324,7 @@
 - (void)newRepairCodeWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties {
     STTTAgentRepairCode *repairCode = (STTTAgentRepairCode*)[self entityByClass:[STTTAgentRepairCode class] andXid:xidData];
     repairCode.repairName = [properties valueForKey:@"repair_name"];
-    repairCode.active = [NSNumber numberWithBool:[[properties valueForKey:@"servstatus"] boolValue]];
+    repairCode.active = [NSNumber numberWithBool:[[properties valueForKey:@"active"] boolValue]];
     repairCode.lts = [NSDate date];
     NSLog(@"get repaor_code.xid %@", repairCode.xid);
 }
