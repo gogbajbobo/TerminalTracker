@@ -70,7 +70,10 @@
                 continue;
             }
             addNew = NO;
-            taskRepair.isdeleted = [NSNumber numberWithBool:![[repairData objectForKey:@"isChecked"] boolValue]];
+            if ([taskRepair.isdeleted boolValue] != ![[repairData objectForKey:@"isChecked"] boolValue]) {
+                taskRepair.isdeleted = [NSNumber numberWithBool:![[repairData objectForKey:@"isChecked"] boolValue]];
+                task.ts = [NSDate date];
+            }
             break;
         }
         if(addNew && [[repairData objectForKey:@"isChecked"] boolValue]) {
