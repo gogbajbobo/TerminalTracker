@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6244" systemVersion="13F34" minimumToolsVersion="Xcode 4.1" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6252" systemVersion="13F34" minimumToolsVersion="Xcode 4.1" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="STBatteryStatus" representedClassName="STBatteryStatus" parentEntity="STComment" syncable="YES">
         <attribute name="batteryLevel" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="batteryState" optional="YES" attributeType="String" syncable="YES"/>
@@ -50,7 +50,7 @@
         <relationship name="terminal" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="STTTAgentTerminal" inverseName="tasks" inverseEntity="STTTAgentTerminal" syncable="YES"/>
         <relationship name="visitLocation" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="STTTTaskLocation" inverseName="task" inverseEntity="STTTTaskLocation" syncable="YES"/>
     </entity>
-    <entity name="STTTAgentTaskRepair" representedClassName="STTTAgentTaskRepair" syncable="YES">
+    <entity name="STTTAgentTaskRepair" representedClassName="STTTAgentTaskRepair" parentEntity="STComment" syncable="YES">
         <attribute name="isdeleted" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <relationship name="repairCode" maxCount="1" deletionRule="Nullify" destinationEntity="STTTAgentRepairCode" syncable="YES"/>
         <relationship name="task" maxCount="1" deletionRule="Nullify" destinationEntity="STTTAgentTask" inverseName="repairs" inverseEntity="STTTAgentTask" syncable="YES"/>
@@ -80,7 +80,7 @@
         <element name="STSettings" positionX="-3980" positionY="-1186" width="128" height="88"/>
         <element name="STTTAgentRepairCode" positionX="-3890" positionY="-882" width="128" height="73"/>
         <element name="STTTAgentTask" positionX="-3798" positionY="-787" width="128" height="148"/>
-        <element name="STTTAgentTaskRepair" positionX="-4059" positionY="-844" width="128" height="88"/>
+        <element name="STTTAgentTaskRepair" positionX="-4059" positionY="-844" width="128" height="90"/>
         <element name="STTTAgentTerminal" positionX="-3609" positionY="-1054" width="128" height="163"/>
         <element name="STTTTaskLocation" positionX="-3620" positionY="-702" width="128" height="58"/>
         <element name="STTTTerminalLocation" positionX="-3438" positionY="-963" width="128" height="58"/>

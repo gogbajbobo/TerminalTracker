@@ -11,7 +11,7 @@
 
 @class STTTAgentRepairCode, STTTAgentTask;
 
-@interface STTTAgentTaskRepair : NSManagedObject
+@interface STTTAgentTaskRepair : STComment
 
 @property (nonatomic, retain) NSNumber * isdeleted;
 @property (nonatomic, retain) STTTAgentRepairCode *repairCode;
