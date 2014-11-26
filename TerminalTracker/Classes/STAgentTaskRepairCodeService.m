@@ -42,7 +42,7 @@
     
     for(STTTAgentRepairCode* repair in fetchResult) {
         NSMutableDictionary* repairData = [NSMutableDictionary dictionary];
-        [repairData setObject:repair.repairName forKey:@"repairName"];
+        [repairData setObject:repair.repairName == nil ? @"????" : repair.repairName forKey:@"repairName"];
         [repairData setObject:repair.xid forKey:@"repairXid"];
         NSNumber* isChesked = @NO;
         for(STTTAgentTaskRepair* taskRepair in task.repairs) {
