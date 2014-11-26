@@ -135,6 +135,10 @@
     return [[result stringByTrimmingCharactersInSet:charsToRemove] stringByReplacingOccurrencesOfString:@" " withString:@""];
 }
 
+-(NSData*)xidWithString:(NSString*)string {
+    return [self dataFromString:[string stringByReplacingOccurrencesOfString:@"-" withString:@""]];
+}
+
 - (NSArray*)arrayWithTaskRepaisToSync:(STTTAgentTask*)task {
     NSMutableArray* results = [NSMutableArray array];
     for(STTTAgentTaskRepair *repair in task.repairs) {
@@ -341,9 +345,24 @@
         
         [self newRepairCodeWithXid:xidData andProperties:properties];
         
+    } else if ([name isEqualToString:@"megaport.iAgentTaskRepair"]) {
+        
+        [self newTaskRepairWithXid:xidData andProperties:properties];
+        
     }
 
 }
+
+- (void)newTaskRepairWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties {
+    STTTAgentTaskRepair *repair = (STTTAgentTaskRepair*)[self entityByClass:[STTTAgentTaskRepair class] andXid:xidData];
+    repair.isdeleted = @NO;
+    repair.repairCode = (STTTAgentRepairCode*)[self entityByClass:[STTTAgentRepairCode class] andXid:[self xidWithString:[properties valueForKey:@"repairxid"]]];
+    NSDictionary *taskData = [properties valueForKey:@"taskxid"];
+    repair.task = (STTTAgentTask*)[self entityByClass:[STTTAgentTask class] andXid:[self xidWithString:[taskData valueForKey:@"id"]]];
+    repair.lts = [NSDate date];
+    NSLog(@"get taskRepair.xid %@", repair.xid);
+}
+
 
 - (void)newRepairCodeWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties {
     STTTAgentRepairCode *repairCode = (STTTAgentRepairCode*)[self entityByClass:[STTTAgentRepairCode class] andXid:xidData];
