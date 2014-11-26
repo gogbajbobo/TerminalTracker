@@ -21,6 +21,8 @@
 #import "STTTAgentTask+cellcoloring.h"
 #import "STTTSettingsController.h"
 #import "STEditTaskRepairCodesTVC.h"
+#import "STTTAgentTaskRepair.h"
+#import "STTTAgentRepairCode.h"
 
 @interface STTTTaskTVC ()
 
@@ -114,7 +116,7 @@
             return 1;
             break;
         case 2:
-            return 1; // variable number !!!
+            return 1;
             break;
         case 3:
             return 1;
@@ -160,7 +162,7 @@
             cell = [cell initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
             [self addButtonsToCell:cell];
             break;
-        case 2: // must be a variable number of rows in this section.
+        case 2:
             cell = [cell initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
             [self addRepairsToCell:cell];
             break;
@@ -239,7 +241,12 @@
     
 }
 - (void)addRepairsToCell:(UITableViewCell *)cell {
-    // !!! Create a list and a static cell
+    NSString* selectedRepairs = @"";
+    for (STTTAgentTaskRepair* taskRepair in self.task.repairs) {
+        selectedRepairs = [NSString stringWithFormat:@"%@, %@", selectedRepairs, taskRepair.repairCode.repairName];
+    }
+    
+    cell.detailTextLabel.text = self.task.repairs.count==0 ? @"Ремонты не выбраны" : selectedRepairs;
     cell.textLabel.textAlignment = NSTextAlignmentCenter;
     cell.textLabel.text = @"Добавить ремонт";
     self.buttonsCell = cell;
@@ -354,7 +361,7 @@
                 [self buttonsBehaviorInCell:[tableView cellForRowAtIndexPath:indexPath]];
             }
             break;
-        case 2: // !!! change this
+        case 2:
             [self performSegueWithIdentifier:@"editBreakCode" sender:self.task];
             break;
         case 3:
