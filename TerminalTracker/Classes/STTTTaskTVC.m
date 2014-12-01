@@ -29,6 +29,7 @@
 @property (nonatomic) BOOL waitingLocation;
 @property (nonatomic, strong) UITableViewCell *buttonsCell;
 @property (nonatomic, strong) UITableViewCell *commentsCell;
+@property (nonatomic, strong) UITableViewCell *repairsCell;
 @property (nonatomic, strong) CLLocation *location;
 
 @end
@@ -88,6 +89,9 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self addObservers];
+    if (self.repairsCell) {
+        [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[self.tableView indexPathForCell:self.repairsCell]] withRowAnimation:UITableViewRowAnimationAutomatic];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -241,15 +245,16 @@
     
 }
 - (void)addRepairsToCell:(UITableViewCell *)cell {
-    NSString* selectedRepairs = @"";
+    NSString* baseLabel = @"Добавить ремонт";
+    int repairsCnt = 0;
     for (STTTAgentTaskRepair* taskRepair in self.task.repairs) {
-        selectedRepairs = [NSString stringWithFormat:@"%@, %@", selectedRepairs, taskRepair.repairCode.repairName];
+        if (![taskRepair.isdeleted boolValue]) {
+            repairsCnt++;
+        }
     }
-    
-    cell.detailTextLabel.text = self.task.repairs.count==0 ? @"Ремонты не выбраны" : selectedRepairs;
     cell.textLabel.textAlignment = NSTextAlignmentCenter;
-    cell.textLabel.text = @"Добавить ремонт";
-    self.buttonsCell = cell;
+    cell.textLabel.text = repairsCnt==0 ? baseLabel : [NSString stringWithFormat:@"%@ (%i)", baseLabel, repairsCnt];
+    self.repairsCell = cell;
 }
 
 - (void)addInfoToCell:(UITableViewCell *)cell {
