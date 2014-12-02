@@ -21,8 +21,7 @@
 #import "STTTAgentTask+cellcoloring.h"
 #import "STTTSettingsController.h"
 #import "STEditTaskRepairCodesTVC.h"
-#import "STTTAgentTaskRepair.h"
-#import "STTTAgentRepairCode.h"
+#import "STAgentTaskRepairCodeService.h"
 
 @interface STTTTaskTVC ()
 
@@ -246,12 +245,7 @@
 }
 - (void)addRepairsToCell:(UITableViewCell *)cell {
     NSString* baseLabel = @"Добавить ремонт";
-    int repairsCnt = 0;
-    for (STTTAgentTaskRepair* taskRepair in self.task.repairs) {
-        if (![taskRepair.isdeleted boolValue]) {
-            repairsCnt++;
-        }
-    }
+    int repairsCnt = [STAgentTaskRepairCodeService getNumberOfSelectedRepairsForTask:self.task];
     cell.textLabel.textAlignment = NSTextAlignmentCenter;
     cell.textLabel.text = repairsCnt==0 ? baseLabel : [NSString stringWithFormat:@"%@ (%i)", baseLabel, repairsCnt];
     self.repairsCell = cell;
@@ -384,7 +378,9 @@
 
 - (void)buttonsBehaviorInCell:(UITableViewCell *)cell {
     
-    if (!self.location) {
+    if ([STAgentTaskRepairCodeService getNumberOfSelectedRepairsForTask:self.task] == 0) {
+        [self showNoRepairsSelectedAlert];
+    } else if (!self.location) {
         if (!self.waitingLocation) {
             self.waitingLocation = YES;
             cell.textLabel.text = @"";
@@ -416,6 +412,18 @@
     double maxOkDistanceFromTerminal = [[[STTTSettingsController sharedSTTTSettingsController] getSettingValueForName:@"maxOkDistanceFromTerminal" inGroup:@"general"] doubleValue];
     NSString *message = [NSString stringWithFormat:@"Нужно находиться не дальше %.0fм от терминала для подтверждения выполнения", maxOkDistanceFromTerminal];
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Терминал слишком далеко"
+                                                    message:message
+                                                   delegate:nil
+                                          cancelButtonTitle:@"OK"
+                                          otherButtonTitles:nil];
+    [alert show];
+    self.location = nil;
+    [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[self.tableView indexPathForCell:self.buttonsCell]] withRowAnimation:UITableViewRowAnimationAutomatic];
+}
+
+- (void) showNoRepairsSelectedAlert {
+    NSString *message = [NSString stringWithFormat:@"Необходимо указать ремонты для подтверждения выполнения"];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Ремонты не выбраны"
                                                     message:message
                                                    delegate:nil
                                           cancelButtonTitle:@"OK"

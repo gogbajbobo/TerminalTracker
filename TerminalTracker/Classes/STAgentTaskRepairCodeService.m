@@ -27,6 +27,16 @@
     return [fetchResult lastObject];
 }
 
++ (int)getNumberOfSelectedRepairsForTask:(STTTAgentTask *)task {
+    int repairsCnt = 0;
+    for (STTTAgentTaskRepair* taskRepair in task.repairs) {
+        if (![taskRepair.isdeleted boolValue]) {
+            repairsCnt++;
+        }
+    }
+    return repairsCnt;
+}
+
 + (NSArray *)getListOfRepairsForTask:(STTTAgentTask *)task {
     NSMutableArray* resultArray = [NSMutableArray array];
     

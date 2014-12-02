@@ -14,5 +14,6 @@
 // Array of Dictionaries -> keys: repairName, repairXid, isChecked
 + (NSArray*)getListOfRepairsForTask:(STTTAgentTask*)task;
 + (void) updateRepairsForTask:(STTTAgentTask*)task fromList:(NSArray*)repairsList;
++ (int)getNumberOfSelectedRepairsForTask:(STTTAgentTask *)task;
 
 @end
