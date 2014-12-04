@@ -88,7 +88,7 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self addObservers];
-    if (self.repairsCell) {
+    if (self.repairsCell && [self.tableView indexPathForCell:self.repairsCell]) {
         [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[self.tableView indexPathForCell:self.repairsCell]] withRowAnimation:UITableViewRowAnimationAutomatic];
     }
 }
