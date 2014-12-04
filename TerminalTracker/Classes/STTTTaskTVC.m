@@ -20,12 +20,15 @@
 #import "STUtilities.h"
 #import "STTTAgentTask+cellcoloring.h"
 #import "STTTSettingsController.h"
+#import "STEditTaskRepairCodesTVC.h"
+#import "STAgentTaskRepairCodeService.h"
 
 @interface STTTTaskTVC ()
 
 @property (nonatomic) BOOL waitingLocation;
 @property (nonatomic, strong) UITableViewCell *buttonsCell;
 @property (nonatomic, strong) UITableViewCell *commentsCell;
+@property (nonatomic, strong) UITableViewCell *repairsCell;
 @property (nonatomic, strong) CLLocation *location;
 
 @end
@@ -85,6 +88,9 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self addObservers];
+    if (self.repairsCell && [self.tableView indexPathForCell:self.repairsCell]) {
+        [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[self.tableView indexPathForCell:self.repairsCell]] withRowAnimation:UITableViewRowAnimationAutomatic];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -98,7 +104,7 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
 
-    return 4;
+    return 5;
     
 }
 
@@ -116,6 +122,9 @@
             return 1;
             break;
         case 3:
+            return 1;
+            break;
+        case 4:
             return 3;
             break;
             
@@ -128,22 +137,13 @@
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     
-    NSString *sectionTitle;
+    NSString *sectionTitle = nil;
     switch (section) {
-        case 0:
-            sectionTitle = nil;
-            break;
-        case 1:
-            sectionTitle = nil;
-            break;
-        case 2:
+        case 3:
             sectionTitle = @"Комментарии:";
             break;
-        case 3:
+        case 4:
             sectionTitle = @"Терминал:";
-            break;
-
-        default:
             break;
     }
     return sectionTitle;
@@ -167,9 +167,13 @@
             break;
         case 2:
             cell = [cell initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-            [self addCommentToCell:cell];
+            [self addRepairsToCell:cell];
             break;
         case 3:
+            cell = [cell initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+            [self addCommentToCell:cell];
+            break;
+        case 4:
             switch (indexPath.row) {
                 case 0:
                     cell = [cell initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
@@ -238,6 +242,13 @@
     
     self.buttonsCell = cell;
     
+}
+- (void)addRepairsToCell:(UITableViewCell *)cell {
+    NSString* baseLabel = @"Добавить ремонт";
+    int repairsCnt = [STAgentTaskRepairCodeService getNumberOfSelectedRepairsForTask:self.task];
+    cell.textLabel.textAlignment = NSTextAlignmentCenter;
+    cell.textLabel.text = repairsCnt==0 ? baseLabel : [NSString stringWithFormat:@"%@ (%i)", baseLabel, repairsCnt];
+    self.repairsCell = cell;
 }
 
 - (void)addInfoToCell:(UITableViewCell *)cell {
@@ -312,6 +323,9 @@
             return 44;
             break;
         case 3:
+            return 44;
+            break;
+        case 4:
             switch (indexPath.row) {
                 case 0:
                     return 44;
@@ -347,9 +361,12 @@
             }
             break;
         case 2:
-            [self performSegueWithIdentifier:@"showComment" sender:self.task];
+            [self performSegueWithIdentifier:@"editBreakCode" sender:self.task];
             break;
         case 3:
+            [self performSegueWithIdentifier:@"showComment" sender:self.task];
+            break;
+        case 4:
             [self performSegueWithIdentifier:@"goToTerminal" sender:self.task.terminal];
             break;
             
@@ -361,7 +378,9 @@
 
 - (void)buttonsBehaviorInCell:(UITableViewCell *)cell {
     
-    if (!self.location) {
+    if ([STAgentTaskRepairCodeService getNumberOfSelectedRepairsForTask:self.task] == 0) {
+        [self showNoRepairsSelectedAlert];
+    } else if (!self.location) {
         if (!self.waitingLocation) {
             self.waitingLocation = YES;
             cell.textLabel.text = @"";
@@ -393,6 +412,18 @@
     double maxOkDistanceFromTerminal = [[[STTTSettingsController sharedSTTTSettingsController] getSettingValueForName:@"maxOkDistanceFromTerminal" inGroup:@"general"] doubleValue];
     NSString *message = [NSString stringWithFormat:@"Нужно находиться не дальше %.0fм от терминала для подтверждения выполнения", maxOkDistanceFromTerminal];
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Терминал слишком далеко"
+                                                    message:message
+                                                   delegate:nil
+                                          cancelButtonTitle:@"OK"
+                                          otherButtonTitles:nil];
+    [alert show];
+    self.location = nil;
+    [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[self.tableView indexPathForCell:self.buttonsCell]] withRowAnimation:UITableViewRowAnimationAutomatic];
+}
+
+- (void) showNoRepairsSelectedAlert {
+    NSString *message = [NSString stringWithFormat:@"Необходимо указать ремонты для подтверждения выполнения"];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Ремонты не выбраны"
                                                     message:message
                                                    delegate:nil
                                           cancelButtonTitle:@"OK"
@@ -442,6 +473,10 @@
     } else if ([segue.identifier isEqualToString:@"goToTerminal"]) {
         if ([segue.destinationViewController isKindOfClass:[STTTTerminalTVC class]] && [sender isKindOfClass:[STTTAgentTerminal class]]) {
             [(STTTTerminalTVC *)segue.destinationViewController setTerminal:(STTTAgentTerminal *)sender];
+        }
+    } else if ([segue.identifier isEqualToString:@"editBreakCode"]) {
+        if ([segue.destinationViewController isKindOfClass:[STEditTaskRepairCodesTVC class]] && [sender isKindOfClass:[STTTAgentTask class]]) {
+            [(STEditTaskRepairCodesTVC *)segue.destinationViewController setTask:(STTTAgentTask *)sender];
         }
     }
     

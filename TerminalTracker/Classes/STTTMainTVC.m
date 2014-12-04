@@ -14,6 +14,8 @@
 #import "STTTInfoCell.h"
 #import "STTTSyncer.h"
 #import <STManagedTracker/STLogMessage+dayAsString.h>
+#import "STTTAgentRepairCode.h"
+#import "STTTAgentTaskRepair.h"
 
 @interface STTTMainTVC () <UIAlertViewDelegate>
 
@@ -475,6 +477,8 @@
     
     [self removeObjectWithName:NSStringFromClass([STTTAgentTask class])];
     [self removeObjectWithName:NSStringFromClass([STTTAgentTerminal class])];
+    [self removeObjectWithName:NSStringFromClass([STTTAgentRepairCode class])];
+    [self removeObjectWithName:NSStringFromClass([STTTAgentTaskRepair class])];
     [self removeObjectWithName:NSStringFromClass([STLogMessage class])];
 
     [(STTTSyncer *)self.session.syncer setDataOffset:nil];

@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13E28" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="UeD-It-wGo">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6245" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="UeD-It-wGo">
     <dependencies>
-        <deployment defaultVersion="1552" identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
     </dependencies>
     <scenes>
         <!--TaskTVC-->
@@ -32,13 +31,41 @@
                     <connections>
                         <segue destination="1ry-OM-6W5" kind="push" identifier="showComment" id="zTa-5j-RHt"/>
                         <segue destination="ktg-lG-8Y4" kind="push" identifier="goToTerminal" id="DhZ-Tp-nrz"/>
+                        <segue destination="UQq-4Y-hYy" kind="push" identifier="editBreakCode" id="2ZH-wo-v8W"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wXe-Et-g8M" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1404" y="-653"/>
         </scene>
-        <!--CommentVC - Комментарий-->
+        <!--Виды Ремонта-->
+        <scene sceneID="krN-0N-vn5">
+            <objects>
+                <tableViewController id="UQq-4Y-hYy" customClass="STEditTaskRepairCodesTVC" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="cwC-5s-jb0">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="breakType" id="OJq-uK-efa">
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="OJq-uK-efa" id="swP-5O-jJR">
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="UQq-4Y-hYy" id="iTb-fZ-NlR"/>
+                            <outlet property="delegate" destination="UQq-4Y-hYy" id="K5b-1D-7b8"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Виды Ремонта" id="Wpx-CP-pvM"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="B93-iU-Mnz" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1858" y="-449"/>
+        </scene>
+        <!--Комментарий-->
         <scene sceneID="B6U-gb-03u">
             <objects>
                 <viewController id="1ry-OM-6W5" customClass="STTTCommentVC" sceneMemberID="viewController">
@@ -52,7 +79,6 @@
                         <subviews>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ueh-ae-iEB">
                                 <rect key="frame" x="20" y="72" width="280" height="140"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="140" id="JWX-Jo-dF9"/>
@@ -76,7 +102,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8Eg-Eq-Mwq" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1990" y="-653"/>
+            <point key="canvasLocation" x="1860" y="-986"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="ial-rb-FU0">
@@ -217,6 +243,6 @@
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
         <segue reference="ERa-2b-qyt"/>
-        <segue reference="lHK-eR-z3z"/>
+        <segue reference="DhZ-Tp-nrz"/>
     </inferredMetricsTieBreakers>
 </document>

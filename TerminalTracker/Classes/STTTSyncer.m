@@ -13,6 +13,8 @@
 #import "STTTTerminalLocation.h"
 #import "STTTTaskLocation.h"
 #import "STTTAgentTask+remainingTime.h"
+#import "STTTAgentRepairCode.h"
+#import "STTTAgentTaskRepair.h"
 
 @interface STTTSyncer()
 
@@ -115,21 +117,42 @@
             
             [objectDictionary setObject:propertiesDictionary forKey:@"properties"];
             [syncDataArray addObject:objectDictionary];
+            [syncDataArray addObjectsFromArray:[self arrayWithTaskRepaisToSync:(STTTAgentTask*)object]];
         }
     }
     
     NSDictionary *dataDictionary = [NSDictionary dictionaryWithObject:syncDataArray forKey:@"data"];
     
     NSError *error;
-//    NSData *JSONData = [NSJSONSerialization dataWithJSONObject:dataDictionary options:NSJSONWritingPrettyPrinted error:&error];
     NSData *JSONData = [NSJSONSerialization dataWithJSONObject:dataDictionary options:0 error:&error];
     
-//    NSLog(@"JSONData %@", JSONData);
-    
-//    NSString *JSONString = [[NSString alloc] initWithData:JSONData encoding:NSUTF8StringEncoding];
-//    NSLog(@"JSONString %@", JSONString);
-    
     return JSONData;
+}
+
+-(NSString*)stringWithXid:(NSData*)xid {
+    NSString *result = [NSString stringWithFormat:@"%@", xid];
+    NSCharacterSet *charsToRemove = [NSCharacterSet characterSetWithCharactersInString:@"< >"];
+    return [[result stringByTrimmingCharactersInSet:charsToRemove] stringByReplacingOccurrencesOfString:@" " withString:@""];
+}
+
+-(NSData*)xidWithString:(NSString*)string {
+    return [self dataFromString:[string stringByReplacingOccurrencesOfString:@"-" withString:@""]];
+}
+
+- (NSArray*)arrayWithTaskRepaisToSync:(STTTAgentTask*)task {
+    NSMutableArray* results = [NSMutableArray array];
+    for(STTTAgentTaskRepair *repair in task.repairs) {
+        NSMutableDictionary *objectDictionary = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"megaport.iAgentTaskRepair", @"name", [self stringWithXid:repair.xid], @"xid", nil];
+        
+        [objectDictionary setObject:@{@"isdeleted": repair.isdeleted,
+                                      @"taskxid": [self stringWithXid:task.xid],
+                                      @"repairxid": [self stringWithXid:repair.repairCode.xid],
+                                      @"ts":[NSString stringWithFormat:@"%@", repair.ts]}
+                             forKey:@"properties"];
+        
+        [results addObject:objectDictionary];
+    }
+    return results;
 }
 
 - (NSMutableDictionary *)dictionaryForObject:(NSManagedObject *)object {
@@ -145,12 +168,6 @@
 
 - (NSMutableDictionary *)propertiesDictionaryForObject:(NSManagedObject *)object {
     
-//    NSLog(@"object %@", object);
-//
-//    NSLog(@"ts %@", [object valueForKey:@"ts"]);
-//    NSLog(@"visited %@", [object valueForKey:@"visited"]);
-//    NSLog(@"commentText %@", [object valueForKey:@"commentText"]);
-    
     double latitude = [[(STTTAgentTask *)object visitLocation].latitude doubleValue];
     double longitude = [[(STTTAgentTask *)object visitLocation].longitude doubleValue];
 
@@ -162,7 +179,6 @@
     [propertiesDictionary setValue:[NSNumber numberWithDouble:latitude] forKey:@"latitude"];
     [propertiesDictionary setValue:[NSNumber numberWithDouble:longitude] forKey:@"longitude"];
     
-//    NSLog(@"propertiesDictionary %@", propertiesDictionary);
     return propertiesDictionary;
 }
 
@@ -325,13 +341,40 @@
         
         [self newSettingWithProperties:properties];
         
+    } else if ([name isEqualToString:@"megaport.iAgentRepairCode"]) {
+        
+        [self newRepairCodeWithXid:xidData andProperties:properties];
+        
+    } else if ([name isEqualToString:@"megaport.iAgentTaskRepair"]) {
+        
+        [self newTaskRepairWithXid:xidData andProperties:properties];
+        
     }
 
 }
 
+- (void)newTaskRepairWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties {
+    STTTAgentTaskRepair *repair = (STTTAgentTaskRepair*)[self entityByClass:[STTTAgentTaskRepair class] andXid:xidData];
+    repair.isdeleted = @NO;
+    repair.repairCode = (STTTAgentRepairCode*)[self entityByClass:[STTTAgentRepairCode class] andXid:[self xidWithString:[properties valueForKey:@"repairxid"]]];
+    NSDictionary *taskData = [properties valueForKey:@"taskxid"];
+    repair.task = (STTTAgentTask*)[self entityByClass:[STTTAgentTask class] andXid:[self xidWithString:[taskData valueForKey:@"id"]]];
+    repair.lts = [NSDate date];
+    NSLog(@"get taskRepair.xid %@", repair.xid);
+}
+
+
+- (void)newRepairCodeWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties {
+    STTTAgentRepairCode *repairCode = (STTTAgentRepairCode*)[self entityByClass:[STTTAgentRepairCode class] andXid:xidData];
+    repairCode.repairName = [properties valueForKey:@"repair_name"];
+    repairCode.active = [NSNumber numberWithBool:[[properties valueForKey:@"active"] boolValue]];
+    repairCode.lts = [NSDate date];
+    NSLog(@"get repaor_code.xid %@", repairCode.xid);
+}
+
 - (void)newTerminalWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties {
     
-    STTTAgentTerminal *terminal = [self terminalByXid:xidData];
+    STTTAgentTerminal *terminal = (STTTAgentTerminal*)[self entityByClass:[STTTAgentTerminal class] andXid:xidData];
     
     if (!terminal.location) {
         STTTTerminalLocation *location = (STTTTerminalLocation *)[NSEntityDescription insertNewObjectForEntityForName:NSStringFromClass([STTTTerminalLocation class]) inManagedObjectContext:self.session.document.managedObjectContext];
@@ -379,7 +422,7 @@
 
 - (void)newTaskWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties {
     
-    STTTAgentTask *task = [self taskByXid:xidData];
+    STTTAgentTask *task = (STTTAgentTask*)[self entityByClass:[STTTAgentTask class] andXid:xidData];
 
     task.terminalBreakName = [properties valueForKey:@"terminal_break_name"];
     task.commentText = [properties valueForKey:@"techinfo"];
@@ -398,7 +441,7 @@
     NSDictionary *terminalData = [properties valueForKey:@"terminal"];
     NSData *terminalXid = [self dataFromString:[[terminalData valueForKey:@"xid"] stringByReplacingOccurrencesOfString:@"-" withString:@""]];
     
-    STTTAgentTerminal *terminal = [self terminalByXid:terminalXid];
+    STTTAgentTerminal *terminal = (STTTAgentTerminal*)[self entityByClass:[STTTAgentTerminal class] andXid:terminalXid];
     task.terminal = terminal;
     if (task.lts == nil) {
         self.newTasksCount++;
@@ -462,47 +505,23 @@
     
 }
 
-- (STTTAgentTerminal *)terminalByXid:(NSData *)xid {
-    
-    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:NSStringFromClass([STTTAgentTerminal class])];
+- (STComment*)entityByClass:(Class)entityClass andXid:(NSData *)xid {
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:NSStringFromClass(entityClass)];
     request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"ts" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
     request.predicate = [NSPredicate predicateWithFormat:@"SELF.xid == %@", xid];
     NSError *error;
     NSArray *fetchResult = [self.session.document.managedObjectContext executeFetchRequest:request error:&error];
     
-    STTTAgentTerminal *terminal;
+    STComment *entity;
     
     if ([fetchResult lastObject]) {
-        terminal = [fetchResult lastObject];
+        entity = [fetchResult lastObject];
     } else {
-        terminal = (STTTAgentTerminal *)[NSEntityDescription insertNewObjectForEntityForName:NSStringFromClass([STTTAgentTerminal class]) inManagedObjectContext:self.session.document.managedObjectContext];
-        terminal.xid = xid;
+        entity = (STComment *)[NSEntityDescription insertNewObjectForEntityForName:NSStringFromClass(entityClass) inManagedObjectContext:self.session.document.managedObjectContext];
+        entity.xid = xid;
     }
     
-    return terminal;
-
-}
-
-- (STTTAgentTask *)taskByXid:(NSData *)xid {
-    
-    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:NSStringFromClass([STTTAgentTask class])];
-    request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"ts" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
-    request.predicate = [NSPredicate predicateWithFormat:@"SELF.xid == %@", xid];
-    
-    NSError *error;
-    NSArray *fetchResult = [self.session.document.managedObjectContext executeFetchRequest:request error:&error];
-    
-    STTTAgentTask *task;
-    
-    if ([fetchResult lastObject]) {
-        task = [fetchResult lastObject];
-    } else {
-        task = (STTTAgentTask *)[NSEntityDescription insertNewObjectForEntityForName:NSStringFromClass([STTTAgentTask class]) inManagedObjectContext:self.session.document.managedObjectContext];
-        task.xid = xid;
-    }
-    
-    return task;
-
+    return entity;
 }
 
 - (void)syncerSettingsChanged:(NSNotification *)notification {
