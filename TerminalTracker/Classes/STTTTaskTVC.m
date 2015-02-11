@@ -228,7 +228,7 @@
 
     cell.textLabel.textAlignment = NSTextAlignmentCenter;
 
-    if ([self.task.servstatus boolValue]) {
+    if ([self.task.servstatus boolValue] && ![self recentlyChangedServstatus]) {
         cell.textLabel.text = @"Выполнено";
         cell.textLabel.textColor = [UIColor colorWithRed:0.16 green:0.53 blue:0.16 alpha:1];
     } else {
@@ -399,6 +399,10 @@
 
     }
 
+}
+
+- (BOOL) recentlyChangedServstatus {
+    return abs([self.task.servstatusDate timeIntervalSinceNow]) < [[[STTTSettingsController sharedSTTTSettingsController] getSettingValueForName:@"OkInterval" inGroup:@"general"] doubleValue]*60;
 }
 
 - (BOOL) tooFarFromTerminal {
