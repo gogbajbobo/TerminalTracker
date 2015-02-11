@@ -433,6 +433,9 @@
     NSDate *doBeforeDate = [self extractDateFrom:properties forKey:@"do-before"];
     task.doBefore = doBeforeDate;
     
+    NSDate *servstatusDate = [self extractDateFrom:properties forKey:@"servstatus_date"];
+    task.servstatusDate = servstatusDate;
+    
     NSDictionary *terminalData = [properties valueForKey:@"terminal"];
     NSData *terminalXid = [self dataFromString:[[terminalData valueForKey:@"xid"] stringByReplacingOccurrencesOfString:@"-" withString:@""]];
     
