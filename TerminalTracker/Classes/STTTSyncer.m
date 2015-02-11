@@ -385,9 +385,7 @@
     terminal.errorText = [properties valueForKey:@"errortext"];
     terminal.srcSystemName = [properties valueForKey:@"src_system_name"];
     
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss.SSS"];
-    NSDate *lastActivityTime = [dateFormatter dateFromString:[properties valueForKey:@"lastactivitytime"]];
+    NSDate *lastActivityTime = [self extractDateFrom:properties forKey:@"lastactivitytime"];
     
     terminal.lastActivityTime = lastActivityTime;
     terminal.address = [NSString stringWithUTF8String:[[properties valueForKey:@"address"] UTF8String]];
@@ -432,10 +430,7 @@
     id servstatus = [properties valueForKey:@"servstatus"];
     task.servstatus = task.recentlyVisited ? [NSNumber numberWithBool:YES] : [NSNumber numberWithBool:[servstatus boolValue]];
     
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss.SSS"];
-    NSDate *doBeforeDate = [dateFormatter dateFromString:[properties valueForKey:@"do-before"]];
-    
+    NSDate *doBeforeDate = [self extractDateFrom:properties forKey:@"do-before"];
     task.doBefore = doBeforeDate;
     
     NSDictionary *terminalData = [properties valueForKey:@"terminal"];
@@ -450,6 +445,12 @@
     
     NSLog(@"get task.xid %@", task.xid);
 
+}
+
+- (NSDate*)extractDateFrom:(NSDictionary*)properties forKey:(NSString*)key{
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss.SSS"];
+    return [dateFormatter dateFromString:[properties valueForKey:key]];
 }
 
 - (void) showNewTaskNotification:(STTTAgentTask *) task {
