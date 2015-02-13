@@ -356,7 +356,7 @@
             // do nothing
             break;
         case 1:
-            if (![self.task.servstatus boolValue]) {
+            if (![self.task.servstatus boolValue] || [self recentlyChangedServstatus]) {
                 [self buttonsBehaviorInCell:[tableView cellForRowAtIndexPath:indexPath]];
             }
             break;
