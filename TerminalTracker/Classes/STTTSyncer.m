@@ -452,9 +452,9 @@
 
 - (NSDate*)extractDateFrom:(NSDictionary*)properties forKey:(NSString*)key{
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss.SSS"];
-    [dateFormatter setTimeZone:[NSTimeZone timeZoneWithName:@"Europe/Moscow"]];
-    return [dateFormatter dateFromString:[properties valueForKey:key]];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss.SSS Z"];
+    NSString *dateString = [NSString stringWithFormat:@"%@ %@", [properties valueForKey:key], [[[self.session settingsController] currentSettingsForGroup:@"general"] valueForKey:@"Timezone"]];
+    return [dateFormatter dateFromString:dateString];
 }
 
 - (void) showNewTaskNotification:(STTTAgentTask *) task {
