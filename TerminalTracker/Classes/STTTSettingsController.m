@@ -71,6 +71,8 @@
     [generalSettings setValue:[NSString stringWithFormat:@"%d", YES] forKey:@"localAccessToSettings"];
     [generalSettings setValue:@"120" forKey:@"blockInterval"];
     [generalSettings setValue:@"1000" forKey:@"maxOkDistanceFromTerminal"];
+    [generalSettings setValue:@"20" forKey:@"OkInterval"];
+    [generalSettings setValue:@"+0300" forKey:@"Timezone"];
     
     [defaultSettings setValue:generalSettings forKey:@"general"];
     
@@ -82,11 +84,13 @@
     
 //    [super normalizeValue:value forKey:key];
     
-    NSArray *positiveDouble = [NSArray arrayWithObjects:@"requiredAccuracy", @"trackDetectionTime", @"trackSeparationDistance", @"trackScale", @"fetchLimit", @"syncInterval", @"HTCheckpointInterval", @"deviceMotionUpdateInterval", @"blockInterval", @"maxOkDistanceFromTerminal", nil];
+    NSArray *positiveDouble = @[@"requiredAccuracy", @"trackDetectionTime", @"trackSeparationDistance", @"trackScale", @"fetchLimit", @"syncInterval", @"HTCheckpointInterval", @"deviceMotionUpdateInterval", @"blockInterval", @"maxOkDistanceFromTerminal", @"OkInterval"];
     
-    NSArray *boolValue = [NSArray arrayWithObjects:@"TrackerAutoStart", @"localAccessToSettings", @"deviceMotionUpdate", @"getLocationsWithNegativeSpeed", @"showLocationInsteadOfMap", nil];
+    NSArray *boolValue = @[@"TrackerAutoStart", @"localAccessToSettings", @"deviceMotionUpdate", @"getLocationsWithNegativeSpeed", @"showLocationInsteadOfMap"];
     
-    NSArray *URIValue = [NSArray arrayWithObjects:@"restServerURI", @"xmlNamespace", @"recieveDataServerURI", @"sendDataServerURI", nil];
+    NSArray *URIValue = @[@"restServerURI", @"xmlNamespace", @"recieveDataServerURI", @"sendDataServerURI"];
+    
+    NSArray *stingValue = @[@"Timezone"];
     
     if ([positiveDouble containsObject:key]) {
         if ([self isPositiveDouble:value]) {
@@ -102,6 +106,8 @@
         if ([self isValidURI:value]) {
             return value;
         }
+    } else if ([stingValue containsObject:key] && [value isKindOfClass:[NSString class]]) {
+            return value;
         
     } else if ([key isEqualToString:@"desiredAccuracy"]) {
         double dValue = [value doubleValue];
@@ -143,9 +149,8 @@
         if (iValue == 0 || iValue == 1) {
             return [NSString stringWithFormat:@"%.f", iValue];
         }
-        
     }
-        
+    
     return nil;
 }
 
