@@ -2,8 +2,8 @@
 //  STTTAgentTask.h
 //  TerminalTracker
 //
-//  Created by Sergey on 16/10/2014.
-//  Copyright (c) 2014 Maxim Grigoriev. All rights reserved.
+//  Created by Sergey on 9/2/2015.
+//  Copyright (c) 2015 Maxim Grigoriev. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -18,6 +18,7 @@
 @property (nonatomic, retain) NSNumber * routePriority;
 @property (nonatomic, retain) NSNumber * servstatus;
 @property (nonatomic, retain) NSString * terminalBreakName;
+@property (nonatomic, retain) NSDate * servstatusDate;
 @property (nonatomic, retain) NSSet *repairs;
 @property (nonatomic, retain) STTTAgentTerminal *terminal;
 @property (nonatomic, retain) STTTTaskLocation *visitLocation;

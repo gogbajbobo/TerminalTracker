@@ -30,6 +30,7 @@
 @property (nonatomic, strong) UITableViewCell *commentsCell;
 @property (nonatomic, strong) UITableViewCell *repairsCell;
 @property (nonatomic, strong) CLLocation *location;
+@property (nonatomic) BOOL taskCompleted;
 
 @end
 
@@ -37,6 +38,7 @@
 
 - (void)viewInit {
     self.title = self.task.terminalBreakName;
+    self.taskCompleted = [self.task.servstatus boolValue] && ![self recentlyChangedServstatus];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
@@ -228,7 +230,7 @@
 
     cell.textLabel.textAlignment = NSTextAlignmentCenter;
 
-    if ([self.task.servstatus boolValue]) {
+    if (self.taskCompleted) {
         cell.textLabel.text = @"Выполнено";
         cell.textLabel.textColor = [UIColor colorWithRed:0.16 green:0.53 blue:0.16 alpha:1];
     } else {
@@ -356,7 +358,7 @@
             // do nothing
             break;
         case 1:
-            if (![self.task.servstatus boolValue]) {
+            if (!self.taskCompleted) {
                 [self buttonsBehaviorInCell:[tableView cellForRowAtIndexPath:indexPath]];
             }
             break;
@@ -399,6 +401,10 @@
 
     }
 
+}
+
+- (BOOL) recentlyChangedServstatus {
+    return abs([self.task.servstatusDate timeIntervalSinceNow]) < [[[STTTSettingsController sharedSTTTSettingsController] getSettingValueForName:@"OkInterval" inGroup:@"general"] doubleValue]*60;
 }
 
 - (BOOL) tooFarFromTerminal {
@@ -457,7 +463,7 @@
         taskLocation.longitude = [NSNumber numberWithDouble:self.location.coordinate.longitude];
         self.task.visitLocation = taskLocation;
         self.task.servstatus = [NSNumber numberWithBool:YES];
-//        self.task.terminal.errorText = nil;
+        self.taskCompleted = YES;
         [self saveDocument];
     } else {
         NSLog(@"No task location");
