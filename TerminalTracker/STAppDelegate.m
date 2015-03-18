@@ -36,8 +36,8 @@
                                      @"60.0", @"timeFilter",
                                      @"50", @"fetchLimit",
                                      @"STTTDataModel", @"dataModelName",
-                                     @"https://system.unact.ru/iproxy/testdata/megaport", @"recieveDataServerURI",
-                                     @"https://system.unact.ru/iproxy/chest/test", @"sendDataServerURI",
+                                     @"https://api.unact.ru/iproxy/testdata/megaport", @"recieveDataServerURI",
+                                     @"https://api.unact.ru/iproxy/chest/test", @"sendDataServerURI",
                                      nil];
 
     NSDictionary *controllers = [NSDictionary dictionaryWithObjectsAndKeys:
