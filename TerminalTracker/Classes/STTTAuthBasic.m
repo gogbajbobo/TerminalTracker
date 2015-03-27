@@ -11,8 +11,6 @@
 #import <UDPushAuth/UDPushAuthCodeRetriever.h>
 #import <UDPushAuth/UDPushAuthRequestBasic.h>
 
-//#define PUSHAUTH_SERVICE_URI @"https://apns-aws.unact.ru/terminal-tracker"
-//#define PUSHAUTH_SERVICE_URI_DEV @"https://apns-aws.unact.ru/terminal-tracker-dev"
 #define PUSHAUTH_SERVICE_URI @"https://uoauth.unact.ru/a/UPushAuth/"
 #define AUTH_SERVICE_URI @"https://uoauth.unact.ru/a/uoauth/"
 #define REACHABILITY_SERVER  @"uoauth.unact.ru"
