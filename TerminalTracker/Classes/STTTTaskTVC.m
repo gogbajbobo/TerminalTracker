@@ -29,6 +29,7 @@
 @property (nonatomic, strong) UITableViewCell *buttonsCell;
 @property (nonatomic, strong) UITableViewCell *commentsCell;
 @property (nonatomic, strong) UITableViewCell *repairsCell;
+@property (nonatomic, strong) UITableViewCell *defectsCell;
 @property (nonatomic, strong) CLLocation *location;
 @property (nonatomic) BOOL taskCompleted;
 
@@ -103,15 +104,13 @@
 
 #pragma mark - Table view data source
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
 
-    return 5;
+    return 6;
     
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     
     switch (section) {
         case 0:
@@ -127,6 +126,9 @@
             return 1;
             break;
         case 4:
+            return 1;
+            break;
+        case 5:
             return 3;
             break;
             
@@ -141,10 +143,10 @@
     
     NSString *sectionTitle = nil;
     switch (section) {
-        case 3:
+        case 4:
             sectionTitle = @"Комментарии:";
             break;
-        case 4:
+        case 5:
             sectionTitle = @"Терминал:";
             break;
     }
@@ -165,7 +167,7 @@
             break;
         case 1:
             cell = [cell initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-            [self addButtonsToCell:cell];
+            [self addDefectsToCell:cell];
             break;
         case 2:
             cell = [cell initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
@@ -173,9 +175,13 @@
             break;
         case 3:
             cell = [cell initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-            [self addCommentToCell:cell];
+            [self addButtonsToCell:cell];
             break;
         case 4:
+            cell = [cell initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+            [self addCommentToCell:cell];
+            break;
+        case 5:
             switch (indexPath.row) {
                 case 0:
                     cell = [cell initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
@@ -246,11 +252,28 @@
     
 }
 - (void)addRepairsToCell:(UITableViewCell *)cell {
+    
     NSString* baseLabel = @"Добавить ремонт";
     int repairsCnt = [STAgentTaskRepairCodeService getNumberOfSelectedRepairsForTask:self.task];
     cell.textLabel.textAlignment = NSTextAlignmentCenter;
     cell.textLabel.text = repairsCnt==0 ? baseLabel : [NSString stringWithFormat:@"%@ (%i)", baseLabel, repairsCnt];
     self.repairsCell = cell;
+    
+}
+
+- (void)addDefectsToCell:(UITableViewCell *)cell {
+    
+    NSString* baseLabel = @"Добавить неисправность";
+    
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"isdeleted != YES"];
+    NSSet *defects = [self.task.defects filteredSetUsingPredicate:predicate];
+    
+    int defectsCount = defects.count;
+    cell.textLabel.textAlignment = NSTextAlignmentCenter;
+    cell.textLabel.text = (defectsCount == 0) ? baseLabel : [NSString stringWithFormat:@"%@ (%i)", baseLabel, defectsCount];
+    
+    self.defectsCell = cell;
+    
 }
 
 - (void)addInfoToCell:(UITableViewCell *)cell {
@@ -328,6 +351,9 @@
             return 44;
             break;
         case 4:
+            return 44;
+            break;
+        case 5:
             switch (indexPath.row) {
                 case 0:
                     return 44;
@@ -358,17 +384,19 @@
             // do nothing
             break;
         case 1:
-            if (!self.taskCompleted) {
-                [self buttonsBehaviorInCell:[tableView cellForRowAtIndexPath:indexPath]];
-            }
             break;
         case 2:
             [self performSegueWithIdentifier:@"editBreakCode" sender:self.task];
             break;
         case 3:
-            [self performSegueWithIdentifier:@"showComment" sender:self.task];
+            if (!self.taskCompleted) {
+                [self buttonsBehaviorInCell:[tableView cellForRowAtIndexPath:indexPath]];
+            }
             break;
         case 4:
+            [self performSegueWithIdentifier:@"showComment" sender:self.task];
+            break;
+        case 5:
             [self performSegueWithIdentifier:@"goToTerminal" sender:self.task.terminal];
             break;
             
