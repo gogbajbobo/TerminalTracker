@@ -187,6 +187,8 @@
     NSError *error;
     id responseJSON = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingMutableContainers error:&error];
     
+//    NSLog(@"responseJSON %@", responseJSON);
+    
     if (![responseJSON isKindOfClass:[NSDictionary class]]) {
         [[(STSession *)self.session logger] saveLogMessageWithText:@"Sync: response is not dictionary" type:@"error"];
         self.syncing = NO;
@@ -202,6 +204,8 @@
             id objectsArray = [(NSDictionary *)responseJSON valueForKey:@"data"];
             if ([objectsArray isKindOfClass:[NSArray class]]) {
                 NSUInteger objectsCount = [(NSArray *)objectsArray count];
+                
+                NSLog(@"originalRequest.URL %@", connection.originalRequest.URL.absoluteString);
                 
                 NSString *logMessage = [NSString stringWithFormat:@"recieve %d objects", objectsCount];
                 [[(STSession *)self.session logger] saveLogMessageWithText:logMessage type:@""];
@@ -349,8 +353,18 @@
         
         [self newTaskRepairWithXid:xidData andProperties:properties];
         
+    } else if ([name isEqualToString:@"megaport.iAgentDefectCode"]) {
+        
+        [self newDefectCodeWithXid:xidData andProperties:properties];
+        
+    } else {
+        NSLog(@"object %@", object);
     }
 
+}
+
+- (void)newDefectCodeWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties {
+    NSLog(@"get defectCode.xid %@", xidData);
 }
 
 - (void)newTaskRepairWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties {
