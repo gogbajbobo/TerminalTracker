@@ -15,6 +15,9 @@
 #import "STTTAgentTask+remainingTime.h"
 #import "STTTAgentRepairCode.h"
 #import "STTTAgentTaskRepair.h"
+#import "STTTAgentDefectCode.h"
+#import "STTTAgentTaskDefect.h"
+
 
 @interface STTTSyncer()
 
@@ -357,14 +360,36 @@
         
         [self newDefectCodeWithXid:xidData andProperties:properties];
         
+    } else if ([name isEqualToString:@"megaport.iAgentTaskDefect"]) {
+        
+        [self newTaskDefectWithXid:xidData andProperties:properties];
+        
     } else {
         NSLog(@"object %@", object);
     }
 
 }
 
+- (void)newTaskDefectWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties {
+    
+    STTTAgentTaskDefect *defect = (STTTAgentTaskDefect*)[self entityByClass:[STTTAgentTaskDefect class] andXid:xidData];
+    defect.isdeleted = @NO;
+    defect.defectCode = (STTTAgentDefectCode *)[self entityByClass:[STTTAgentDefectCode class] andXid:[self xidWithString:[properties valueForKey:@"defectxid"]]];
+    NSDictionary *taskData = [properties valueForKey:@"taskxid"];
+    defect.task = (STTTAgentTask *)[self entityByClass:[STTTAgentTask class] andXid:[self xidWithString:[taskData valueForKey:@"id"]]];
+    defect.lts = [NSDate date];
+    NSLog(@"get taskDefect.xid %@", defect.xid);
+    
+}
+
 - (void)newDefectCodeWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties {
-    NSLog(@"get defectCode.xid %@", xidData);
+    
+    STTTAgentDefectCode *defectCode = (STTTAgentDefectCode *)[self entityByClass:[STTTAgentDefectCode class] andXid:xidData];
+    defectCode.name = [properties valueForKey:@"name"];
+    defectCode.active = [NSNumber numberWithBool:[[properties valueForKey:@"active"] boolValue]];
+    defectCode.lts = [NSDate date];
+    NSLog(@"get defect_code.xid %@", defectCode.xid);
+
 }
 
 - (void)newTaskRepairWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties {
@@ -376,7 +401,6 @@
     repair.lts = [NSDate date];
     NSLog(@"get taskRepair.xid %@", repair.xid);
 }
-
 
 - (void)newRepairCodeWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties {
     STTTAgentRepairCode *repairCode = (STTTAgentRepairCode*)[self entityByClass:[STTTAgentRepairCode class] andXid:xidData];
