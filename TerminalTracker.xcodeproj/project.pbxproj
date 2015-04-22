@@ -21,6 +21,8 @@
 		2CC47BDE1AE69109008F5250 /* STTTAgentTaskDefect.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CC47BDD1AE69109008F5250 /* STTTAgentTaskDefect.m */; };
 		2CC47BE11AE6910A008F5250 /* STTTAgentTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CC47BE01AE6910A008F5250 /* STTTAgentTask.m */; };
 		2CC47BE41AE6910A008F5250 /* STTTAgentDefectCode.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CC47BE31AE6910A008F5250 /* STTTAgentDefectCode.m */; };
+		2CC47BE71AE767EB008F5250 /* STEditTaskDefectCodesTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CC47BE61AE767EB008F5250 /* STEditTaskDefectCodesTVC.m */; };
+		2CC47BEA1AE76872008F5250 /* STAgentTaskDefectCodeService.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CC47BE91AE76872008F5250 /* STAgentTaskDefectCodeService.m */; };
 		2CE3265B176F29E800BAA1D4 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE3265A176F29E800BAA1D4 /* UIKit.framework */; };
 		2CE3265D176F29E800BAA1D4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE3265C176F29E800BAA1D4 /* Foundation.framework */; };
 		2CE3265F176F29E800BAA1D4 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE3265E176F29E800BAA1D4 /* CoreGraphics.framework */; };
@@ -98,6 +100,10 @@
 		2CC47BE01AE6910A008F5250 /* STTTAgentTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTAgentTask.m; sourceTree = "<group>"; };
 		2CC47BE21AE6910A008F5250 /* STTTAgentDefectCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTAgentDefectCode.h; sourceTree = "<group>"; };
 		2CC47BE31AE6910A008F5250 /* STTTAgentDefectCode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTAgentDefectCode.m; sourceTree = "<group>"; };
+		2CC47BE51AE767EB008F5250 /* STEditTaskDefectCodesTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STEditTaskDefectCodesTVC.h; sourceTree = "<group>"; };
+		2CC47BE61AE767EB008F5250 /* STEditTaskDefectCodesTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STEditTaskDefectCodesTVC.m; sourceTree = "<group>"; };
+		2CC47BE81AE76872008F5250 /* STAgentTaskDefectCodeService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STAgentTaskDefectCodeService.h; sourceTree = "<group>"; };
+		2CC47BE91AE76872008F5250 /* STAgentTaskDefectCodeService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STAgentTaskDefectCodeService.m; sourceTree = "<group>"; };
 		2CE32657176F29E800BAA1D4 /* TerminalTracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TerminalTracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CE3265A176F29E800BAA1D4 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		2CE3265C176F29E800BAA1D4 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -273,8 +279,12 @@
 			children = (
 				A50B027719EDFCD0008612CD /* STEditTaskRepairCodesTVC.h */,
 				A50B027819EDFCD0008612CD /* STEditTaskRepairCodesTVC.m */,
+				2CC47BE51AE767EB008F5250 /* STEditTaskDefectCodesTVC.h */,
+				2CC47BE61AE767EB008F5250 /* STEditTaskDefectCodesTVC.m */,
 				A50B027A19EF5C46008612CD /* STAgentTaskRepairCodeService.h */,
 				A50B027B19EF5C46008612CD /* STAgentTaskRepairCodeService.m */,
+				2CC47BE81AE76872008F5250 /* STAgentTaskDefectCodeService.h */,
+				2CC47BE91AE76872008F5250 /* STAgentTaskDefectCodeService.m */,
 				A54DEE8C19D2501600D7D1C7 /* STTTAgentTask+cellcoloring.h */,
 				A54DEE8D19D2501600D7D1C7 /* STTTAgentTask+cellcoloring.m */,
 				2CE7E4B3179D31B000113A6A /* STTTMainTVC.h */,
@@ -507,12 +517,14 @@
 				2C93A5C1178471B60014001B /* STTTMapAnnotation.m in Sources */,
 				A50B027919EDFCD0008612CD /* STEditTaskRepairCodesTVC.m in Sources */,
 				A56429BD18841A2300168724 /* STUtilities.m in Sources */,
+				2CC47BE71AE767EB008F5250 /* STEditTaskDefectCodesTVC.m in Sources */,
 				2C93A5C4178597940014001B /* STTTCommentVC.m in Sources */,
 				A54DEE8E19D2501600D7D1C7 /* STTTAgentTask+cellcoloring.m in Sources */,
 				A59C60F419C92DDE0028A8F7 /* STTTDataModel2.xcdatamodeld in Sources */,
 				A50B028219EF6E98008612CD /* STTTAgentTaskRepair.m in Sources */,
 				2C93A5C717859F880014001B /* STTTAgentTerminal.m in Sources */,
 				2CE7E4B5179D31B000113A6A /* STTTMainTVC.m in Sources */,
+				2CC47BEA1AE76872008F5250 /* STAgentTaskDefectCodeService.m in Sources */,
 				2CE7E4BA179D5CE300113A6A /* STTTInfoTVC.m in Sources */,
 				2CC47BE11AE6910A008F5250 /* STTTAgentTask.m in Sources */,
 				A505081119E7604D00632027 /* STTTAgentRepairCode.m in Sources */,

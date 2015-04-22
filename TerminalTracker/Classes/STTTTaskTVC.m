@@ -21,7 +21,10 @@
 #import "STTTAgentTask+cellcoloring.h"
 #import "STTTSettingsController.h"
 #import "STEditTaskRepairCodesTVC.h"
+#import "STEditTaskDefectCodesTVC.h"
 #import "STAgentTaskRepairCodeService.h"
+#import "STAgentTaskDefectCodeService.h"
+
 
 @interface STTTTaskTVC ()
 
@@ -384,6 +387,7 @@
             // do nothing
             break;
         case 1:
+            [self performSegueWithIdentifier:@"editDefectCode" sender:self.task];
             break;
         case 2:
             [self performSegueWithIdentifier:@"editBreakCode" sender:self.task];
@@ -500,18 +504,42 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     
-    if ([segue.identifier isEqualToString:@"showComment"]) {
-        if ([segue.destinationViewController isKindOfClass:[STTTCommentVC class]] && [sender isKindOfClass:[STTTAgentTask class]]) {
-            [(STTTCommentVC *)segue.destinationViewController setTask:(STTTAgentTask *)sender];
+    if ([sender isKindOfClass:[STTTAgentTask class]]) {
+        
+        STTTAgentTask *task = (STTTAgentTask *)sender;
+        
+        if ([segue.identifier isEqualToString:@"showComment"]) {
+            
+            if ([segue.destinationViewController isKindOfClass:[STTTCommentVC class]]) {
+                [(STTTCommentVC *)segue.destinationViewController setTask:task];
+            }
+            
+        } else  if ([segue.identifier isEqualToString:@"editBreakCode"]) {
+            
+            if ([segue.destinationViewController isKindOfClass:[STEditTaskRepairCodesTVC class]]) {
+                [(STEditTaskRepairCodesTVC *)segue.destinationViewController setTask:task];
+            }
+            
+        } else if ([segue.identifier isEqualToString:@"editDefectCode"]) {
+            
+            if ([segue.destinationViewController isKindOfClass:[STEditTaskDefectCodesTVC class]]) {
+                [(STEditTaskDefectCodesTVC *)segue.destinationViewController setTask:task];
+            }
+            
         }
-    } else if ([segue.identifier isEqualToString:@"goToTerminal"]) {
-        if ([segue.destinationViewController isKindOfClass:[STTTTerminalTVC class]] && [sender isKindOfClass:[STTTAgentTerminal class]]) {
-            [(STTTTerminalTVC *)segue.destinationViewController setTerminal:(STTTAgentTerminal *)sender];
+
+    } else if ([sender isKindOfClass:[STTTAgentTerminal class]]) {
+        
+        STTTAgentTerminal *terminal = (STTTAgentTerminal *)sender;
+        
+        if ([segue.identifier isEqualToString:@"goToTerminal"]) {
+            
+            if ([segue.destinationViewController isKindOfClass:[STTTTerminalTVC class]]) {
+                [(STTTTerminalTVC *)segue.destinationViewController setTerminal:terminal];
+            }
+            
         }
-    } else if ([segue.identifier isEqualToString:@"editBreakCode"]) {
-        if ([segue.destinationViewController isKindOfClass:[STEditTaskRepairCodesTVC class]] && [sender isKindOfClass:[STTTAgentTask class]]) {
-            [(STEditTaskRepairCodesTVC *)segue.destinationViewController setTask:(STTTAgentTask *)sender];
-        }
+        
     }
     
 }
