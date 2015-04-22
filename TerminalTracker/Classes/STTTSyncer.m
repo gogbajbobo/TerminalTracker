@@ -113,7 +113,9 @@
     NSMutableArray *syncDataArray = [NSMutableArray array];
     
     for (NSManagedObject *object in dataForSyncing) {
+        
         if ([object isKindOfClass:[STTTAgentTask class]]) {
+            
             [object setPrimitiveValue:[NSDate date] forKey:@"sts"];
             NSMutableDictionary *objectDictionary = [self dictionaryForObject:object];
             NSMutableDictionary *propertiesDictionary = [self propertiesDictionaryForObject:object];
@@ -121,10 +123,15 @@
             [objectDictionary setObject:propertiesDictionary forKey:@"properties"];
             [syncDataArray addObject:objectDictionary];
             [syncDataArray addObjectsFromArray:[self arrayWithTaskRepaisToSync:(STTTAgentTask*)object]];
+            [syncDataArray addObjectsFromArray:[self arrayWithTaskDefectsToSync:(STTTAgentTask*)object]];
+            
         }
+        
     }
     
     NSDictionary *dataDictionary = [NSDictionary dictionaryWithObject:syncDataArray forKey:@"data"];
+    
+//    NSLog(@"dataDictionary %@", dataDictionary);
     
     NSError *error;
     NSData *JSONData = [NSJSONSerialization dataWithJSONObject:dataDictionary options:0 error:&error];
@@ -132,10 +139,12 @@
     return JSONData;
 }
 
--(NSString*)stringWithXid:(NSData*)xid {
+-(NSString *)stringWithXid:(NSData *)xid {
+    
     NSString *result = [NSString stringWithFormat:@"%@", xid];
     NSCharacterSet *charsToRemove = [NSCharacterSet characterSetWithCharactersInString:@"< >"];
     return [[result stringByTrimmingCharactersInSet:charsToRemove] stringByReplacingOccurrencesOfString:@" " withString:@""];
+    
 }
 
 -(NSData*)xidWithString:(NSString*)string {
@@ -156,6 +165,27 @@
         [results addObject:objectDictionary];
     }
     return results;
+}
+
+- (NSArray*)arrayWithTaskDefectsToSync:(STTTAgentTask*)task {
+    
+    NSMutableArray *results = [NSMutableArray array];
+
+    for(STTTAgentTaskDefect *defect in task.defects) {
+        
+        NSMutableDictionary *objectDictionary = [@{@"name"  : @"megaport.iAgentTaskDefect",
+                                                   @"xid"   : [self stringWithXid:defect.xid]} mutableCopy];
+        
+        objectDictionary[@"properties"] = @{@"isdeleted": (defect.isdeleted) ? defect.isdeleted : @(NO),
+                                            @"taskxid"  : [self stringWithXid:task.xid],
+                                            @"defectxid": [self stringWithXid:defect.defectCode.xid],
+                                            @"ts"       : [NSString stringWithFormat:@"%@", defect.ts]};
+        
+        [results addObject:objectDictionary];
+        
+    }
+    return results;
+    
 }
 
 - (NSMutableDictionary *)dictionaryForObject:(NSManagedObject *)object {
@@ -191,6 +221,7 @@
     id responseJSON = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingMutableContainers error:&error];
     
 //    NSLog(@"responseJSON %@", responseJSON);
+//    NSLog(@"URL %@", connection.originalRequest.URL.absoluteString);
     
     if (![responseJSON isKindOfClass:[NSDictionary class]]) {
         [[(STSession *)self.session logger] saveLogMessageWithText:@"Sync: response is not dictionary" type:@"error"];
@@ -301,9 +332,9 @@
         
     } else {
         
-        if ([name isEqualToString:@"megaport.iAgentTask"]) {
-            
-            NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:NSStringFromClass([STTTAgentTask class])];
+//        if ([name isEqualToString:@"megaport.iAgentTask"]) {
+        
+            NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:NSStringFromClass([STDatum class])];
             request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"ts" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
             request.predicate = [NSPredicate predicateWithFormat:@"SELF.xid == %@", xidData];
             
@@ -312,9 +343,9 @@
             
             if ([fetchResult lastObject]) {
                 
-                STTTAgentTask *task = [fetchResult lastObject];
-                [task setValue:[task valueForKey:@"sts"] forKey:@"lts"];
-                NSLog(@"sync object xid %@", xid);
+                STDatum *datum = [fetchResult lastObject];
+                datum.lts = datum.sts;
+                NSLog(@"sync %@ xid %@", name, xid);
                 
             } else {
                 
@@ -322,8 +353,8 @@
                 
             }
 
-        }
-        
+//        }
+    
     }
 
 }

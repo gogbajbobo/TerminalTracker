@@ -59,7 +59,7 @@
         <relationship name="visitLocation" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="STTTTaskLocation" inverseName="task" inverseEntity="STTTTaskLocation" syncable="YES"/>
     </entity>
     <entity name="STTTAgentTaskDefect" representedClassName="STTTAgentTaskDefect" parentEntity="STComment" syncable="YES">
-        <attribute name="isdeleted" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="isdeleted" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <relationship name="defectCode" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="STTTAgentDefectCode" inverseName="taskDefects" inverseEntity="STTTAgentDefectCode" syncable="YES"/>
         <relationship name="task" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="STTTAgentTask" inverseName="defects" inverseEntity="STTTAgentTask" syncable="YES"/>
     </entity>
