@@ -57,8 +57,8 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    BOOL isChecked = [[self.defectsList[indexPath.row] objectForKey:@"isChecked"] boolValue];
-    [self.defectsList[indexPath.row] setObject:@(!isChecked) forKey:@"isChecked"];
+    BOOL isChecked = [self.defectsList[indexPath.row][@"isChecked"] boolValue];
+    self.defectsList[indexPath.row][@"isChecked"] = @(!isChecked);
     
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     cell.accessoryType = (!isChecked) ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
@@ -70,7 +70,7 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
     
-    //    [STAgentTaskRepairCodeService updateRepairsForTask:self.task fromList:self.repairList];
+    [STAgentTaskDefectCodeService updateDefectsForTask:self.task fromList:self.defectsList];
     [super viewWillDisappear:animated];
     
 }

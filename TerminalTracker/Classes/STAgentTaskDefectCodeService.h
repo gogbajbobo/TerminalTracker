@@ -14,5 +14,6 @@
 // Array of Dictionaries -> keys: repairName, repairXid, isChecked
 + (NSArray*)getListOfDefectsForTask:(STTTAgentTask*)task;
 
++ (void)updateDefectsForTask:(STTTAgentTask *)task fromList:(NSArray *)defectsList;
 
 @end
