@@ -16,4 +16,7 @@
 
 + (void)updateDefectsForTask:(STTTAgentTask *)task fromList:(NSArray *)defectsList;
 
++ (NSInteger)getNumberOfSelectedDefectsForTask:(STTTAgentTask *)task;
+
+
 @end

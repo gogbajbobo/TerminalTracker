@@ -42,6 +42,20 @@
 
 @implementation STTTTaskTVC
 
+- (NSInteger)repairsCount {
+    
+    _repairsCount = [STAgentTaskRepairCodeService getNumberOfSelectedRepairsForTask:self.task];
+    return _repairsCount;
+    
+}
+
+- (NSInteger)defectsCount {
+    
+    _defectsCount = [STAgentTaskDefectCodeService getNumberOfSelectedDefectsForTask:self.task];
+    return _defectsCount;
+    
+}
+
 - (void)viewInit {
     self.title = self.task.terminalBreakName;
     self.taskCompleted = [self.task.servstatus boolValue] && ![self recentlyChangedServstatus];
@@ -99,19 +113,9 @@
     
     [self addObservers];
     
-    if (self.repairsCell) {
-        
-        NSIndexPath *indexPath = [self.tableView indexPathForCell:self.repairsCell];
-        if (indexPath) [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-        
-    }
-    
-    if (self.defectsCell) {
-
-        NSIndexPath *indexPath = [self.tableView indexPathForCell:self.defectsCell];
-        if (indexPath) [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-        
-    }
+    if (self.defectsCell) [self reloadCell:self.defectsCell];
+    if (self.repairsCell) [self reloadCell:self.repairsCell];
+    if (self.buttonsCell) [self reloadCell:self.buttonsCell];
     
 }
 
@@ -240,6 +244,7 @@
 }
 
 - (void)addCommentToCell:(UITableViewCell *)cell {
+    
     if (self.task.commentText) {
         cell.textLabel.text = self.task.commentText;
         cell.textLabel.font = [UIFont systemFontOfSize:16];
@@ -258,15 +263,21 @@
     cell.textLabel.textAlignment = NSTextAlignmentCenter;
 
     if (self.taskCompleted) {
+        
         cell.textLabel.text = @"Выполнено";
         cell.textLabel.textColor = [UIColor colorWithRed:0.16 green:0.53 blue:0.16 alpha:1];
+        
     } else {
-        cell.textLabel.textColor = [UIColor blueColor];
+        
+        UIColor *textColor = (self.repairsCount > 0 && self.defectsCount > 0) ? [UIColor blueColor] : [UIColor lightGrayColor];
+        
+        cell.textLabel.textColor = textColor;
         if (self.location) {
             cell.textLabel.text = @"Отметить выполнение";
         } else {
             cell.textLabel.text = @"Поставить геометку";
         }
+        
     }
     
     self.buttonsCell = cell;
@@ -274,22 +285,22 @@
 }
 - (void)addRepairsToCell:(UITableViewCell *)cell {
     
-    NSString* baseLabel = @"Добавить ремонт";
-    self.repairsCount = [STAgentTaskRepairCodeService getNumberOfSelectedRepairsForTask:self.task];
+    NSString *baseLabel = @"Добавить ремонт";
+
+    UIColor *textColor = (self.defectsCount > 0) ? [UIColor blackColor] : [UIColor lightGrayColor];
+
+    cell.textLabel.textColor = textColor;
     cell.textLabel.textAlignment = NSTextAlignmentCenter;
     cell.textLabel.text = (self.repairsCount == 0) ? baseLabel : [NSString stringWithFormat:@"%@ (%i)", baseLabel, self.repairsCount];
+    
     self.repairsCell = cell;
     
 }
 
 - (void)addDefectsToCell:(UITableViewCell *)cell {
     
-    NSString* baseLabel = @"Добавить неисправность";
+    NSString *baseLabel = @"Добавить неисправность";
     
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"isdeleted != YES"];
-    NSSet *defects = [self.task.defects filteredSetUsingPredicate:predicate];
-    
-    self.defectsCount = defects.count;
     cell.textLabel.textAlignment = NSTextAlignmentCenter;
     cell.textLabel.text = (self.defectsCount == 0) ? baseLabel : [NSString stringWithFormat:@"%@ (%i)", baseLabel, self.defectsCount];
     
@@ -418,10 +429,20 @@
             break;
             
         case 3:
-            if (self.defectsCount > 0 && self.repairsCount > 0) {
-                if (!self.taskCompleted) {
-                    [self buttonsBehaviorInCell:[tableView cellForRowAtIndexPath:indexPath]];
+            if (self.defectsCount == 0 && self.repairsCount == 0) {
+                [self showNoDefectsAndRepairsSelectedAlert];
+            } else {
+                
+                if (self.defectsCount == 0) {
+                    [self showNoDefectsSelectedAlert];
+                } else if (self.repairsCount == 0) {
+                    [self showNoRepairsSelectedAlert];
+                } else {
+                    if (!self.taskCompleted) {
+                        [self buttonsBehaviorInCell:[tableView cellForRowAtIndexPath:indexPath]];
+                    }                    
                 }
+                
             }
             break;
             
@@ -464,6 +485,14 @@
 
 }
 
+- (void)reloadCell:(UITableViewCell *)cell {
+    
+    NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+    if (indexPath) [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+    
+}
+
+
 - (BOOL) recentlyChangedServstatus {
     return abs([self.task.servstatusDate timeIntervalSinceNow]) < [[[STTTSettingsController sharedSTTTSettingsController] getSettingValueForName:@"OkInterval" inGroup:@"general"] doubleValue]*60;
 }
@@ -474,6 +503,9 @@
     int distanceFromTerminal = [self.location distanceFromLocation:terminalLocation];
     return distanceFromTerminal > [[[STTTSettingsController sharedSTTTSettingsController] getSettingValueForName:@"maxOkDistanceFromTerminal" inGroup:@"general"] doubleValue];
 }
+
+
+#pragma mark - alerts
 
 - (void) showTooFarAlert {
     double maxOkDistanceFromTerminal = [[[STTTSettingsController sharedSTTTSettingsController] getSettingValueForName:@"maxOkDistanceFromTerminal" inGroup:@"general"] doubleValue];
@@ -488,7 +520,25 @@
     [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[self.tableView indexPathForCell:self.buttonsCell]] withRowAnimation:UITableViewRowAnimationAutomatic];
 }
 
+- (void)showNoDefectsAndRepairsSelectedAlert {
+
+    NSString *message = [NSString stringWithFormat:@"Необходимо указать неисправности и ремонты для подтверждения выполнения"];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Неисправности и ремонты не выбраны"
+                                                    message:message
+                                                   delegate:nil
+                                          cancelButtonTitle:@"OK"
+                                          otherButtonTitles:nil];
+    [alert show];
+    self.location = nil;
+    
+    NSIndexPath *buttonCellIndexPath = [self.tableView indexPathForCell:self.buttonsCell];
+    
+    [self.tableView reloadRowsAtIndexPaths:@[buttonCellIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+
+}
+
 - (void) showNoRepairsSelectedAlert {
+    
     NSString *message = [NSString stringWithFormat:@"Необходимо указать ремонты для подтверждения выполнения"];
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Ремонты не выбраны"
                                                     message:message
@@ -498,6 +548,7 @@
     [alert show];
     self.location = nil;
     [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[self.tableView indexPathForCell:self.buttonsCell]] withRowAnimation:UITableViewRowAnimationAutomatic];
+
 }
 
 - (void)showNoDefectsSelectedAlert {
@@ -517,6 +568,9 @@
     [self.tableView reloadRowsAtIndexPaths:@[buttonCellIndexPath, repairCellIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
     
 }
+
+
+#pragma mark - notifications
 
 - (void)currentAccuracyUpdated:(NSNotification *)notification {
     if (self.waitingLocation) {

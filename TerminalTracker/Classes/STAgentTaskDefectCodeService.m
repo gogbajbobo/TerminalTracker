@@ -14,6 +14,15 @@
 
 @implementation STAgentTaskDefectCodeService
 
++ (NSInteger)getNumberOfSelectedDefectsForTask:(STTTAgentTask *)task {
+    
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"isdeleted != YES"];
+    NSSet *defects = [task.defects filteredSetUsingPredicate:predicate];
+
+    return defects.count;
+    
+}
+
 + (NSArray*)getListOfDefectsForTask:(STTTAgentTask*)task {
     
     NSMutableArray* resultArray = [NSMutableArray array];
