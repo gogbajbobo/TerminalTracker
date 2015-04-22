@@ -497,11 +497,21 @@
     return abs([self.task.servstatusDate timeIntervalSinceNow]) < [[[STTTSettingsController sharedSTTTSettingsController] getSettingValueForName:@"OkInterval" inGroup:@"general"] doubleValue]*60;
 }
 
-- (BOOL) tooFarFromTerminal {
+- (BOOL)tooFarFromTerminal {
+    
+#ifdef DEBUG
+    
+    return NO;
+    
+#else
+    
     CLLocation *terminalLocation = [[CLLocation alloc] initWithLatitude:[self.task.terminal.location.latitude doubleValue]
-                                                             longitude:[self.task.terminal.location.longitude doubleValue]];
-    int distanceFromTerminal = [self.location distanceFromLocation:terminalLocation];
-    return distanceFromTerminal > [[[STTTSettingsController sharedSTTTSettingsController] getSettingValueForName:@"maxOkDistanceFromTerminal" inGroup:@"general"] doubleValue];
+                                                              longitude:[self.task.terminal.location.longitude doubleValue]];
+    CLLocationDistance distanceFromTerminal = [self.location distanceFromLocation:terminalLocation];
+    return (distanceFromTerminal > [[[STTTSettingsController sharedSTTTSettingsController] getSettingValueForName:@"maxOkDistanceFromTerminal" inGroup:@"general"] doubleValue]);
+    
+#endif
+    
 }
 
 
