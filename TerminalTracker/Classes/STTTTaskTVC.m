@@ -33,6 +33,8 @@
 @property (nonatomic, strong) UITableViewCell *commentsCell;
 @property (nonatomic, strong) UITableViewCell *repairsCell;
 @property (nonatomic, strong) UITableViewCell *defectsCell;
+@property (nonatomic) NSInteger repairsCount;
+@property (nonatomic) NSInteger defectsCount;
 @property (nonatomic, strong) CLLocation *location;
 @property (nonatomic) BOOL taskCompleted;
 
@@ -273,9 +275,9 @@
 - (void)addRepairsToCell:(UITableViewCell *)cell {
     
     NSString* baseLabel = @"Добавить ремонт";
-    int repairsCnt = [STAgentTaskRepairCodeService getNumberOfSelectedRepairsForTask:self.task];
+    self.repairsCount = [STAgentTaskRepairCodeService getNumberOfSelectedRepairsForTask:self.task];
     cell.textLabel.textAlignment = NSTextAlignmentCenter;
-    cell.textLabel.text = repairsCnt==0 ? baseLabel : [NSString stringWithFormat:@"%@ (%i)", baseLabel, repairsCnt];
+    cell.textLabel.text = (self.repairsCount == 0) ? baseLabel : [NSString stringWithFormat:@"%@ (%i)", baseLabel, self.repairsCount];
     self.repairsCell = cell;
     
 }
@@ -287,9 +289,9 @@
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"isdeleted != YES"];
     NSSet *defects = [self.task.defects filteredSetUsingPredicate:predicate];
     
-    int defectsCount = defects.count;
+    self.defectsCount = defects.count;
     cell.textLabel.textAlignment = NSTextAlignmentCenter;
-    cell.textLabel.text = (defectsCount == 0) ? baseLabel : [NSString stringWithFormat:@"%@ (%i)", baseLabel, defectsCount];
+    cell.textLabel.text = (self.defectsCount == 0) ? baseLabel : [NSString stringWithFormat:@"%@ (%i)", baseLabel, self.defectsCount];
     
     self.defectsCell = cell;
     
@@ -402,20 +404,31 @@
         case 0:
             // do nothing
             break;
+            
         case 1:
             [self performSegueWithIdentifier:@"editDefectCode" sender:self.task];
             break;
+            
         case 2:
-            [self performSegueWithIdentifier:@"editBreakCode" sender:self.task];
-            break;
-        case 3:
-            if (!self.taskCompleted) {
-                [self buttonsBehaviorInCell:[tableView cellForRowAtIndexPath:indexPath]];
+            if (self.defectsCount > 0) {
+                [self performSegueWithIdentifier:@"editBreakCode" sender:self.task];
+            } else {
+                [self showNoDefectsSelectedAlert];
             }
             break;
+            
+        case 3:
+            if (self.defectsCount > 0 && self.repairsCount > 0) {
+                if (!self.taskCompleted) {
+                    [self buttonsBehaviorInCell:[tableView cellForRowAtIndexPath:indexPath]];
+                }
+            }
+            break;
+            
         case 4:
             [self performSegueWithIdentifier:@"showComment" sender:self.task];
             break;
+            
         case 5:
             [self performSegueWithIdentifier:@"goToTerminal" sender:self.task.terminal];
             break;
@@ -485,6 +498,24 @@
     [alert show];
     self.location = nil;
     [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[self.tableView indexPathForCell:self.buttonsCell]] withRowAnimation:UITableViewRowAnimationAutomatic];
+}
+
+- (void)showNoDefectsSelectedAlert {
+    
+    NSString *message = [NSString stringWithFormat:@"Необходимо указать неисправности для выбора ремонта"];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Неисправности не выбраны"
+                                                    message:message
+                                                   delegate:nil
+                                          cancelButtonTitle:@"OK"
+                                          otherButtonTitles:nil];
+    [alert show];
+    self.location = nil;
+    
+    NSIndexPath *buttonCellIndexPath = [self.tableView indexPathForCell:self.buttonsCell];
+    NSIndexPath *repairCellIndexPath = [self.tableView indexPathForCell:self.repairsCell];
+    
+    [self.tableView reloadRowsAtIndexPaths:@[buttonCellIndexPath, repairCellIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+    
 }
 
 - (void)currentAccuracyUpdated:(NSNotification *)notification {
