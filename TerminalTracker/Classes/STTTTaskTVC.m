@@ -92,16 +92,32 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    
     [super viewWillAppear:animated];
+    
     [self addObservers];
-    if (self.repairsCell && [self.tableView indexPathForCell:self.repairsCell]) {
-        [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[self.tableView indexPathForCell:self.repairsCell]] withRowAnimation:UITableViewRowAnimationAutomatic];
+    
+    if (self.repairsCell) {
+        
+        NSIndexPath *indexPath = [self.tableView indexPathForCell:self.repairsCell];
+        if (indexPath) [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+        
     }
+    
+    if (self.defectsCell) {
+
+        NSIndexPath *indexPath = [self.tableView indexPathForCell:self.defectsCell];
+        if (indexPath) [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+        
+    }
+    
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
+    
     [super viewWillDisappear:animated];
     [self removeObservers];
+    
 }
 
 
