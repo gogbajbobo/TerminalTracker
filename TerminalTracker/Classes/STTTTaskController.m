@@ -157,9 +157,9 @@
         NSLog(@"performFetch error %@", error);
     } else {
         //            NSLog(@"fetchedObjects %@", self.resultsController.fetchedObjects);
-        for (NSManagedObject *object in self.resultsController.fetchedObjects) {
-            //                NSLog(@"distance %@", [object valueForKey:@"distance"]);
-        }
+//        for (NSManagedObject *object in self.resultsController.fetchedObjects) {
+//            //                NSLog(@"distance %@", [object valueForKey:@"distance"]);
+//        }
     }
 }
 

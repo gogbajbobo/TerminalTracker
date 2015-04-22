@@ -104,6 +104,7 @@
 		2CC47BE61AE767EB008F5250 /* STEditTaskDefectCodesTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STEditTaskDefectCodesTVC.m; sourceTree = "<group>"; };
 		2CC47BE81AE76872008F5250 /* STAgentTaskDefectCodeService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STAgentTaskDefectCodeService.h; sourceTree = "<group>"; };
 		2CC47BE91AE76872008F5250 /* STAgentTaskDefectCodeService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STAgentTaskDefectCodeService.m; sourceTree = "<group>"; };
+		2CC47BEB1AE78560008F5250 /* STTTDataModel 5.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "STTTDataModel 5.xcdatamodel"; sourceTree = "<group>"; };
 		2CE32657176F29E800BAA1D4 /* TerminalTracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TerminalTracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CE3265A176F29E800BAA1D4 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		2CE3265C176F29E800BAA1D4 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -404,6 +405,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = ST;
+				LastTestingUpgradeCheck = 0630;
 				LastUpgradeCheck = 0460;
 				ORGANIZATIONNAME = "Maxim Grigoriev";
 			};
@@ -740,12 +742,13 @@
 		A59C60F119C92DDE0028A8F7 /* STTTDataModel2.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				2CC47BEB1AE78560008F5250 /* STTTDataModel 5.xcdatamodel */,
 				2CC47BD21AE68DE9008F5250 /* STTTDataModel 4.xcdatamodel */,
 				A59C60F219C92DDE0028A8F7 /* STTTDataModel 2.xcdatamodel */,
 				A505080E19E75F0100632027 /* STTTDataModel 3.xcdatamodel */,
 				A59C60F319C92DDE0028A8F7 /* STTTDataModel.xcdatamodel */,
 			);
-			currentVersion = 2CC47BD21AE68DE9008F5250 /* STTTDataModel 4.xcdatamodel */;
+			currentVersion = 2CC47BEB1AE78560008F5250 /* STTTDataModel 5.xcdatamodel */;
 			path = STTTDataModel2.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
