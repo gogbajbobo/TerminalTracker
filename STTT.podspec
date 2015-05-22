@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "STTT"
-  s.version      = "1.7.1"
+  s.version      = "1.7.2"
   s.summary      = "STTT is Sys-Team TerminalTracker."
   s.homepage     = "https://github.com/sys-team/TerminalTracker"
 
