@@ -152,19 +152,26 @@
 }
 
 - (NSArray*)arrayWithTaskRepaisToSync:(STTTAgentTask*)task {
+    
     NSMutableArray* results = [NSMutableArray array];
+    
     for(STTTAgentTaskRepair *repair in task.repairs) {
-        NSMutableDictionary *objectDictionary = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"megaport.iAgentTaskRepair", @"name", [self stringWithXid:repair.xid], @"xid", nil];
         
-        [objectDictionary setObject:@{@"isdeleted": repair.isdeleted,
-                                      @"taskxid": [self stringWithXid:task.xid],
-                                      @"repairxid": [self stringWithXid:repair.repairCode.xid],
-                                      @"ts":[NSString stringWithFormat:@"%@", repair.ts]}
-                             forKey:@"properties"];
+        NSDictionary *propertiesDic = @{@"isdeleted": repair.isdeleted,
+                                        @"taskxid": [self stringWithXid:task.xid],
+                                        @"repairxid": [self stringWithXid:repair.repairCode.xid],
+                                        @"repairName": repair.repairCode.repairName,
+                                        @"ts":[NSString stringWithFormat:@"%@", repair.ts]};
+
+        NSDictionary *objectDictionary = @{@"name": @"megaport.iAgentTaskRepair",
+                                           @"xid": [self stringWithXid:repair.xid],
+                                           @"properties": propertiesDic};
         
         [results addObject:objectDictionary];
+        
     }
     return results;
+    
 }
 
 - (NSArray*)arrayWithTaskDefectsToSync:(STTTAgentTask*)task {
