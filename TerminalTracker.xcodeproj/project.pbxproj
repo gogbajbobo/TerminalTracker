@@ -74,6 +74,7 @@
 		2C42ECA51B05F0F800B5C91A /* STTTDataModel 6.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "STTTDataModel 6.xcdatamodel"; sourceTree = "<group>"; };
 		2C42ECA61B05F13400B5C91A /* STTTAgentRepairCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTAgentRepairCode.h; sourceTree = "<group>"; };
 		2C42ECA71B05F13400B5C91A /* STTTAgentRepairCode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTAgentRepairCode.m; sourceTree = "<group>"; };
+		2C42ECBD1B14575F00B5C91A /* STTTDataModel 7.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "STTTDataModel 7.xcdatamodel"; sourceTree = "<group>"; };
 		2C93A560177D795E0014001B /* STTTTerminalController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTTerminalController.h; sourceTree = "<group>"; };
 		2C93A561177D795E0014001B /* STTTTerminalController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTTerminalController.m; sourceTree = "<group>"; };
 		2C93A563177D79790014001B /* STTTTaskController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTTaskController.h; sourceTree = "<group>"; };
@@ -743,6 +744,7 @@
 		A59C60F119C92DDE0028A8F7 /* STTTDataModel2.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				2C42ECBD1B14575F00B5C91A /* STTTDataModel 7.xcdatamodel */,
 				2C42ECA51B05F0F800B5C91A /* STTTDataModel 6.xcdatamodel */,
 				2CC47BEB1AE78560008F5250 /* STTTDataModel 5.xcdatamodel */,
 				2CC47BD21AE68DE9008F5250 /* STTTDataModel 4.xcdatamodel */,
@@ -750,7 +752,7 @@
 				A505080E19E75F0100632027 /* STTTDataModel 3.xcdatamodel */,
 				A59C60F319C92DDE0028A8F7 /* STTTDataModel.xcdatamodel */,
 			);
-			currentVersion = 2C42ECA51B05F0F800B5C91A /* STTTDataModel 6.xcdatamodel */;
+			currentVersion = 2C42ECBD1B14575F00B5C91A /* STTTDataModel 7.xcdatamodel */;
 			path = STTTDataModel2.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
