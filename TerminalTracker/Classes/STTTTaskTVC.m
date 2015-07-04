@@ -454,18 +454,26 @@
                     break;
                     
                 case 2:
-                    [self performSegueWithIdentifier:@"editComponents" sender:self.task];
+                    if (self.defectsCount > 0 && self.repairsCount > 0) {
+                        [self performSegueWithIdentifier:@"editComponents" sender:self.task];
+                    } else {
+                        [self showNoDefectsAndRepairsSelectedAlert];
+                    }
                     break;
                     
                 case 3:
-                    if (self.defectsCount == 0 && self.repairsCount == 0) {
-                        [self showNoDefectsAndRepairsSelectedAlert];
+                    if (self.defectsCount == 0 && self.repairsCount == 0 && self.componentsCount == 0) {
+                        
+                        [self showNoDefectsRepairsAndComponentsSelectedAlert];
+                        
                     } else {
                         
                         if (self.defectsCount == 0) {
                             [self showNoDefectsSelectedAlert];
                         } else if (self.repairsCount == 0) {
                             [self showNoRepairsSelectedAlert];
+                        } else if (self.componentsCount == 0) {
+                            [self showNoComponentsSelectedAlert];
                         } else {
                             if (!self.taskCompleted) {
                                 [self buttonsBehaviorInCell:[tableView cellForRowAtIndexPath:indexPath]];
@@ -565,9 +573,26 @@
 }
 
 - (void)showNoDefectsAndRepairsSelectedAlert {
-
+    
     NSString *message = [NSString stringWithFormat:@"Необходимо указать неисправности и ремонты для подтверждения выполнения"];
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Неисправности и ремонты не выбраны"
+                                                    message:message
+                                                   delegate:nil
+                                          cancelButtonTitle:@"OK"
+                                          otherButtonTitles:nil];
+    [alert show];
+    self.location = nil;
+    
+    NSIndexPath *buttonCellIndexPath = [self.tableView indexPathForCell:self.buttonsCell];
+    
+    [self.tableView reloadRowsAtIndexPaths:@[buttonCellIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+    
+}
+
+- (void)showNoDefectsRepairsAndComponentsSelectedAlert {
+
+    NSString *message = [NSString stringWithFormat:@"Необходимо указать неисправности, ремонты и ЗИПы для подтверждения выполнения"];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Не указаны необходимые данные"
                                                     message:message
                                                    delegate:nil
                                           cancelButtonTitle:@"OK"
@@ -610,6 +635,25 @@
     NSIndexPath *repairCellIndexPath = [self.tableView indexPathForCell:self.repairsCell];
     
     [self.tableView reloadRowsAtIndexPaths:@[buttonCellIndexPath, repairCellIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+    
+}
+
+- (void)showNoComponentsSelectedAlert {
+    
+    NSString *message = [NSString stringWithFormat:@"Необходимо указать ЗИПы"];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"ЗИПы не выбраны"
+                                                    message:message
+                                                   delegate:nil
+                                          cancelButtonTitle:@"OK"
+                                          otherButtonTitles:nil];
+    [alert show];
+    self.location = nil;
+    
+    NSIndexPath *buttonCellIndexPath = [self.tableView indexPathForCell:self.buttonsCell];
+    NSIndexPath *repairCellIndexPath = [self.tableView indexPathForCell:self.repairsCell];
+    NSIndexPath *componentCellIndexPath = [self.tableView indexPathForCell:self.componentsCell];
+    
+    [self.tableView reloadRowsAtIndexPaths:@[buttonCellIndexPath, repairCellIndexPath, componentCellIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
     
 }
 
