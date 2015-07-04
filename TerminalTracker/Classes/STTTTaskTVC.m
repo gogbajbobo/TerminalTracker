@@ -453,6 +453,10 @@
                     }
                     break;
                     
+                case 2:
+                    [self performSegueWithIdentifier:@"editComponents" sender:self.task];
+                    break;
+                    
                 case 3:
                     if (self.defectsCount == 0 && self.repairsCount == 0) {
                         [self showNoDefectsAndRepairsSelectedAlert];
