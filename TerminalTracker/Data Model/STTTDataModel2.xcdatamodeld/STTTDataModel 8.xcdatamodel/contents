@@ -64,7 +64,7 @@
         <relationship name="terminal" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="STTTAgentTerminal" inverseName="tasks" inverseEntity="STTTAgentTerminal" syncable="YES"/>
         <relationship name="visitLocation" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="STTTTaskLocation" inverseName="task" inverseEntity="STTTTaskLocation" syncable="YES"/>
     </entity>
-    <entity name="STTTAgentTaskComponent" representedClassName="STTTAgentTaskComponent" syncable="YES">
+    <entity name="STTTAgentTaskComponent" representedClassName="STTTAgentTaskComponent" parentEntity="STComment" syncable="YES">
         <attribute name="isdeleted" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <relationship name="component" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="STTTAgentComponent" inverseName="taskComponent" inverseEntity="STTTAgentComponent" syncable="YES"/>
         <relationship name="task" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="STTTAgentTask" inverseName="components" inverseEntity="STTTAgentTask" syncable="YES"/>

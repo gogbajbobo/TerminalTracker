@@ -12,11 +12,17 @@
 #import "STTTAgentTask.h"
 #import "STTTTerminalLocation.h"
 #import "STTTTaskLocation.h"
+
 #import "STTTAgentTask+remainingTime.h"
+
 #import "STTTAgentRepairCode.h"
 #import "STTTAgentTaskRepair.h"
+
 #import "STTTAgentDefectCode.h"
 #import "STTTAgentTaskDefect.h"
+
+#import "STTTAgentComponent.h"
+#import "STTTAgentTaskComponent.h"
 
 
 @interface STTTSyncer()
@@ -402,6 +408,14 @@
         
         [self newTaskDefectWithXid:xidData andProperties:properties];
         
+    } else if ([name isEqualToString:@"megaport.iAgentComponent"]) {
+        
+        [self newComponentWithXid:xidData andProperties:properties];
+        
+    } else if ([name isEqualToString:@"megaport.iAgentTaskComponent"]) {
+        
+        [self newTaskComponentWithXid:xidData andProperties:properties];
+
     } else {
         NSLog(@"object %@", object);
     }
@@ -427,6 +441,31 @@
     defectCode.active = [NSNumber numberWithBool:[[properties valueForKey:@"active"] boolValue]];
     defectCode.lts = [NSDate date];
     NSLog(@"get defect_code.xid %@", defectCode.xid);
+
+}
+
+- (void)newTaskComponentWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties {
+    
+    NSDictionary *taskData = [properties valueForKey:@"taskxid"];
+
+    STTTAgentTaskComponent *taskComponent = (STTTAgentTaskComponent *)[self entityByClass:[STTTAgentTaskComponent class] andXid:xidData];
+    taskComponent.isdeleted = @NO;
+    taskComponent.component = (STTTAgentComponent *)[self entityByClass:[STTTAgentComponent class] andXid:[self xidWithString:[properties valueForKey:@"componentxid"]]];
+    taskComponent.task = (STTTAgentTask *)[self entityByClass:[STTTAgentTask class] andXid:[self xidWithString:[taskData valueForKey:@"id"]]];
+    taskComponent.lts = [NSDate date];
+    
+    NSLog(@"get taskComponent.xid %@", taskComponent.xid);
+    
+}
+
+- (void)newComponentWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties {
+    
+    STTTAgentComponent *component = (STTTAgentComponent *)[self entityByClass:[STTTAgentComponent class] andXid:xidData];
+    component.shortName = [properties valueForKey:@"short_name"];
+    component.serial = [properties valueForKey:@"serial"];
+    component.lts = [NSDate date];
+    
+    NSLog(@"get component.xid %@", component.xid);
 
 }
 
@@ -587,22 +626,29 @@
 }
 
 - (STComment*)entityByClass:(Class)entityClass andXid:(NSData *)xid {
+    
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:NSStringFromClass(entityClass)];
     request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"ts" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
     request.predicate = [NSPredicate predicateWithFormat:@"SELF.xid == %@", xid];
+    
     NSError *error;
     NSArray *fetchResult = [self.session.document.managedObjectContext executeFetchRequest:request error:&error];
     
     STComment *entity;
     
     if ([fetchResult lastObject]) {
+        
         entity = [fetchResult lastObject];
+        
     } else {
-        entity = (STComment *)[NSEntityDescription insertNewObjectForEntityForName:NSStringFromClass(entityClass) inManagedObjectContext:self.session.document.managedObjectContext];
+        
+        entity = (STComment *)[NSEntityDescription insertNewObjectForEntityForName:NSStringFromClass(entityClass)
+                                                            inManagedObjectContext:self.session.document.managedObjectContext];
         entity.xid = xid;
+        
     }
-    
     return entity;
+    
 }
 
 - (void)syncerSettingsChanged:(NSNotification *)notification {

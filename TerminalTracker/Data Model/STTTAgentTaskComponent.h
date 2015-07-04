@@ -8,10 +8,11 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
+#import "STComment.h"
 
 @class STTTAgentComponent, STTTAgentTask;
 
-@interface STTTAgentTaskComponent : NSManagedObject
+@interface STTTAgentTaskComponent : STComment
 
 @property (nonatomic, retain) NSNumber * isdeleted;
 @property (nonatomic, retain) STTTAgentComponent *component;
