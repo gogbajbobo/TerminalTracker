@@ -15,6 +15,9 @@
 #import "STTTAgentTask+remainingTime.h"
 #import "STTTAgentRepairCode.h"
 #import "STTTAgentTaskRepair.h"
+#import "STTTAgentDefectCode.h"
+#import "STTTAgentTaskDefect.h"
+
 
 @interface STTTSyncer()
 
@@ -110,7 +113,9 @@
     NSMutableArray *syncDataArray = [NSMutableArray array];
     
     for (NSManagedObject *object in dataForSyncing) {
+        
         if ([object isKindOfClass:[STTTAgentTask class]]) {
+            
             [object setPrimitiveValue:[NSDate date] forKey:@"sts"];
             NSMutableDictionary *objectDictionary = [self dictionaryForObject:object];
             NSMutableDictionary *propertiesDictionary = [self propertiesDictionaryForObject:object];
@@ -118,10 +123,15 @@
             [objectDictionary setObject:propertiesDictionary forKey:@"properties"];
             [syncDataArray addObject:objectDictionary];
             [syncDataArray addObjectsFromArray:[self arrayWithTaskRepaisToSync:(STTTAgentTask*)object]];
+            [syncDataArray addObjectsFromArray:[self arrayWithTaskDefectsToSync:(STTTAgentTask*)object]];
+            
         }
+        
     }
     
     NSDictionary *dataDictionary = [NSDictionary dictionaryWithObject:syncDataArray forKey:@"data"];
+    
+//    NSLog(@"dataDictionary %@", dataDictionary);
     
     NSError *error;
     NSData *JSONData = [NSJSONSerialization dataWithJSONObject:dataDictionary options:0 error:&error];
@@ -129,10 +139,12 @@
     return JSONData;
 }
 
--(NSString*)stringWithXid:(NSData*)xid {
+-(NSString *)stringWithXid:(NSData *)xid {
+    
     NSString *result = [NSString stringWithFormat:@"%@", xid];
     NSCharacterSet *charsToRemove = [NSCharacterSet characterSetWithCharactersInString:@"< >"];
     return [[result stringByTrimmingCharactersInSet:charsToRemove] stringByReplacingOccurrencesOfString:@" " withString:@""];
+    
 }
 
 -(NSData*)xidWithString:(NSString*)string {
@@ -140,19 +152,47 @@
 }
 
 - (NSArray*)arrayWithTaskRepaisToSync:(STTTAgentTask*)task {
+    
     NSMutableArray* results = [NSMutableArray array];
+    
     for(STTTAgentTaskRepair *repair in task.repairs) {
-        NSMutableDictionary *objectDictionary = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"megaport.iAgentTaskRepair", @"name", [self stringWithXid:repair.xid], @"xid", nil];
         
-        [objectDictionary setObject:@{@"isdeleted": repair.isdeleted,
-                                      @"taskxid": [self stringWithXid:task.xid],
-                                      @"repairxid": [self stringWithXid:repair.repairCode.xid],
-                                      @"ts":[NSString stringWithFormat:@"%@", repair.ts]}
-                             forKey:@"properties"];
+        NSDictionary *propertiesDic = @{@"isdeleted": repair.isdeleted,
+                                        @"taskxid": [self stringWithXid:task.xid],
+                                        @"repairxid": [self stringWithXid:repair.repairCode.xid],
+                                        @"repairName": repair.repairCode.repairName,
+                                        @"ts":[NSString stringWithFormat:@"%@", repair.ts]};
+
+        NSDictionary *objectDictionary = @{@"name": @"megaport.iAgentTaskRepair",
+                                           @"xid": [self stringWithXid:repair.xid],
+                                           @"properties": propertiesDic};
         
         [results addObject:objectDictionary];
+        
     }
     return results;
+    
+}
+
+- (NSArray*)arrayWithTaskDefectsToSync:(STTTAgentTask*)task {
+    
+    NSMutableArray *results = [NSMutableArray array];
+
+    for(STTTAgentTaskDefect *defect in task.defects) {
+        
+        NSMutableDictionary *objectDictionary = [@{@"name"  : @"megaport.iAgentTaskDefect",
+                                                   @"xid"   : [self stringWithXid:defect.xid]} mutableCopy];
+        
+        objectDictionary[@"properties"] = @{@"isdeleted": (defect.isdeleted) ? defect.isdeleted : @(NO),
+                                            @"taskxid"  : [self stringWithXid:task.xid],
+                                            @"defectxid": [self stringWithXid:defect.defectCode.xid],
+                                            @"ts"       : [NSString stringWithFormat:@"%@", defect.ts]};
+        
+        [results addObject:objectDictionary];
+        
+    }
+    return results;
+    
 }
 
 - (NSMutableDictionary *)dictionaryForObject:(NSManagedObject *)object {
@@ -187,6 +227,9 @@
     NSError *error;
     id responseJSON = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingMutableContainers error:&error];
     
+//    NSLog(@"responseJSON %@", responseJSON);
+//    NSLog(@"URL %@", connection.originalRequest.URL.absoluteString);
+    
     if (![responseJSON isKindOfClass:[NSDictionary class]]) {
         [[(STSession *)self.session logger] saveLogMessageWithText:@"Sync: response is not dictionary" type:@"error"];
         self.syncing = NO;
@@ -202,6 +245,8 @@
             id objectsArray = [(NSDictionary *)responseJSON valueForKey:@"data"];
             if ([objectsArray isKindOfClass:[NSArray class]]) {
                 NSUInteger objectsCount = [(NSArray *)objectsArray count];
+                
+                NSLog(@"originalRequest.URL %@", connection.originalRequest.URL.absoluteString);
                 
                 NSString *logMessage = [NSString stringWithFormat:@"recieve %d objects", objectsCount];
                 [[(STSession *)self.session logger] saveLogMessageWithText:logMessage type:@""];
@@ -294,9 +339,9 @@
         
     } else {
         
-        if ([name isEqualToString:@"megaport.iAgentTask"]) {
-            
-            NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:NSStringFromClass([STTTAgentTask class])];
+//        if ([name isEqualToString:@"megaport.iAgentTask"]) {
+        
+            NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:NSStringFromClass([STDatum class])];
             request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"ts" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
             request.predicate = [NSPredicate predicateWithFormat:@"SELF.xid == %@", xidData];
             
@@ -305,9 +350,9 @@
             
             if ([fetchResult lastObject]) {
                 
-                STTTAgentTask *task = [fetchResult lastObject];
-                [task setValue:[task valueForKey:@"sts"] forKey:@"lts"];
-                NSLog(@"sync object xid %@", xid);
+                STDatum *datum = [fetchResult lastObject];
+                datum.lts = datum.sts;
+                NSLog(@"sync %@ xid %@", name, xid);
                 
             } else {
                 
@@ -315,8 +360,8 @@
                 
             }
 
-        }
-        
+//        }
+    
     }
 
 }
@@ -349,7 +394,39 @@
         
         [self newTaskRepairWithXid:xidData andProperties:properties];
         
+    } else if ([name isEqualToString:@"megaport.iAgentDefectCode"]) {
+        
+        [self newDefectCodeWithXid:xidData andProperties:properties];
+        
+    } else if ([name isEqualToString:@"megaport.iAgentTaskDefect"]) {
+        
+        [self newTaskDefectWithXid:xidData andProperties:properties];
+        
+    } else {
+        NSLog(@"object %@", object);
     }
+
+}
+
+- (void)newTaskDefectWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties {
+    
+    STTTAgentTaskDefect *defect = (STTTAgentTaskDefect*)[self entityByClass:[STTTAgentTaskDefect class] andXid:xidData];
+    defect.isdeleted = @NO;
+    defect.defectCode = (STTTAgentDefectCode *)[self entityByClass:[STTTAgentDefectCode class] andXid:[self xidWithString:[properties valueForKey:@"defectxid"]]];
+    NSDictionary *taskData = [properties valueForKey:@"taskxid"];
+    defect.task = (STTTAgentTask *)[self entityByClass:[STTTAgentTask class] andXid:[self xidWithString:[taskData valueForKey:@"id"]]];
+    defect.lts = [NSDate date];
+    NSLog(@"get taskDefect.xid %@", defect.xid);
+    
+}
+
+- (void)newDefectCodeWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties {
+    
+    STTTAgentDefectCode *defectCode = (STTTAgentDefectCode *)[self entityByClass:[STTTAgentDefectCode class] andXid:xidData];
+    defectCode.name = [properties valueForKey:@"name"];
+    defectCode.active = [NSNumber numberWithBool:[[properties valueForKey:@"active"] boolValue]];
+    defectCode.lts = [NSDate date];
+    NSLog(@"get defect_code.xid %@", defectCode.xid);
 
 }
 
@@ -363,13 +440,12 @@
     NSLog(@"get taskRepair.xid %@", repair.xid);
 }
 
-
 - (void)newRepairCodeWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties {
     STTTAgentRepairCode *repairCode = (STTTAgentRepairCode*)[self entityByClass:[STTTAgentRepairCode class] andXid:xidData];
     repairCode.repairName = [properties valueForKey:@"repair_name"];
     repairCode.active = [NSNumber numberWithBool:[[properties valueForKey:@"active"] boolValue]];
     repairCode.lts = [NSDate date];
-    NSLog(@"get repaor_code.xid %@", repairCode.xid);
+    NSLog(@"get repair_code.xid %@", repairCode.xid);
 }
 
 - (void)newTerminalWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties {

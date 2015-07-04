@@ -52,15 +52,15 @@
 {
     
     if ([self.tableView.dataSource isKindOfClass:[STTTTaskController class]]) {
+        
         STTTTaskController *taskController = (STTTTaskController *)self.tableView.dataSource;
-        id <NSFetchedResultsSectionInfo> sectionInfo = [[taskController.resultsController sections] objectAtIndex:indexPath.section];
-        STTTAgentTask *task = (STTTAgentTask *)[[sectionInfo objects] objectAtIndex:indexPath.row];
+        STTTAgentTask *task = [taskController.resultsController objectAtIndexPath:indexPath];
         [self performSegueWithIdentifier:@"showTask" sender:task];
         
     } else if ([self.tableView.dataSource isKindOfClass:[STTTTerminalController class]]) {
+        
         STTTTerminalController *terminalController = (STTTTerminalController *)self.tableView.dataSource;
-        id <NSFetchedResultsSectionInfo> sectionInfo = [[terminalController.resultsController sections] objectAtIndex:indexPath.section];
-        STTTAgentTerminal *terminal = (STTTAgentTerminal *)[[sectionInfo objects] objectAtIndex:indexPath.row];
+        STTTAgentTerminal *terminal = [terminalController.resultsController objectAtIndexPath:indexPath];
         [self performSegueWithIdentifier:@"showTerminal" sender:terminal];
         
     }
