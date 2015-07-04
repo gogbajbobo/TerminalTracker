@@ -32,7 +32,7 @@
     if (!_resultsController) {
         NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:NSStringFromClass([STTTAgentTerminal class])];
         request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"distance" ascending:YES selector:@selector(compare:)]];
-//        request.predicate = [NSPredicate predicateWithFormat:@"SELF.errorText != %@", nil];
+//        request.predicate = [NSPredicate predicateWithFormat:@"errorText != nil"];
         request.predicate = [NSPredicate predicateWithFormat:@"errorText != nil AND (ANY tasks.servstatus == 0 OR tasks.@count == 0)"];
         _resultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request managedObjectContext:self.session.document.managedObjectContext sectionNameKeyPath:@"sectionNumber" cacheName:nil];
         _resultsController.delegate = self;
@@ -47,9 +47,9 @@
         NSLog(@"performFetch error %@", error);
     } else {
         //            NSLog(@"fetchedObjects %@", self.resultsController.fetchedObjects);
-        for (NSManagedObject *object in self.resultsController.fetchedObjects) {
+//        for (NSManagedObject *object in self.resultsController.fetchedObjects) {
             //                NSLog(@"distance %@", [object valueForKey:@"distance"]);
-        }
+//        }
     }
 }
 

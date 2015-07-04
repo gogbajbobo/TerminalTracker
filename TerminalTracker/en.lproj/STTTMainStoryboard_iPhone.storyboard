@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6245" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="UeD-It-wGo">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7531" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="UeD-It-wGo">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7520"/>
     </dependencies>
     <scenes>
         <!--TaskTVC-->
@@ -32,6 +33,7 @@
                         <segue destination="1ry-OM-6W5" kind="push" identifier="showComment" id="zTa-5j-RHt"/>
                         <segue destination="ktg-lG-8Y4" kind="push" identifier="goToTerminal" id="DhZ-Tp-nrz"/>
                         <segue destination="UQq-4Y-hYy" kind="push" identifier="editBreakCode" id="2ZH-wo-v8W"/>
+                        <segue destination="ytb-9m-kCX" kind="push" identifier="editDefectCode" id="Sxl-Yb-f3z"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wXe-Et-g8M" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -63,7 +65,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="B93-iU-Mnz" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1858" y="-449"/>
+            <point key="canvasLocation" x="1860" y="-363"/>
         </scene>
         <!--Комментарий-->
         <scene sceneID="B6U-gb-03u">
@@ -103,6 +105,33 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8Eg-Eq-Mwq" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1860" y="-986"/>
+        </scene>
+        <!--Виды Неисправностей-->
+        <scene sceneID="eaJ-h7-kZK">
+            <objects>
+                <tableViewController id="ytb-9m-kCX" customClass="STEditTaskDefectCodesTVC" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="6Zn-9H-QjF">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="defectType" id="vi2-HX-6pI">
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="vi2-HX-6pI" id="STF-fS-2g0">
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="ytb-9m-kCX" id="Mgl-ed-8ER"/>
+                            <outlet property="delegate" destination="ytb-9m-kCX" id="wLw-sp-xvZ"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Виды Неисправностей" id="ejM-JJ-mQL"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="c6q-Hg-bQJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2256" y="-732"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="ial-rb-FU0">
