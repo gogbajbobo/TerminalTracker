@@ -142,7 +142,7 @@
             return 1;
             break;
         case 1:
-            return 3;
+            return 4;
             break;
         case 2:
             return 1;
@@ -197,6 +197,10 @@
                     [self addRepairsToCell:cell];
                     break;
                 case 2:
+                    cell = [cell initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+                    [self addComponentsToCell:cell];
+                    break;
+                case 3:
                     cell = [cell initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
                     [self addButtonsToCell:cell];
                     break;
@@ -288,19 +292,6 @@
     self.buttonsCell = cell;
     
 }
-- (void)addRepairsToCell:(UITableViewCell *)cell {
-    
-    NSString *baseLabel = @"Добавить ремонт";
-
-    UIColor *textColor = (self.defectsCount > 0) ? [UIColor blackColor] : [UIColor lightGrayColor];
-
-    cell.textLabel.textColor = textColor;
-    cell.textLabel.textAlignment = NSTextAlignmentCenter;
-    cell.textLabel.text = (self.repairsCount == 0) ? baseLabel : [NSString stringWithFormat:@"%@ (%i)", baseLabel, self.repairsCount];
-    
-    self.repairsCell = cell;
-    
-}
 
 - (void)addDefectsToCell:(UITableViewCell *)cell {
     
@@ -310,6 +301,34 @@
     cell.textLabel.text = (self.defectsCount == 0) ? baseLabel : [NSString stringWithFormat:@"%@ (%i)", baseLabel, self.defectsCount];
     
     self.defectsCell = cell;
+    
+}
+
+- (void)addRepairsToCell:(UITableViewCell *)cell {
+    
+    NSString *baseLabel = @"Добавить ремонт";
+    
+    UIColor *textColor = (self.defectsCount > 0) ? [UIColor blackColor] : [UIColor lightGrayColor];
+    
+    cell.textLabel.textColor = textColor;
+    cell.textLabel.textAlignment = NSTextAlignmentCenter;
+    cell.textLabel.text = (self.repairsCount == 0) ? baseLabel : [NSString stringWithFormat:@"%@ (%i)", baseLabel, self.repairsCount];
+    
+    self.repairsCell = cell;
+    
+}
+
+- (void)addComponentsToCell:(UITableViewCell *)cell {
+    
+    NSString *baseLabel = @"ЗИПы";
+    
+    UIColor *textColor = (self.defectsCount > 0) ? [UIColor blackColor] : [UIColor lightGrayColor];
+    
+    cell.textLabel.textColor = textColor;
+    cell.textLabel.textAlignment = NSTextAlignmentCenter;
+    cell.textLabel.text = (self.repairsCount == 0) ? baseLabel : [NSString stringWithFormat:@"%@ (%i)", baseLabel, self.repairsCount];
+    
+    self.repairsCell = cell;
     
 }
 
