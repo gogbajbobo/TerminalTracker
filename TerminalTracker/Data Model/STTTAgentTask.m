@@ -2,11 +2,12 @@
 //  STTTAgentTask.m
 //  TerminalTracker
 //
-//  Created by Maxim Grigoriev on 21/04/15.
+//  Created by Maxim Grigoriev on 04/07/15.
 //  Copyright (c) 2015 Maxim Grigoriev. All rights reserved.
 //
 
 #import "STTTAgentTask.h"
+#import "STTTAgentTaskComponent.h"
 #import "STTTAgentTaskDefect.h"
 #import "STTTAgentTaskRepair.h"
 #import "STTTAgentTerminal.h"
@@ -20,9 +21,10 @@
 @dynamic servstatus;
 @dynamic servstatusDate;
 @dynamic terminalBreakName;
+@dynamic defects;
 @dynamic repairs;
 @dynamic terminal;
 @dynamic visitLocation;
-@dynamic defects;
+@dynamic components;
 
 @end
