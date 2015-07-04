@@ -445,7 +445,7 @@
     repairCode.repairName = [properties valueForKey:@"repair_name"];
     repairCode.active = [NSNumber numberWithBool:[[properties valueForKey:@"active"] boolValue]];
     repairCode.lts = [NSDate date];
-    NSLog(@"get repaor_code.xid %@", repairCode.xid);
+    NSLog(@"get repair_code.xid %@", repairCode.xid);
 }
 
 - (void)newTerminalWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties {
