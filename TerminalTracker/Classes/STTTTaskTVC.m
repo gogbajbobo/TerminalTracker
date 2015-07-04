@@ -20,25 +20,36 @@
 #import "STUtilities.h"
 #import "STTTAgentTask+cellcoloring.h"
 #import "STTTSettingsController.h"
+
 #import "STEditTaskRepairCodesTVC.h"
 #import "STEditTaskDefectCodesTVC.h"
+
 #import "STAgentTaskRepairCodeService.h"
 #import "STAgentTaskDefectCodeService.h"
+#import "STAgentTaskComponentService.h"
 
 
 @interface STTTTaskTVC ()
 
 @property (nonatomic) BOOL waitingLocation;
+
 @property (nonatomic, strong) UITableViewCell *buttonsCell;
 @property (nonatomic, strong) UITableViewCell *commentsCell;
 @property (nonatomic, strong) UITableViewCell *repairsCell;
 @property (nonatomic, strong) UITableViewCell *defectsCell;
+@property (nonatomic, strong) UITableViewCell *componentsCell;
+
 @property (nonatomic) NSInteger repairsCount;
 @property (nonatomic) NSInteger defectsCount;
+@property (nonatomic) NSInteger componentsCount;
+
 @property (nonatomic, strong) CLLocation *location;
+
 @property (nonatomic) BOOL taskCompleted;
 
+
 @end
+
 
 @implementation STTTTaskTVC
 
@@ -53,6 +64,13 @@
     
     _defectsCount = [STAgentTaskDefectCodeService getNumberOfSelectedDefectsForTask:self.task];
     return _defectsCount;
+    
+}
+
+- (NSInteger)componentsCount {
+    
+    _componentsCount = [STAgentTaskComponentService getNumberOfSelectedComponentsForTask:self.task];
+    return _componentsCount;
     
 }
 
@@ -115,6 +133,7 @@
     
     if (self.defectsCell) [self reloadCell:self.defectsCell];
     if (self.repairsCell) [self reloadCell:self.repairsCell];
+    if (self.componentsCell) [self reloadCell:self.componentsCell];
     if (self.buttonsCell) [self reloadCell:self.buttonsCell];
     
 }
@@ -267,32 +286,6 @@
     
 }
 
-- (void)addButtonsToCell:(UITableViewCell *)cell {
-
-    cell.textLabel.textAlignment = NSTextAlignmentCenter;
-
-    if (self.taskCompleted) {
-        
-        cell.textLabel.text = @"Выполнено";
-        cell.textLabel.textColor = [UIColor colorWithRed:0.16 green:0.53 blue:0.16 alpha:1];
-        
-    } else {
-        
-        UIColor *textColor = (self.repairsCount > 0 && self.defectsCount > 0) ? [UIColor blueColor] : [UIColor lightGrayColor];
-        
-        cell.textLabel.textColor = textColor;
-        if (self.location) {
-            cell.textLabel.text = @"Отметить выполнение";
-        } else {
-            cell.textLabel.text = @"Поставить геометку";
-        }
-        
-    }
-    
-    self.buttonsCell = cell;
-    
-}
-
 - (void)addDefectsToCell:(UITableViewCell *)cell {
     
     NSString *baseLabel = @"Добавить неисправность";
@@ -322,13 +315,39 @@
     
     NSString *baseLabel = @"ЗИПы";
     
-    UIColor *textColor = (self.defectsCount > 0) ? [UIColor blackColor] : [UIColor lightGrayColor];
+    UIColor *textColor = (self.defectsCount > 0 && self.repairsCount > 0) ? [UIColor blackColor] : [UIColor lightGrayColor];
     
     cell.textLabel.textColor = textColor;
     cell.textLabel.textAlignment = NSTextAlignmentCenter;
-    cell.textLabel.text = (self.repairsCount == 0) ? baseLabel : [NSString stringWithFormat:@"%@ (%i)", baseLabel, self.repairsCount];
+    cell.textLabel.text = (self.componentsCount == 0) ? baseLabel : [NSString stringWithFormat:@"%@ (%i)", baseLabel, self.componentsCount];
     
-    self.repairsCell = cell;
+    self.componentsCell = cell;
+    
+}
+
+- (void)addButtonsToCell:(UITableViewCell *)cell {
+    
+    cell.textLabel.textAlignment = NSTextAlignmentCenter;
+    
+    if (self.taskCompleted) {
+        
+        cell.textLabel.text = @"Выполнено";
+        cell.textLabel.textColor = [UIColor colorWithRed:0.16 green:0.53 blue:0.16 alpha:1];
+        
+    } else {
+        
+        UIColor *textColor = (self.repairsCount > 0 && self.defectsCount > 0 && self.componentsCount > 0) ? [UIColor blueColor] : [UIColor lightGrayColor];
+        
+        cell.textLabel.textColor = textColor;
+        if (self.location) {
+            cell.textLabel.text = @"Отметить выполнение";
+        } else {
+            cell.textLabel.text = @"Поставить геометку";
+        }
+        
+    }
+    
+    self.buttonsCell = cell;
     
 }
 
@@ -434,7 +453,7 @@
                     }
                     break;
                     
-                case 2:
+                case 3:
                     if (self.defectsCount == 0 && self.repairsCount == 0) {
                         [self showNoDefectsAndRepairsSelectedAlert];
                     } else {

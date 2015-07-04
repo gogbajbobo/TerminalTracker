@@ -8,8 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		2C0CDDD41B47BDDF000CA183 /* STTTAgentComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C0CDDD31B47BDDF000CA183 /* STTTAgentComponent.m */; };
-		2C0CDDD71B47BDE0000CA183 /* STTTAgentTaskComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C0CDDD61B47BDE0000CA183 /* STTTAgentTaskComponent.m */; };
 		2C0CDDDA1B47BDE0000CA183 /* STTTAgentTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C0CDDD91B47BDE0000CA183 /* STTTAgentTask.m */; };
+		2C0CDDDD1B47BF06000CA183 /* STAgentTaskComponentService.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C0CDDDC1B47BF06000CA183 /* STAgentTaskComponentService.m */; };
+		2C0CDDE01B47BFE8000CA183 /* STTTAgentTaskComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C0CDDDF1B47BFE8000CA183 /* STTTAgentTaskComponent.m */; };
 		2C42ECA81B05F13400B5C91A /* STTTAgentRepairCode.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C42ECA71B05F13400B5C91A /* STTTAgentRepairCode.m */; };
 		2C93A562177D795E0014001B /* STTTTerminalController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A561177D795E0014001B /* STTTTerminalController.m */; };
 		2C93A565177D79790014001B /* STTTTaskController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A564177D79790014001B /* STTTTaskController.m */; };
@@ -76,10 +77,12 @@
 		2C0CDDC81B47BBDF000CA183 /* STTTDataModel 8.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "STTTDataModel 8.xcdatamodel"; sourceTree = "<group>"; };
 		2C0CDDD21B47BDDF000CA183 /* STTTAgentComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTAgentComponent.h; sourceTree = "<group>"; };
 		2C0CDDD31B47BDDF000CA183 /* STTTAgentComponent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTAgentComponent.m; sourceTree = "<group>"; };
-		2C0CDDD51B47BDE0000CA183 /* STTTAgentTaskComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTAgentTaskComponent.h; sourceTree = "<group>"; };
-		2C0CDDD61B47BDE0000CA183 /* STTTAgentTaskComponent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTAgentTaskComponent.m; sourceTree = "<group>"; };
 		2C0CDDD81B47BDE0000CA183 /* STTTAgentTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTAgentTask.h; sourceTree = "<group>"; };
 		2C0CDDD91B47BDE0000CA183 /* STTTAgentTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTAgentTask.m; sourceTree = "<group>"; };
+		2C0CDDDB1B47BF06000CA183 /* STAgentTaskComponentService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STAgentTaskComponentService.h; sourceTree = "<group>"; };
+		2C0CDDDC1B47BF06000CA183 /* STAgentTaskComponentService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STAgentTaskComponentService.m; sourceTree = "<group>"; };
+		2C0CDDDE1B47BFE8000CA183 /* STTTAgentTaskComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTAgentTaskComponent.h; sourceTree = "<group>"; };
+		2C0CDDDF1B47BFE8000CA183 /* STTTAgentTaskComponent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTAgentTaskComponent.m; sourceTree = "<group>"; };
 		2C42ECA51B05F0F800B5C91A /* STTTDataModel 6.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "STTTDataModel 6.xcdatamodel"; sourceTree = "<group>"; };
 		2C42ECA61B05F13400B5C91A /* STTTAgentRepairCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTAgentRepairCode.h; sourceTree = "<group>"; };
 		2C42ECA71B05F13400B5C91A /* STTTAgentRepairCode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTAgentRepairCode.m; sourceTree = "<group>"; };
@@ -295,6 +298,8 @@
 				A50B027B19EF5C46008612CD /* STAgentTaskRepairCodeService.m */,
 				2CC47BE81AE76872008F5250 /* STAgentTaskDefectCodeService.h */,
 				2CC47BE91AE76872008F5250 /* STAgentTaskDefectCodeService.m */,
+				2C0CDDDB1B47BF06000CA183 /* STAgentTaskComponentService.h */,
+				2C0CDDDC1B47BF06000CA183 /* STAgentTaskComponentService.m */,
 				A54DEE8C19D2501600D7D1C7 /* STTTAgentTask+cellcoloring.h */,
 				A54DEE8D19D2501600D7D1C7 /* STTTAgentTask+cellcoloring.m */,
 				2CE7E4B3179D31B000113A6A /* STTTMainTVC.h */,
@@ -335,8 +340,8 @@
 				A59C60F119C92DDE0028A8F7 /* STTTDataModel2.xcdatamodeld */,
 				2C0CDDD81B47BDE0000CA183 /* STTTAgentTask.h */,
 				2C0CDDD91B47BDE0000CA183 /* STTTAgentTask.m */,
-				2C0CDDD51B47BDE0000CA183 /* STTTAgentTaskComponent.h */,
-				2C0CDDD61B47BDE0000CA183 /* STTTAgentTaskComponent.m */,
+				2C0CDDDE1B47BFE8000CA183 /* STTTAgentTaskComponent.h */,
+				2C0CDDDF1B47BFE8000CA183 /* STTTAgentTaskComponent.m */,
 				2C0CDDD21B47BDDF000CA183 /* STTTAgentComponent.h */,
 				2C0CDDD31B47BDDF000CA183 /* STTTAgentComponent.m */,
 				2CC47BE21AE6910A008F5250 /* STTTAgentDefectCode.h */,
@@ -535,17 +540,18 @@
 				A56429BD18841A2300168724 /* STUtilities.m in Sources */,
 				2CC47BE71AE767EB008F5250 /* STEditTaskDefectCodesTVC.m in Sources */,
 				2C93A5C4178597940014001B /* STTTCommentVC.m in Sources */,
-				2C0CDDD71B47BDE0000CA183 /* STTTAgentTaskComponent.m in Sources */,
 				A54DEE8E19D2501600D7D1C7 /* STTTAgentTask+cellcoloring.m in Sources */,
 				2C0CDDDA1B47BDE0000CA183 /* STTTAgentTask.m in Sources */,
 				A59C60F419C92DDE0028A8F7 /* STTTDataModel2.xcdatamodeld in Sources */,
 				A50B028219EF6E98008612CD /* STTTAgentTaskRepair.m in Sources */,
 				2C93A5C717859F880014001B /* STTTAgentTerminal.m in Sources */,
+				2C0CDDDD1B47BF06000CA183 /* STAgentTaskComponentService.m in Sources */,
 				2CE7E4B5179D31B000113A6A /* STTTMainTVC.m in Sources */,
 				2CC47BEA1AE76872008F5250 /* STAgentTaskDefectCodeService.m in Sources */,
 				2CE7E4BA179D5CE300113A6A /* STTTInfoTVC.m in Sources */,
 				2C0CDDD41B47BDDF000CA183 /* STTTAgentComponent.m in Sources */,
 				2CE7E4C1179D658100113A6A /* STTTTaskTVC.m in Sources */,
+				2C0CDDE01B47BFE8000CA183 /* STTTAgentTaskComponent.m in Sources */,
 				2CE7E4C4179D659700113A6A /* STTTTerminalTVC.m in Sources */,
 				2CE7E51717A93E7100113A6A /* STTTInfoCell.m in Sources */,
 			);

@@ -65,6 +65,7 @@
         <relationship name="visitLocation" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="STTTTaskLocation" inverseName="task" inverseEntity="STTTTaskLocation" syncable="YES"/>
     </entity>
     <entity name="STTTAgentTaskComponent" representedClassName="STTTAgentTaskComponent" syncable="YES">
+        <attribute name="isdeleted" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <relationship name="component" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="STTTAgentComponent" inverseName="taskComponent" inverseEntity="STTTAgentComponent" syncable="YES"/>
         <relationship name="task" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="STTTAgentTask" inverseName="components" inverseEntity="STTTAgentTask" syncable="YES"/>
     </entity>
@@ -110,6 +111,6 @@
         <element name="STTTTaskLocation" positionX="-3422" positionY="-508" width="128" height="58"/>
         <element name="STTTTerminalLocation" positionX="-3438" positionY="-963" width="128" height="58"/>
         <element name="STTTAgentComponent" positionX="-3690" positionY="-774" width="128" height="88"/>
-        <element name="STTTAgentTaskComponent" positionX="-3600" positionY="-646" width="128" height="73"/>
+        <element name="STTTAgentTaskComponent" positionX="-3600" positionY="-646" width="128" height="88"/>
     </elements>
 </model>

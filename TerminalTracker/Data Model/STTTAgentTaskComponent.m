@@ -13,6 +13,7 @@
 
 @implementation STTTAgentTaskComponent
 
+@dynamic isdeleted;
 @dynamic component;
 @dynamic task;
 

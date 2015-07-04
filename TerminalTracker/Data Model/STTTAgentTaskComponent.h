@@ -13,6 +13,7 @@
 
 @interface STTTAgentTaskComponent : NSManagedObject
 
+@property (nonatomic, retain) NSNumber * isdeleted;
 @property (nonatomic, retain) STTTAgentComponent *component;
 @property (nonatomic, retain) STTTAgentTask *task;
 
