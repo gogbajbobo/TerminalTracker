@@ -131,7 +131,7 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
 
-    return 6;
+    return 4;
     
 }
 
@@ -142,18 +142,12 @@
             return 1;
             break;
         case 1:
-            return 1;
+            return 3;
             break;
         case 2:
             return 1;
             break;
         case 3:
-            return 1;
-            break;
-        case 4:
-            return 1;
-            break;
-        case 5:
             return 3;
             break;
             
@@ -168,10 +162,10 @@
     
     NSString *sectionTitle = nil;
     switch (section) {
-        case 4:
+        case 2:
             sectionTitle = @"Комментарии:";
             break;
-        case 5:
+        case 3:
             sectionTitle = @"Терминал:";
             break;
     }
@@ -180,33 +174,44 @@
 }
 
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
     static NSString *cellIdentifier = @"taskCell";
     UITableViewCell *cell = [UITableViewCell alloc];
     
     switch (indexPath.section) {
+            
         case 0:
             cell = [cell initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:cellIdentifier];
             [self addDoBeforeToCell:cell];
             break;
+            
         case 1:
-            cell = [cell initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-            [self addDefectsToCell:cell];
+            switch (indexPath.row) {
+                case 0:
+                    cell = [cell initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+                    [self addDefectsToCell:cell];
+                    break;
+                case 1:
+                    cell = [cell initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+                    [self addRepairsToCell:cell];
+                    break;
+                case 2:
+                    cell = [cell initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+                    [self addButtonsToCell:cell];
+                    break;
+                    
+                default:
+                    break;
+            }
             break;
+            
         case 2:
-            cell = [cell initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-            [self addRepairsToCell:cell];
-            break;
-        case 3:
-            cell = [cell initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-            [self addButtonsToCell:cell];
-            break;
-        case 4:
             cell = [cell initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
             [self addCommentToCell:cell];
             break;
-        case 5:
+            
+        case 3:
             switch (indexPath.row) {
                 case 0:
                     cell = [cell initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
@@ -370,41 +375,20 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     switch (indexPath.section) {
-        case 0:
-            return 44;
-            break;
-        case 1:
-            return 44;
-            break;
-        case 2:
-            return 44;
-            break;
         case 3:
-            return 44;
-            break;
-        case 4:
-            return 44;
-            break;
-        case 5:
             switch (indexPath.row) {
-                case 0:
-                    return 44;
-                    break;
-                case 1:
-                    return 44;
-                    break;
                 case 2:
                     return 160;
                     break;
                     
                 default:
-                    return 0;
+                    return 44;
                     break;
             }
             break;
             
         default:
-            return 0;
+            return 44;
             break;
     }
 }
@@ -417,40 +401,48 @@
             break;
             
         case 1:
-            [self performSegueWithIdentifier:@"editDefectCode" sender:self.task];
+            
+            switch (indexPath.row) {
+                case 0:
+                    [self performSegueWithIdentifier:@"editDefectCode" sender:self.task];
+                    break;
+                    
+                case 1:
+                    if (self.defectsCount > 0) {
+                        [self performSegueWithIdentifier:@"editBreakCode" sender:self.task];
+                    } else {
+                        [self showNoDefectsSelectedAlert];
+                    }
+                    break;
+                    
+                case 2:
+                    if (self.defectsCount == 0 && self.repairsCount == 0) {
+                        [self showNoDefectsAndRepairsSelectedAlert];
+                    } else {
+                        
+                        if (self.defectsCount == 0) {
+                            [self showNoDefectsSelectedAlert];
+                        } else if (self.repairsCount == 0) {
+                            [self showNoRepairsSelectedAlert];
+                        } else {
+                            if (!self.taskCompleted) {
+                                [self buttonsBehaviorInCell:[tableView cellForRowAtIndexPath:indexPath]];
+                            }                    
+                        }
+                        
+                    }
+                    break;
+        
+                default:
+                    break;
+            }
             break;
             
         case 2:
-            if (self.defectsCount > 0) {
-                [self performSegueWithIdentifier:@"editBreakCode" sender:self.task];
-            } else {
-                [self showNoDefectsSelectedAlert];
-            }
-            break;
-            
-        case 3:
-            if (self.defectsCount == 0 && self.repairsCount == 0) {
-                [self showNoDefectsAndRepairsSelectedAlert];
-            } else {
-                
-                if (self.defectsCount == 0) {
-                    [self showNoDefectsSelectedAlert];
-                } else if (self.repairsCount == 0) {
-                    [self showNoRepairsSelectedAlert];
-                } else {
-                    if (!self.taskCompleted) {
-                        [self buttonsBehaviorInCell:[tableView cellForRowAtIndexPath:indexPath]];
-                    }                    
-                }
-                
-            }
-            break;
-            
-        case 4:
             [self performSegueWithIdentifier:@"showComment" sender:self.task];
             break;
             
-        case 5:
+        case 3:
             [self performSegueWithIdentifier:@"goToTerminal" sender:self.task.terminal];
             break;
             
@@ -547,7 +539,7 @@
 
 }
 
-- (void) showNoRepairsSelectedAlert {
+- (void)showNoRepairsSelectedAlert {
     
     NSString *message = [NSString stringWithFormat:@"Необходимо указать ремонты для подтверждения выполнения"];
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Ремонты не выбраны"
