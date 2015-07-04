@@ -18,9 +18,9 @@
 + (NSInteger)getNumberOfSelectedComponentsForTask:(STTTAgentTask *)task {
     
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"isdeleted != YES"];
-    NSSet *defects = [task.components filteredSetUsingPredicate:predicate];
+    NSSet *components = [task.components filteredSetUsingPredicate:predicate];
     
-    return defects.count;
+    return components.count;
 
 }
 
@@ -30,7 +30,10 @@
     
     NSManagedObjectContext* managedObjectContext = [[STSessionManager sharedManager] currentSession].document.managedObjectContext;
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:NSStringFromClass([STTTAgentComponent class])];
-    request.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"shortName" ascending:YES]];
+    
+    NSSortDescriptor *nameDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"shortName" ascending:YES];
+    NSSortDescriptor *idDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"id" ascending:YES];
+    request.sortDescriptors = @[nameDescriptor, idDescriptor];
     
     NSError *error;
     NSArray *fetchResult = [managedObjectContext executeFetchRequest:request error:&error];
@@ -42,7 +45,10 @@
             NSMutableDictionary *componentData = [NSMutableDictionary dictionary];
             componentData[@"shortName"] = (component.shortName == nil) ? @"????" : component.shortName;
             componentData[@"serial"] = (component.serial == nil) ? @"????" : component.serial;
-            componentData[@"defectXid"] = component.xid;
+            componentData[@"componentXid"] = component.xid;
+            
+            componentData[@"isUsed"] = (component.taskComponent.task && component.taskComponent.task != task) ? @YES : @NO;
+            
             NSNumber *isChecked = @NO;
             
             for(STTTAgentTaskComponent *taskComponent in task.components) {
@@ -65,5 +71,67 @@
     return [resultArray copy];
 
 }
+
++ (void)updateComponentsForTask:(STTTAgentTask *)task fromList:(NSArray *)componentsList {
+    
+    STManagedDocument *document = [[STSessionManager sharedManager] currentSession].document;
+    NSManagedObjectContext *context = document.managedObjectContext;
+    
+    for (NSDictionary *componentData in componentsList) {
+        
+        BOOL addNew = YES;
+        
+        BOOL isChecked = [componentData[@"isChecked"] boolValue];
+        NSData *componentXid = componentData[@"componentXid"];
+        
+        for (STTTAgentTaskComponent *taskComponent in task.components) {
+            
+            if(![taskComponent.component.xid isEqualToData:componentXid]) {
+                continue;
+            }
+            
+            addNew = NO;
+            
+            if ([taskComponent.isdeleted boolValue] != !isChecked) {
+                
+                taskComponent.isdeleted = @(!isChecked);
+                task.ts = [NSDate date];
+                
+            }
+            
+            break;
+            
+        }
+        
+        if (addNew && isChecked) {
+            
+            STTTAgentTaskComponent *taskComponent = (STTTAgentTaskComponent *)[NSEntityDescription insertNewObjectForEntityForName:NSStringFromClass([STTTAgentTaskComponent class]) inManagedObjectContext:context];
+            taskComponent.task = task;
+            taskComponent.component = [STAgentTaskComponentService findComponentByXid:componentXid inContext:context];
+            
+        }
+        
+    }
+    
+    if (context.hasChanges) {
+        NSError* error;
+        [context save:&error];
+    }
+
+}
+
++ (STTTAgentComponent *)findComponentByXid:(NSData *)xid inContext:(NSManagedObjectContext *)context {
+    
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:NSStringFromClass([STTTAgentComponent class])];
+    request.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"ts" ascending:YES]];
+    request.predicate = [NSPredicate predicateWithFormat:@"SELF.xid == %@", xid];
+    
+    NSError *error;
+    NSArray *fetchResult = [context executeFetchRequest:request error:&error];
+    
+    return (error) ? nil : [fetchResult lastObject];
+    
+}
+
 
 @end

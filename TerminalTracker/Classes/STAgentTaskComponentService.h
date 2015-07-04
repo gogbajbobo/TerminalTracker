@@ -16,5 +16,7 @@
 
 + (NSArray*)getListOfComponentsForTask:(STTTAgentTask*)task;
 
++ (void)updateComponentsForTask:(STTTAgentTask *)task fromList:(NSArray *)componentsList;
+
 
 @end

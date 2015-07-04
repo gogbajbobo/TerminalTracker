@@ -49,8 +49,28 @@
     cell.textLabel.text = [self.componentsList[indexPath.row] objectForKey:@"shortName"];
     cell.detailTextLabel.text = [self.componentsList[indexPath.row] objectForKey:@"serial"];
     
-    BOOL isChecked = [[self.componentsList[indexPath.row] objectForKey:@"isChecked"] boolValue];
-    cell.accessoryType =  isChecked ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+    BOOL isUsed = [[self.componentsList[indexPath.row] objectForKey:@"isUsed"] boolValue];
+    
+    if (isUsed) {
+        
+        UIColor *isUsedColor = [UIColor lightGrayColor];
+        
+        cell.textLabel.textColor = isUsedColor;
+        cell.detailTextLabel.textColor = isUsedColor;
+        
+        cell.accessoryType = UITableViewCellAccessoryNone;
+        
+    } else {
+
+        UIColor *notUsedColor = [UIColor blackColor];
+        
+        cell.textLabel.textColor = notUsedColor;
+        cell.detailTextLabel.textColor = notUsedColor;
+
+        BOOL isChecked = [[self.componentsList[indexPath.row] objectForKey:@"isChecked"] boolValue];
+        cell.accessoryType = isChecked ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+
+    }
     
     return cell;
     
@@ -58,11 +78,17 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    BOOL isChecked = [self.componentsList[indexPath.row][@"isChecked"] boolValue];
-    self.componentsList[indexPath.row][@"isChecked"] = @(!isChecked);
+    BOOL isUsed = [[self.componentsList[indexPath.row] objectForKey:@"isUsed"] boolValue];
     
-    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-    cell.accessoryType = (!isChecked) ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+    if (!isUsed) {
+        
+        BOOL isChecked = [self.componentsList[indexPath.row][@"isChecked"] boolValue];
+        self.componentsList[indexPath.row][@"isChecked"] = @(!isChecked);
+        
+        UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+        cell.accessoryType = (!isChecked) ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
+        
+    }
     
 }
 
@@ -71,7 +97,7 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
     
-//    [STAgentTaskDefectCodeService updateDefectsForTask:self.task fromList:self.componentsList];
+    [STAgentTaskComponentService updateComponentsForTask:self.task fromList:self.componentsList];
     [super viewWillDisappear:animated];
     
 }

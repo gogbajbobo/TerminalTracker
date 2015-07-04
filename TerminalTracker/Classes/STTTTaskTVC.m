@@ -23,6 +23,7 @@
 
 #import "STEditTaskRepairCodesTVC.h"
 #import "STEditTaskDefectCodesTVC.h"
+#import "STEditTaskComponentsTVC.h"
 
 #import "STAgentTaskRepairCodeService.h"
 #import "STAgentTaskDefectCodeService.h"
@@ -715,6 +716,12 @@
                 [(STEditTaskDefectCodesTVC *)segue.destinationViewController setTask:task];
             }
             
+        } else if ([segue.identifier isEqualToString:@"editComponents"]) {
+            
+            if ([segue.destinationViewController isKindOfClass:[STEditTaskComponentsTVC class]]) {
+                [(STEditTaskComponentsTVC *)segue.destinationViewController setTask:task];
+            }
+
         }
 
     } else if ([sender isKindOfClass:[STTTAgentTerminal class]]) {
