@@ -14,5 +14,7 @@
 
 + (NSInteger)getNumberOfSelectedComponentsForTask:(STTTAgentTask *)task;
 
++ (NSArray*)getListOfComponentsForTask:(STTTAgentTask*)task;
+
 
 @end
