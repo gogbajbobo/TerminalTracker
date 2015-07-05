@@ -47,7 +47,9 @@
             componentData[@"serial"] = (component.serial == nil) ? @"????" : component.serial;
             componentData[@"componentXid"] = component.xid;
             
-            componentData[@"isUsed"] = (component.taskComponent.task && component.taskComponent.task != task) ? @YES : @NO;
+            componentData[@"isUsed"] = (!component.taskComponent.isdeleted.boolValue &&
+                                        component.taskComponent.task &&
+                                        component.taskComponent.task != task) ? @YES : @NO;
             
             NSNumber *isChecked = @NO;
             
