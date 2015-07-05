@@ -11,6 +11,7 @@
 #import "STSession.h"
 #import "STTTAgentTaskComponent.h"
 #import "STTTAgentComponent.h"
+#import "STTTComponentsController.h"
 
 
 @implementation STAgentTaskComponentService
@@ -34,6 +35,9 @@
     NSSortDescriptor *nameDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"shortName" ascending:YES];
     NSSortDescriptor *idDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"id" ascending:YES];
     request.sortDescriptors = @[nameDescriptor, idDescriptor];
+    
+    NSDate *expiredDate = [STTTComponentsController expiredDate];
+    request.predicate = [NSPredicate predicateWithFormat:@"(cts > %@) OR (taskComponent.task == %@)", expiredDate, task];
     
     NSError *error;
     NSArray *fetchResult = [managedObjectContext executeFetchRequest:request error:&error];

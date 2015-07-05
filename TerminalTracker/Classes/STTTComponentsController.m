@@ -53,13 +53,7 @@
         
     } else {
         
-        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-        NSDate *nowDate = [NSDate date];
-        dateFormatter.dateStyle = NSDateFormatterShortStyle;
-        dateFormatter.locale = [NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"];
-        NSDate *today = [dateFormatter dateFromString:[dateFormatter stringFromDate:nowDate]];
-
-        NSDate *expiredDate = [today dateByAddingTimeInterval:3600 * EXPIRED_HOUR];
+        NSDate *expiredDate = [self expiredDate];
         
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"cts <= %@", expiredDate];
         
@@ -71,5 +65,18 @@
     
 }
 
++ (NSDate *)expiredDate {
+    
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    NSDate *nowDate = [NSDate date];
+    dateFormatter.dateStyle = NSDateFormatterShortStyle;
+    dateFormatter.locale = [NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"];
+    NSDate *today = [dateFormatter dateFromString:[dateFormatter stringFromDate:nowDate]];
+    
+    NSDate *expiredDate = [today dateByAddingTimeInterval:3600 * EXPIRED_HOUR];
+
+    return expiredDate;
+    
+}
 
 @end

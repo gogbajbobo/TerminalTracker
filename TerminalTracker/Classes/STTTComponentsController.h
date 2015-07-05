@@ -14,5 +14,6 @@
 
 + (void)checkExpiredComponentsForSession:(id <STSession>)session;
 
++ (NSDate *)expiredDate;
 
 @end
