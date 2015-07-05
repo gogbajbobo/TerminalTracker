@@ -140,6 +140,7 @@
             [syncDataArray addObject:objectDictionary];
             [syncDataArray addObjectsFromArray:[self arrayWithTaskRepaisToSync:(STTTAgentTask*)object]];
             [syncDataArray addObjectsFromArray:[self arrayWithTaskDefectsToSync:(STTTAgentTask*)object]];
+            [syncDataArray addObjectsFromArray:[self arrayWithTaskComponentsToSync:(STTTAgentTask*)object]];
             
         }
         
@@ -210,6 +211,28 @@
     return results;
     
 }
+
+- (NSArray*)arrayWithTaskComponentsToSync:(STTTAgentTask*)task {
+    
+    NSMutableArray *results = [NSMutableArray array];
+    
+    for(STTTAgentTaskComponent *taskComponent in task.components) {
+        
+        NSMutableDictionary *objectDictionary = [@{@"name"  : @"megaport.iAgentTaskComponent",
+                                                   @"xid"   : [self stringWithXid:taskComponent.xid]} mutableCopy];
+        
+        objectDictionary[@"properties"] = @{@"isdeleted": (taskComponent.isdeleted) ? taskComponent.isdeleted : @(NO),
+                                            @"taskxid"  : [self stringWithXid:task.xid],
+                                            @"componentxid": [self stringWithXid:taskComponent.component.xid],
+                                            @"ts"       : [NSString stringWithFormat:@"%@", taskComponent.ts]};
+        
+        [results addObject:objectDictionary];
+        
+    }
+    return results;
+
+}
+
 
 - (NSMutableDictionary *)dictionaryForObject:(NSManagedObject *)object {
     
