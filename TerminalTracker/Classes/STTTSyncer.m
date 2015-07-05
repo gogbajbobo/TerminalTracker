@@ -296,6 +296,8 @@
                             self.newTasksCount = 0;
             
                             [[NSNotificationCenter defaultCenter] postNotificationName:@"syncerRecievedAllData" object:self];
+                            
+                            [self showDataInfo];
 
                         } else {
 
@@ -314,6 +316,8 @@
 
                             NSLog(@"recieved object was stored");
                             [[NSNotificationCenter defaultCenter] postNotificationName:@"syncerRecievedAllData" object:self];
+
+                            [self showDataInfo];
 
                         } else {
                             NSLog(@"no requested object recieved");
@@ -666,6 +670,36 @@
         self.sendDataServerURI = [notification.userInfo valueForKey:key];
         
     }
+    
+}
+
+
+#pragma mark - info methods
+
+- (void)showDataInfo {
+    
+#ifdef DEBUG
+    
+    NSArray *entityNames = @[NSStringFromClass([STTTAgentTask class]),
+                             NSStringFromClass([STTTAgentTerminal class]),
+                             NSStringFromClass([STTTAgentRepairCode class]),
+                             NSStringFromClass([STTTAgentDefectCode class]),
+                             NSStringFromClass([STTTAgentComponent class])];
+
+    for (NSString *entityName in entityNames) {
+        
+        NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:entityName];
+        NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"id" ascending:YES];
+        request.sortDescriptors = @[sortDescriptor];
+        
+        NSUInteger resultCount = [[(STSession *)self.session document].managedObjectContext countForFetchRequest:request error:nil];
+        
+        NSLog(@"%@ — %d", entityName, resultCount);
+        
+    }
+    
+    
+#endif
     
 }
 
