@@ -24,6 +24,8 @@
 #import "STTTAgentComponent.h"
 #import "STTTAgentTaskComponent.h"
 
+#import "STTTComponentsController.h"
+
 
 @interface STTTSyncer()
 
@@ -37,6 +39,14 @@
 @implementation STTTSyncer
 
 @synthesize dataOffset = _dataOffset;
+
+- (void)setSession:(id<STSession>)session {
+    
+    [super setSession:session];
+
+    [STTTComponentsController checkExpiredComponentsForSession:session];
+    
+}
 
 - (NSString *)restServerURI {
     if (!_restServerURI) {

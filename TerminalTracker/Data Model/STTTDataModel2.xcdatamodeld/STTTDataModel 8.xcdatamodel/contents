@@ -40,7 +40,7 @@
     <entity name="STTTAgentComponent" representedClassName="STTTAgentComponent" parentEntity="STComment" syncable="YES">
         <attribute name="serial" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="shortName" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="taskComponent" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="STTTAgentTaskComponent" inverseName="component" inverseEntity="STTTAgentTaskComponent" syncable="YES"/>
+        <relationship name="taskComponent" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="STTTAgentTaskComponent" inverseName="component" inverseEntity="STTTAgentTaskComponent" syncable="YES"/>
     </entity>
     <entity name="STTTAgentDefectCode" representedClassName="STTTAgentDefectCode" parentEntity="STComment" syncable="YES">
         <attribute name="active" optional="YES" attributeType="Boolean" syncable="YES"/>
