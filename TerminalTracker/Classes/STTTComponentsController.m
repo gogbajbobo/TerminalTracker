@@ -41,6 +41,8 @@
     NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"id" ascending:YES];
     request.sortDescriptors = @[sortDescriptor];
     
+    request.predicate = [NSPredicate predicateWithFormat:@"taskComponent == %@", nil];
+    
     NSError *error;
     NSArray *result = [[session document].managedObjectContext executeFetchRequest:request error:&error];
     
