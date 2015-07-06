@@ -337,7 +337,7 @@
         
     } else {
         
-        UIColor *textColor = (self.repairsCount > 0 && self.defectsCount > 0 && self.componentsCount > 0) ? [UIColor blueColor] : [UIColor lightGrayColor];
+        UIColor *textColor = (self.repairsCount > 0 && self.defectsCount > 0) ? [UIColor blueColor] : [UIColor lightGrayColor];
         
         cell.textLabel.textColor = textColor;
         if (self.location) {
@@ -455,32 +455,16 @@
                     break;
                     
                 case 2:
-                    if (self.defectsCount > 0 && self.repairsCount > 0) {
+                    if ([self isDataCompleted]) {
                         [self performSegueWithIdentifier:@"editComponents" sender:self.task];
-                    } else {
-                        [self showNoDefectsAndRepairsSelectedAlert];
                     }
                     break;
                     
                 case 3:
-                    if (self.defectsCount == 0 && self.repairsCount == 0 && self.componentsCount == 0) {
-                        
-                        [self showNoDefectsRepairsAndComponentsSelectedAlert];
-                        
-                    } else {
-                        
-                        if (self.defectsCount == 0) {
-                            [self showNoDefectsSelectedAlert];
-                        } else if (self.repairsCount == 0) {
-                            [self showNoRepairsSelectedAlert];
-                        } else if (self.componentsCount == 0) {
-                            [self showNoComponentsSelectedAlert];
-                        } else {
-                            if (!self.taskCompleted) {
-                                [self buttonsBehaviorInCell:[tableView cellForRowAtIndexPath:indexPath]];
-                            }                    
+                    if ([self isDataCompleted]) {
+                        if (!self.taskCompleted) {
+                            [self buttonsBehaviorInCell:[tableView cellForRowAtIndexPath:indexPath]];
                         }
-                        
                     }
                     break;
         
@@ -501,6 +485,28 @@
             break;
     }
     
+}
+
+- (BOOL)isDataCompleted {
+    
+    if (self.defectsCount > 0 && self.repairsCount > 0) {
+
+        return YES;
+        
+    } else {
+        
+        if (self.defectsCount == 0 && self.repairsCount == 0) {
+            [self showNoDefectsAndRepairsSelectedAlert];
+        } else if (self.defectsCount == 0) {
+            [self showNoDefectsSelectedAlert];
+        } else if (self.repairsCount == 0) {
+            [self showNoRepairsSelectedAlert];
+        }
+        
+        return NO;
+        
+    }
+
 }
 
 - (void)buttonsBehaviorInCell:(UITableViewCell *)cell {
