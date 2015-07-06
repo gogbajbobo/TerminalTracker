@@ -41,7 +41,8 @@
     NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"id" ascending:YES];
     request.sortDescriptors = @[sortDescriptor];
     
-    request.predicate = [NSPredicate predicateWithFormat:@"taskComponent == %@", nil];
+    NSDate *expiredDate = [self expiredDate];
+    request.predicate = [NSPredicate predicateWithFormat:@"taskComponent == %@ && cts <= %@", nil, expiredDate];
     
     NSError *error;
     NSArray *result = [[session document].managedObjectContext executeFetchRequest:request error:&error];
@@ -52,13 +53,7 @@
         return nil;
         
     } else {
-        
-        NSDate *expiredDate = [self expiredDate];
-        
-        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"cts <= %@", expiredDate];
-        
-        result = [result filteredArrayUsingPredicate:predicate];
-        
+                
         return result;
         
     }

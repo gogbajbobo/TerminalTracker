@@ -44,7 +44,7 @@
     
     [super setSession:session];
 
-//    [STTTComponentsController checkExpiredComponentsForSession:session];
+    [STTTComponentsController checkExpiredComponentsForSession:session];
     
 }
 
