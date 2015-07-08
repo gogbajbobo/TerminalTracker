@@ -84,11 +84,13 @@
             
             addNew = NO;
             
-            if ([taskDefect.isdeleted boolValue] != !isChecked) {
+            if (!isChecked) {
                 
                 taskDefect.isdeleted = @(!isChecked);
                 task.ts = [NSDate date];
                 
+            } else {
+                addNew = YES;
             }
             
             break;

@@ -73,25 +73,42 @@
     
     NSManagedObjectContext* managedObjectContext = [[STSessionManager sharedManager] currentSession].document.managedObjectContext;
     
-    for (NSDictionary* repairData in repairsList) {
+    for (NSDictionary *repairData in repairsList) {
+        
         BOOL addNew = YES;
-        for (STTTAgentTaskRepair* taskRepair in task.repairs) {
-            if(![taskRepair.repairCode.xid isEqualToData:[repairData objectForKey:@"repairXid"]]) {
+
+        BOOL isChecked = [repairData[@"isChecked"] boolValue];
+        NSData *repairXid = repairData[@"repairXid"];
+
+        for (STTTAgentTaskRepair *taskRepair in task.repairs) {
+            
+            if(![taskRepair.repairCode.xid isEqualToData:repairXid]) {
                 continue;
             }
+            
             addNew = NO;
-            if ([taskRepair.isdeleted boolValue] != ![[repairData objectForKey:@"isChecked"] boolValue]) {
-                taskRepair.isdeleted = [NSNumber numberWithBool:![[repairData objectForKey:@"isChecked"] boolValue]];
+            
+            if (!isChecked) {
+                
+                taskRepair.isdeleted = @(!isChecked);
                 task.ts = [NSDate date];
+                
+            } else {
+                addNew = YES;
             }
+            
             break;
-        }
-        if(addNew && [[repairData objectForKey:@"isChecked"] boolValue]) {
-            STTTAgentTaskRepair* entity = (STTTAgentTaskRepair *)[NSEntityDescription insertNewObjectForEntityForName:@"STTTAgentTaskRepair" inManagedObjectContext:managedObjectContext];
-            entity.task = task;
-            entity.repairCode = [STAgentTaskRepairCodeService findRepairCodeByXid:[repairData objectForKey:@"repairXid"] inContext:managedObjectContext];
             
         }
+        
+        if(addNew && isChecked) {
+            
+            STTTAgentTaskRepair* entity = (STTTAgentTaskRepair *)[NSEntityDescription insertNewObjectForEntityForName:@"STTTAgentTaskRepair" inManagedObjectContext:managedObjectContext];
+            entity.task = task;
+            entity.repairCode = [STAgentTaskRepairCodeService findRepairCodeByXid:repairXid inContext:managedObjectContext];
+            
+        }
+        
     }
     
     if (managedObjectContext.hasChanges) {
