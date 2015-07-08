@@ -113,10 +113,17 @@
         } else {
             NSString *logMessage = [NSString stringWithFormat:@"unsynced object count %d", fetchResult.count];
             [[(STSession *)self.session logger] saveLogMessageWithText:logMessage type:@""];
+            
             if (fetchResult.count == 0) {
-                [self sendData:nil toServer:self.recieveDataServerURI withParameters:self.requestParameters];
+                
+//                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(30 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [self sendData:nil toServer:self.recieveDataServerURI withParameters:self.requestParameters];
+//                });
+                
             } else {
+                
                 [self sendData:[self JSONFrom:fetchResult] toServer:self.sendDataServerURI withParameters:nil];
+                
             }
             
         }
@@ -507,21 +514,27 @@
 }
 
 - (void)newTaskRepairWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties {
+    
     STTTAgentTaskRepair *repair = (STTTAgentTaskRepair*)[self entityByClass:[STTTAgentTaskRepair class] andXid:xidData];
     repair.isdeleted = @NO;
     repair.repairCode = (STTTAgentRepairCode*)[self entityByClass:[STTTAgentRepairCode class] andXid:[self xidWithString:[properties valueForKey:@"repairxid"]]];
     NSDictionary *taskData = [properties valueForKey:@"taskxid"];
     repair.task = (STTTAgentTask*)[self entityByClass:[STTTAgentTask class] andXid:[self xidWithString:[taskData valueForKey:@"id"]]];
     repair.lts = [NSDate date];
+    
     NSLog(@"get taskRepair.xid %@", repair.xid);
+    
 }
 
 - (void)newRepairCodeWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties {
+    
     STTTAgentRepairCode *repairCode = (STTTAgentRepairCode*)[self entityByClass:[STTTAgentRepairCode class] andXid:xidData];
     repairCode.repairName = [properties valueForKey:@"repair_name"];
     repairCode.active = [NSNumber numberWithBool:[[properties valueForKey:@"active"] boolValue]];
     repairCode.lts = [NSDate date];
+    
     NSLog(@"get repair_code.xid %@", repairCode.xid);
+    
 }
 
 - (void)newTerminalWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties {
@@ -681,6 +694,7 @@
         
         entity = (STComment *)[NSEntityDescription insertNewObjectForEntityForName:NSStringFromClass(entityClass)
                                                             inManagedObjectContext:self.session.document.managedObjectContext];
+        entity.ts = [NSDate date];
         entity.xid = xid;
         
     }
