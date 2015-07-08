@@ -98,11 +98,13 @@
             
             addNew = NO;
             
-            if ([taskComponent.isdeleted boolValue] != !isChecked) {
+            if (!isChecked) {
                 
                 taskComponent.isdeleted = @(!isChecked);
                 task.ts = [NSDate date];
                 
+            } else {
+                addNew = YES;
             }
             
             break;
