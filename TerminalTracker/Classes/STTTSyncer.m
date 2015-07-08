@@ -506,12 +506,20 @@
     } else {
     
         STTTAgentTaskDefect *defect = (STTTAgentTaskDefect*)[self entityByClass:[STTTAgentTaskDefect class] andXid:xidData];
-        defect.defectCode = (STTTAgentDefectCode *)[self entityByClass:[STTTAgentDefectCode class] andXid:[self xidWithString:[properties valueForKey:@"defectxid"]]];
-
-        [self taskRelationshipInitForRelationshipObject:defect andTask:task];
         
-        NSLog(@"get taskDefect.xid %@", defect.xid);
+        if ([defect.isdeleted boolValue]) {
+            
+            NSLog(@"local taskDefect isdeleted, server's data will be ignored for taskDefect %@", xidData);
+            
+        } else {
+            
+            defect.defectCode = (STTTAgentDefectCode *)[self entityByClass:[STTTAgentDefectCode class] andXid:[self xidWithString:[properties valueForKey:@"defectxid"]]];
+            
+            [self taskRelationshipInitForRelationshipObject:defect andTask:task];
+            
+            NSLog(@"get taskDefect.xid %@", defect.xid);
 
+        }
     }
     
 }
@@ -581,11 +589,20 @@
     } else {
 
         STTTAgentTaskRepair *repair = (STTTAgentTaskRepair*)[self entityByClass:[STTTAgentTaskRepair class] andXid:xidData];
-        repair.repairCode = (STTTAgentRepairCode*)[self entityByClass:[STTTAgentRepairCode class] andXid:[self xidWithString:[properties valueForKey:@"repairxid"]]];
-
-        [self taskRelationshipInitForRelationshipObject:repair andTask:task];
         
-        NSLog(@"get taskRepair.xid %@", repair.xid);
+        if ([repair.isdeleted boolValue]) {
+            
+            NSLog(@"local taskRepair isdeleted, server's data will be ignored for taskRepair %@", xidData);
+            
+        } else {
+
+            repair.repairCode = (STTTAgentRepairCode*)[self entityByClass:[STTTAgentRepairCode class] andXid:[self xidWithString:[properties valueForKey:@"repairxid"]]];
+            
+            [self taskRelationshipInitForRelationshipObject:repair andTask:task];
+            
+            NSLog(@"get taskRepair.xid %@", repair.xid);
+
+        }
 
     }
     
