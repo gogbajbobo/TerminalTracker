@@ -96,7 +96,7 @@
                 continue;
             }
             
-            BOOL isdeleted = [taskComponent.isdeleted boolValue];
+            BOOL isdeleted = taskComponent.isdeleted.boolValue;
             
             addNew = addNew && isdeleted && isChecked;
             

@@ -82,7 +82,7 @@
                 continue;
             }
             
-            BOOL isdeleted = [taskDefect.isdeleted boolValue];
+            BOOL isdeleted = taskDefect.isdeleted.boolValue;
             
             addNew = addNew && isdeleted && isChecked;
             
