@@ -119,7 +119,7 @@
 //                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(30 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                     [self sendData:nil toServer:self.recieveDataServerURI withParameters:self.requestParameters];
 //                });
-                
+            
             } else {
                 
                 [self sendData:[self JSONFrom:fetchResult] toServer:self.sendDataServerURI withParameters:nil];
@@ -468,13 +468,26 @@
 
 - (void)newTaskDefectWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties {
     
-    STTTAgentTaskDefect *defect = (STTTAgentTaskDefect*)[self entityByClass:[STTTAgentTaskDefect class] andXid:xidData];
-    defect.isdeleted = @NO;
-    defect.defectCode = (STTTAgentDefectCode *)[self entityByClass:[STTTAgentDefectCode class] andXid:[self xidWithString:[properties valueForKey:@"defectxid"]]];
     NSDictionary *taskData = [properties valueForKey:@"taskxid"];
-    defect.task = (STTTAgentTask *)[self entityByClass:[STTTAgentTask class] andXid:[self xidWithString:[taskData valueForKey:@"id"]]];
-    defect.lts = [NSDate date];
-    NSLog(@"get taskDefect.xid %@", defect.xid);
+
+    STTTAgentTask *task = (STTTAgentTask *)[self entityByClass:[STTTAgentTask class]
+                                                        andXid:[self xidWithString:[taskData valueForKey:@"id"]]];
+    
+    if (task.ts && [task.lts compare:task.ts] == NSOrderedAscending) {
+        
+        NSLog(@"task has local changes and not synced yet, servers data will be ignored for taskDefect %@", xidData);
+        
+    } else {
+    
+        STTTAgentTaskDefect *defect = (STTTAgentTaskDefect*)[self entityByClass:[STTTAgentTaskDefect class] andXid:xidData];
+        defect.isdeleted = @NO;
+        defect.defectCode = (STTTAgentDefectCode *)[self entityByClass:[STTTAgentDefectCode class] andXid:[self xidWithString:[properties valueForKey:@"defectxid"]]];
+        defect.task = task;
+        defect.lts = [NSDate date];
+        
+        NSLog(@"get taskDefect.xid %@", defect.xid);
+
+    }
     
 }
 
@@ -492,14 +505,24 @@
     
     NSDictionary *taskData = [properties valueForKey:@"taskxid"];
 
-    STTTAgentTaskComponent *taskComponent = (STTTAgentTaskComponent *)[self entityByClass:[STTTAgentTaskComponent class] andXid:xidData];
-    taskComponent.isdeleted = @NO;
-    taskComponent.component = (STTTAgentComponent *)[self entityByClass:[STTTAgentComponent class] andXid:[self xidWithString:[properties valueForKey:@"componentxid"]]];
-    taskComponent.task = (STTTAgentTask *)[self entityByClass:[STTTAgentTask class] andXid:[self xidWithString:[taskData valueForKey:@"id"]]];
-    taskComponent.lts = [NSDate date];
+    STTTAgentTask *task = (STTTAgentTask *)[self entityByClass:[STTTAgentTask class]
+                                                        andXid:[self xidWithString:[taskData valueForKey:@"id"]]];
     
-    NSLog(@"get taskComponent.xid %@", taskComponent.xid);
+    if (task.ts && [task.lts compare:task.ts] == NSOrderedAscending) {
+        
+        NSLog(@"task has local changes and not synced yet, servers data will be ignored for taskComponent %@", xidData);
+        
+    } else {
+
+        STTTAgentTaskComponent *taskComponent = (STTTAgentTaskComponent *)[self entityByClass:[STTTAgentTaskComponent class] andXid:xidData];
+        taskComponent.isdeleted = @NO;
+        taskComponent.component = (STTTAgentComponent *)[self entityByClass:[STTTAgentComponent class] andXid:[self xidWithString:[properties valueForKey:@"componentxid"]]];
+        taskComponent.task = task;
+        taskComponent.lts = [NSDate date];
+        
+        NSLog(@"get taskComponent.xid %@", taskComponent.xid);
     
+    }
 }
 
 - (void)newComponentWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties {
@@ -515,14 +538,26 @@
 
 - (void)newTaskRepairWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties {
     
-    STTTAgentTaskRepair *repair = (STTTAgentTaskRepair*)[self entityByClass:[STTTAgentTaskRepair class] andXid:xidData];
-    repair.isdeleted = @NO;
-    repair.repairCode = (STTTAgentRepairCode*)[self entityByClass:[STTTAgentRepairCode class] andXid:[self xidWithString:[properties valueForKey:@"repairxid"]]];
     NSDictionary *taskData = [properties valueForKey:@"taskxid"];
-    repair.task = (STTTAgentTask*)[self entityByClass:[STTTAgentTask class] andXid:[self xidWithString:[taskData valueForKey:@"id"]]];
-    repair.lts = [NSDate date];
     
-    NSLog(@"get taskRepair.xid %@", repair.xid);
+    STTTAgentTask *task = (STTTAgentTask *)[self entityByClass:[STTTAgentTask class]
+                                                        andXid:[self xidWithString:[taskData valueForKey:@"id"]]];
+    
+    if (task.ts && [task.lts compare:task.ts] == NSOrderedAscending) {
+        
+        NSLog(@"task has local changes and not synced yet, servers data will be ignored for taskRepair %@", xidData);
+        
+    } else {
+
+        STTTAgentTaskRepair *repair = (STTTAgentTaskRepair*)[self entityByClass:[STTTAgentTaskRepair class] andXid:xidData];
+        repair.isdeleted = @NO;
+        repair.repairCode = (STTTAgentRepairCode*)[self entityByClass:[STTTAgentRepairCode class] andXid:[self xidWithString:[properties valueForKey:@"repairxid"]]];
+        repair.task = task;
+        repair.lts = [NSDate date];
+        
+        NSLog(@"get taskRepair.xid %@", repair.xid);
+
+    }
     
 }
 
@@ -587,31 +622,39 @@
     
     STTTAgentTask *task = (STTTAgentTask*)[self entityByClass:[STTTAgentTask class] andXid:xidData];
 
-    task.terminalBreakName = [properties valueForKey:@"terminal_break_name"];
-    task.commentText = [properties valueForKey:@"techinfo"];
-    id routePriority = [properties valueForKey:@"route_priority"];
-    task.routePriority = [routePriority respondsToSelector:@selector(integerValue)] ? [NSNumber numberWithInteger:[routePriority integerValue]] : @0;
-    
-    id servstatus = [properties valueForKey:@"servstatus"];
-    task.servstatus = task.recentlyVisited ? [NSNumber numberWithBool:YES] : [NSNumber numberWithBool:[servstatus boolValue]];
-    
-    NSDate *doBeforeDate = [self extractDateFrom:properties forKey:@"do-before"];
-    task.doBefore = doBeforeDate;
-    
-    NSDate *servstatusDate = [self extractDateFrom:properties forKey:@"servstatus_date"];
-    task.servstatusDate = servstatusDate;
-    
-    NSDictionary *terminalData = [properties valueForKey:@"terminal"];
-    NSData *terminalXid = [self dataFromString:[[terminalData valueForKey:@"xid"] stringByReplacingOccurrencesOfString:@"-" withString:@""]];
-    
-    STTTAgentTerminal *terminal = (STTTAgentTerminal*)[self entityByClass:[STTTAgentTerminal class] andXid:terminalXid];
-    task.terminal = terminal;
-    if (task.lts == nil) {
-        self.newTasksCount++;
+    if (task.ts && [task.lts compare:task.ts] == NSOrderedAscending) {
+        
+        NSLog(@"task has local changes and not synced yet, servers data will be ignored for task %@", xidData);
+        
+    } else {
+
+        task.terminalBreakName = [properties valueForKey:@"terminal_break_name"];
+        task.commentText = [properties valueForKey:@"techinfo"];
+        id routePriority = [properties valueForKey:@"route_priority"];
+        task.routePriority = [routePriority respondsToSelector:@selector(integerValue)] ? [NSNumber numberWithInteger:[routePriority integerValue]] : @0;
+        
+        id servstatus = [properties valueForKey:@"servstatus"];
+        task.servstatus = task.recentlyVisited ? [NSNumber numberWithBool:YES] : [NSNumber numberWithBool:[servstatus boolValue]];
+        
+        NSDate *doBeforeDate = [self extractDateFrom:properties forKey:@"do-before"];
+        task.doBefore = doBeforeDate;
+        
+        NSDate *servstatusDate = [self extractDateFrom:properties forKey:@"servstatus_date"];
+        task.servstatusDate = servstatusDate;
+        
+        NSDictionary *terminalData = [properties valueForKey:@"terminal"];
+        NSData *terminalXid = [self dataFromString:[[terminalData valueForKey:@"xid"] stringByReplacingOccurrencesOfString:@"-" withString:@""]];
+        
+        STTTAgentTerminal *terminal = (STTTAgentTerminal*)[self entityByClass:[STTTAgentTerminal class] andXid:terminalXid];
+        task.terminal = terminal;
+        if (task.lts == nil) {
+            self.newTasksCount++;
+        }
+        task.lts = [NSDate date];
+        
+        NSLog(@"get task.xid %@", task.xid);
+
     }
-    task.lts = [NSDate date];
-    
-    NSLog(@"get task.xid %@", task.xid);
 
 }
 
