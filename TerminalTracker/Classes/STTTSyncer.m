@@ -228,10 +228,17 @@
         NSMutableDictionary *objectDictionary = [@{@"name"  : @"megaport.iAgentTaskComponent",
                                                    @"xid"   : [self stringWithXid:taskComponent.xid]} mutableCopy];
         
-        objectDictionary[@"properties"] = @{@"isdeleted": (taskComponent.isdeleted) ? taskComponent.isdeleted : @(NO),
-                                            @"taskxid"  : [self stringWithXid:task.xid],
-                                            @"componentxid": [self stringWithXid:taskComponent.component.xid],
-                                            @"ts"       : [NSString stringWithFormat:@"%@", taskComponent.ts]};
+        NSMutableDictionary *properties = [NSMutableDictionary dictionary];
+        
+        [properties addEntriesFromDictionary:@{@"isdeleted" : (taskComponent.isdeleted) ? taskComponent.isdeleted : @(NO),
+                                               @"taskxid"   : [self stringWithXid:task.xid],
+                                               @"ts"        : [NSString stringWithFormat:@"%@", taskComponent.ts]}];
+        
+        if (taskComponent.component) {
+            [properties addEntriesFromDictionary:@{@"componentxid" : [self stringWithXid:taskComponent.component.xid]}];
+        }
+        
+        objectDictionary[@"properties"] = properties;
         
         [results addObject:objectDictionary];
         
