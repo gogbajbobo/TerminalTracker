@@ -466,24 +466,49 @@
 
 }
 
+- (STTTAgentTask *)taskForReceivingDataWithXid:(NSData *)xid {
+
+    STTTAgentTask *task = (STTTAgentTask *)[self entityByClass:[STTTAgentTask class]
+                                                        andXid:xid];
+    
+    return (task.ts && [task.lts compare:task.ts] == NSOrderedAscending) ? nil : task;
+        
+}
+
+- (void)taskRelationshipInitForRelationshipObject:(NSManagedObject *)object andTask:(STTTAgentTask *)task {
+    
+    [self setValue:@NO forKey:@"isdeleted" forObject:object];
+    [self setValue:task forKey:@"task" forObject:object];
+    [self setValue:[NSDate date] forKey:@"lts" forObject:object];
+    
+}
+
+- (void)setValue:(id)value forKey:(NSString *)key forObject:(NSManagedObject *)object {
+
+    if ([[object.entity propertiesByName] objectForKey:key] != nil) {
+        [object setValue:value forKey:key];
+    } else {
+        NSLog(@"object %@ has no property with name %@", object.entity.name, key);
+    }
+
+}
+
 - (void)newTaskDefectWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties {
     
     NSDictionary *taskData = [properties valueForKey:@"taskxid"];
 
-    STTTAgentTask *task = (STTTAgentTask *)[self entityByClass:[STTTAgentTask class]
-                                                        andXid:[self xidWithString:[taskData valueForKey:@"id"]]];
+    STTTAgentTask *task = [self taskForReceivingDataWithXid:[self xidWithString:[taskData valueForKey:@"id"]]];
     
-    if (task.ts && [task.lts compare:task.ts] == NSOrderedAscending) {
+    if (!task) {
         
-        NSLog(@"task has local changes and not synced yet, servers data will be ignored for taskDefect %@", xidData);
+        NSLog(@"task has local changes and not synced yet, server's data will be ignored for taskDefect %@", xidData);
         
     } else {
     
         STTTAgentTaskDefect *defect = (STTTAgentTaskDefect*)[self entityByClass:[STTTAgentTaskDefect class] andXid:xidData];
-        defect.isdeleted = @NO;
         defect.defectCode = (STTTAgentDefectCode *)[self entityByClass:[STTTAgentDefectCode class] andXid:[self xidWithString:[properties valueForKey:@"defectxid"]]];
-        defect.task = task;
-        defect.lts = [NSDate date];
+
+        [self taskRelationshipInitForRelationshipObject:defect andTask:task];
         
         NSLog(@"get taskDefect.xid %@", defect.xid);
 
@@ -505,20 +530,18 @@
     
     NSDictionary *taskData = [properties valueForKey:@"taskxid"];
 
-    STTTAgentTask *task = (STTTAgentTask *)[self entityByClass:[STTTAgentTask class]
-                                                        andXid:[self xidWithString:[taskData valueForKey:@"id"]]];
+    STTTAgentTask *task = [self taskForReceivingDataWithXid:[self xidWithString:[taskData valueForKey:@"id"]]];
     
-    if (task.ts && [task.lts compare:task.ts] == NSOrderedAscending) {
+    if (!task) {
         
-        NSLog(@"task has local changes and not synced yet, servers data will be ignored for taskComponent %@", xidData);
+        NSLog(@"task has local changes and not synced yet, server's data will be ignored for taskComponent %@", xidData);
         
     } else {
 
         STTTAgentTaskComponent *taskComponent = (STTTAgentTaskComponent *)[self entityByClass:[STTTAgentTaskComponent class] andXid:xidData];
-        taskComponent.isdeleted = @NO;
         taskComponent.component = (STTTAgentComponent *)[self entityByClass:[STTTAgentComponent class] andXid:[self xidWithString:[properties valueForKey:@"componentxid"]]];
-        taskComponent.task = task;
-        taskComponent.lts = [NSDate date];
+
+        [self taskRelationshipInitForRelationshipObject:taskComponent andTask:task];
         
         NSLog(@"get taskComponent.xid %@", taskComponent.xid);
     
@@ -540,20 +563,18 @@
     
     NSDictionary *taskData = [properties valueForKey:@"taskxid"];
     
-    STTTAgentTask *task = (STTTAgentTask *)[self entityByClass:[STTTAgentTask class]
-                                                        andXid:[self xidWithString:[taskData valueForKey:@"id"]]];
+    STTTAgentTask *task = [self taskForReceivingDataWithXid:[self xidWithString:[taskData valueForKey:@"id"]]];
     
-    if (task.ts && [task.lts compare:task.ts] == NSOrderedAscending) {
+    if (!task) {
         
-        NSLog(@"task has local changes and not synced yet, servers data will be ignored for taskRepair %@", xidData);
+        NSLog(@"task has local changes and not synced yet, server's data will be ignored for taskRepair %@", xidData);
         
     } else {
 
         STTTAgentTaskRepair *repair = (STTTAgentTaskRepair*)[self entityByClass:[STTTAgentTaskRepair class] andXid:xidData];
-        repair.isdeleted = @NO;
         repair.repairCode = (STTTAgentRepairCode*)[self entityByClass:[STTTAgentRepairCode class] andXid:[self xidWithString:[properties valueForKey:@"repairxid"]]];
-        repair.task = task;
-        repair.lts = [NSDate date];
+
+        [self taskRelationshipInitForRelationshipObject:repair andTask:task];
         
         NSLog(@"get taskRepair.xid %@", repair.xid);
 
@@ -620,11 +641,11 @@
 
 - (void)newTaskWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties {
     
-    STTTAgentTask *task = (STTTAgentTask*)[self entityByClass:[STTTAgentTask class] andXid:xidData];
-
-    if (task.ts && [task.lts compare:task.ts] == NSOrderedAscending) {
+    STTTAgentTask *task = [self taskForReceivingDataWithXid:xidData];
+    
+    if (!task) {
         
-        NSLog(@"task has local changes and not synced yet, servers data will be ignored for task %@", xidData);
+        NSLog(@"task has local changes and not synced yet, server's data will be ignored for task %@", xidData);
         
     } else {
 
