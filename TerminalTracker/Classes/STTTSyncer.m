@@ -539,12 +539,21 @@
     } else {
 
         STTTAgentTaskComponent *taskComponent = (STTTAgentTaskComponent *)[self entityByClass:[STTTAgentTaskComponent class] andXid:xidData];
-        taskComponent.component = (STTTAgentComponent *)[self entityByClass:[STTTAgentComponent class] andXid:[self xidWithString:[properties valueForKey:@"componentxid"]]];
-
-        [self taskRelationshipInitForRelationshipObject:taskComponent andTask:task];
         
-        NSLog(@"get taskComponent.xid %@", taskComponent.xid);
-    
+        if ([taskComponent.isdeleted boolValue]) {
+            
+            NSLog(@"local taskComponent isdeleted, server's data will be ignored for taskComponent %@", xidData);
+            
+        } else {
+            
+            taskComponent.component = (STTTAgentComponent *)[self entityByClass:[STTTAgentComponent class] andXid:[self xidWithString:[properties valueForKey:@"componentxid"]]];
+            
+            [self taskRelationshipInitForRelationshipObject:taskComponent andTask:task];
+            
+            NSLog(@"get taskComponent.xid %@", taskComponent.xid);
+
+        }
+        
     }
 }
 
