@@ -12,11 +12,19 @@
 #import "STTTAgentTask.h"
 #import "STTTTerminalLocation.h"
 #import "STTTTaskLocation.h"
+
 #import "STTTAgentTask+remainingTime.h"
+
 #import "STTTAgentRepairCode.h"
 #import "STTTAgentTaskRepair.h"
+
 #import "STTTAgentDefectCode.h"
 #import "STTTAgentTaskDefect.h"
+
+#import "STTTAgentComponent.h"
+#import "STTTAgentTaskComponent.h"
+
+#import "STTTComponentsController.h"
 
 
 @interface STTTSyncer()
@@ -31,6 +39,14 @@
 @implementation STTTSyncer
 
 @synthesize dataOffset = _dataOffset;
+
+- (void)setSession:(id<STSession>)session {
+    
+    [super setSession:session];
+
+    [STTTComponentsController checkExpiredComponentsForSession:session];
+    
+}
 
 - (NSString *)restServerURI {
     if (!_restServerURI) {
@@ -97,10 +113,17 @@
         } else {
             NSString *logMessage = [NSString stringWithFormat:@"unsynced object count %d", fetchResult.count];
             [[(STSession *)self.session logger] saveLogMessageWithText:logMessage type:@""];
+            
             if (fetchResult.count == 0) {
-                [self sendData:nil toServer:self.recieveDataServerURI withParameters:self.requestParameters];
+                
+//                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(30 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [self sendData:nil toServer:self.recieveDataServerURI withParameters:self.requestParameters];
+//                });
+            
             } else {
+                
                 [self sendData:[self JSONFrom:fetchResult] toServer:self.sendDataServerURI withParameters:nil];
+                
             }
             
         }
@@ -124,6 +147,7 @@
             [syncDataArray addObject:objectDictionary];
             [syncDataArray addObjectsFromArray:[self arrayWithTaskRepaisToSync:(STTTAgentTask*)object]];
             [syncDataArray addObjectsFromArray:[self arrayWithTaskDefectsToSync:(STTTAgentTask*)object]];
+            [syncDataArray addObjectsFromArray:[self arrayWithTaskComponentsToSync:(STTTAgentTask*)object]];
             
         }
         
@@ -194,6 +218,35 @@
     return results;
     
 }
+
+- (NSArray*)arrayWithTaskComponentsToSync:(STTTAgentTask*)task {
+    
+    NSMutableArray *results = [NSMutableArray array];
+    
+    for(STTTAgentTaskComponent *taskComponent in task.components) {
+        
+        NSMutableDictionary *objectDictionary = [@{@"name"  : @"megaport.iAgentTaskComponent",
+                                                   @"xid"   : [self stringWithXid:taskComponent.xid]} mutableCopy];
+        
+        NSMutableDictionary *properties = [NSMutableDictionary dictionary];
+        
+        [properties addEntriesFromDictionary:@{@"isdeleted" : (taskComponent.isdeleted) ? taskComponent.isdeleted : @(NO),
+                                               @"taskxid"   : [self stringWithXid:task.xid],
+                                               @"ts"        : [NSString stringWithFormat:@"%@", taskComponent.ts]}];
+        
+        if (taskComponent.component) {
+            [properties addEntriesFromDictionary:@{@"componentxid" : [self stringWithXid:taskComponent.component.xid]}];
+        }
+        
+        objectDictionary[@"properties"] = properties;
+        
+        [results addObject:objectDictionary];
+        
+    }
+    return results;
+
+}
+
 
 - (NSMutableDictionary *)dictionaryForObject:(NSManagedObject *)object {
     
@@ -290,6 +343,8 @@
                             self.newTasksCount = 0;
             
                             [[NSNotificationCenter defaultCenter] postNotificationName:@"syncerRecievedAllData" object:self];
+                            
+                            [self showDataInfo];
 
                         } else {
 
@@ -308,6 +363,8 @@
 
                             NSLog(@"recieved object was stored");
                             [[NSNotificationCenter defaultCenter] postNotificationName:@"syncerRecievedAllData" object:self];
+
+                            [self showDataInfo];
 
                         } else {
                             NSLog(@"no requested object recieved");
@@ -402,21 +459,75 @@
         
         [self newTaskDefectWithXid:xidData andProperties:properties];
         
+    } else if ([name isEqualToString:@"megaport.iAgentComponent"]) {
+        
+        [self newComponentWithXid:xidData andProperties:properties];
+        
+    } else if ([name isEqualToString:@"megaport.iAgentTaskComponent"]) {
+        
+        [self newTaskComponentWithXid:xidData andProperties:properties];
+
     } else {
         NSLog(@"object %@", object);
     }
 
 }
 
+- (STTTAgentTask *)taskForReceivingDataWithXid:(NSData *)xid {
+
+    STTTAgentTask *task = (STTTAgentTask *)[self entityByClass:[STTTAgentTask class]
+                                                        andXid:xid];
+    
+    return (task.ts && [task.lts compare:task.ts] == NSOrderedAscending) ? nil : task;
+        
+}
+
+- (void)taskRelationshipInitForRelationshipObject:(NSManagedObject *)object andTask:(STTTAgentTask *)task {
+    
+    [self setValue:@NO forKey:@"isdeleted" forObject:object];
+    [self setValue:task forKey:@"task" forObject:object];
+    [self setValue:[NSDate date] forKey:@"lts" forObject:object];
+    
+}
+
+- (void)setValue:(id)value forKey:(NSString *)key forObject:(NSManagedObject *)object {
+
+    if ([[object.entity propertiesByName] objectForKey:key] != nil) {
+        [object setValue:value forKey:key];
+    } else {
+        NSLog(@"object %@ has no property with name %@", object.entity.name, key);
+    }
+
+}
+
 - (void)newTaskDefectWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties {
     
-    STTTAgentTaskDefect *defect = (STTTAgentTaskDefect*)[self entityByClass:[STTTAgentTaskDefect class] andXid:xidData];
-    defect.isdeleted = @NO;
-    defect.defectCode = (STTTAgentDefectCode *)[self entityByClass:[STTTAgentDefectCode class] andXid:[self xidWithString:[properties valueForKey:@"defectxid"]]];
     NSDictionary *taskData = [properties valueForKey:@"taskxid"];
-    defect.task = (STTTAgentTask *)[self entityByClass:[STTTAgentTask class] andXid:[self xidWithString:[taskData valueForKey:@"id"]]];
-    defect.lts = [NSDate date];
-    NSLog(@"get taskDefect.xid %@", defect.xid);
+
+    STTTAgentTask *task = [self taskForReceivingDataWithXid:[self xidWithString:[taskData valueForKey:@"id"]]];
+    
+    if (!task) {
+        
+        NSLog(@"task has local changes and not synced yet, server's data will be ignored for taskDefect %@", xidData);
+        
+    } else {
+    
+        STTTAgentTaskDefect *defect = (STTTAgentTaskDefect*)[self entityByClass:[STTTAgentTaskDefect class] andXid:xidData];
+        
+        if ([defect.isdeleted boolValue]) {
+            
+            NSLog(@"local taskDefect isdeleted, server's data will be ignored for taskDefect %@", xidData);
+            
+        } else {
+            
+            defect.defectCode = (STTTAgentDefectCode *)[self entityByClass:[STTTAgentDefectCode class] andXid:[self xidWithString:[properties valueForKey:@"defectxid"]]];
+            
+            [self taskRelationshipInitForRelationshipObject:defect andTask:task];
+            
+            NSLog(@"get taskDefect.xid %@", defect.xid);
+
+        }
+    }
     
 }
 
@@ -430,22 +541,89 @@
 
 }
 
-- (void)newTaskRepairWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties {
-    STTTAgentTaskRepair *repair = (STTTAgentTaskRepair*)[self entityByClass:[STTTAgentTaskRepair class] andXid:xidData];
-    repair.isdeleted = @NO;
-    repair.repairCode = (STTTAgentRepairCode*)[self entityByClass:[STTTAgentRepairCode class] andXid:[self xidWithString:[properties valueForKey:@"repairxid"]]];
+- (void)newTaskComponentWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties {
+    
     NSDictionary *taskData = [properties valueForKey:@"taskxid"];
-    repair.task = (STTTAgentTask*)[self entityByClass:[STTTAgentTask class] andXid:[self xidWithString:[taskData valueForKey:@"id"]]];
-    repair.lts = [NSDate date];
-    NSLog(@"get taskRepair.xid %@", repair.xid);
+
+    STTTAgentTask *task = [self taskForReceivingDataWithXid:[self xidWithString:[taskData valueForKey:@"id"]]];
+    
+    if (!task) {
+        
+        NSLog(@"task has local changes and not synced yet, server's data will be ignored for taskComponent %@", xidData);
+        
+    } else {
+
+        STTTAgentTaskComponent *taskComponent = (STTTAgentTaskComponent *)[self entityByClass:[STTTAgentTaskComponent class] andXid:xidData];
+        
+        if ([taskComponent.isdeleted boolValue]) {
+            
+            NSLog(@"local taskComponent isdeleted, server's data will be ignored for taskComponent %@", xidData);
+            
+        } else {
+            
+            taskComponent.component = (STTTAgentComponent *)[self entityByClass:[STTTAgentComponent class] andXid:[self xidWithString:[properties valueForKey:@"componentxid"]]];
+            
+            [self taskRelationshipInitForRelationshipObject:taskComponent andTask:task];
+            
+            NSLog(@"get taskComponent.xid %@", taskComponent.xid);
+
+        }
+        
+    }
+}
+
+- (void)newComponentWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties {
+    
+    STTTAgentComponent *component = (STTTAgentComponent *)[self entityByClass:[STTTAgentComponent class] andXid:xidData];
+    component.shortName = [properties valueForKey:@"short_name"];
+    component.serial = [properties valueForKey:@"serial"];
+    component.lts = [NSDate date];
+    
+    NSLog(@"get component.xid %@", component.xid);
+
+}
+
+- (void)newTaskRepairWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties {
+    
+    NSDictionary *taskData = [properties valueForKey:@"taskxid"];
+    
+    STTTAgentTask *task = [self taskForReceivingDataWithXid:[self xidWithString:[taskData valueForKey:@"id"]]];
+    
+    if (!task) {
+        
+        NSLog(@"task has local changes and not synced yet, server's data will be ignored for taskRepair %@", xidData);
+        
+    } else {
+
+        STTTAgentTaskRepair *repair = (STTTAgentTaskRepair*)[self entityByClass:[STTTAgentTaskRepair class] andXid:xidData];
+        
+        if ([repair.isdeleted boolValue]) {
+            
+            NSLog(@"local taskRepair isdeleted, server's data will be ignored for taskRepair %@", xidData);
+            
+        } else {
+
+            repair.repairCode = (STTTAgentRepairCode*)[self entityByClass:[STTTAgentRepairCode class] andXid:[self xidWithString:[properties valueForKey:@"repairxid"]]];
+            
+            [self taskRelationshipInitForRelationshipObject:repair andTask:task];
+            
+            NSLog(@"get taskRepair.xid %@", repair.xid);
+
+        }
+
+    }
+    
 }
 
 - (void)newRepairCodeWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties {
+    
     STTTAgentRepairCode *repairCode = (STTTAgentRepairCode*)[self entityByClass:[STTTAgentRepairCode class] andXid:xidData];
     repairCode.repairName = [properties valueForKey:@"repair_name"];
     repairCode.active = [NSNumber numberWithBool:[[properties valueForKey:@"active"] boolValue]];
     repairCode.lts = [NSDate date];
+    
     NSLog(@"get repair_code.xid %@", repairCode.xid);
+    
 }
 
 - (void)newTerminalWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties {
@@ -496,33 +674,41 @@
 
 - (void)newTaskWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties {
     
-    STTTAgentTask *task = (STTTAgentTask*)[self entityByClass:[STTTAgentTask class] andXid:xidData];
+    STTTAgentTask *task = [self taskForReceivingDataWithXid:xidData];
+    
+    if (!task) {
+        
+        NSLog(@"task has local changes and not synced yet, server's data will be ignored for task %@", xidData);
+        
+    } else {
 
-    task.terminalBreakName = [properties valueForKey:@"terminal_break_name"];
-    task.commentText = [properties valueForKey:@"techinfo"];
-    id routePriority = [properties valueForKey:@"route_priority"];
-    task.routePriority = [routePriority respondsToSelector:@selector(integerValue)] ? [NSNumber numberWithInteger:[routePriority integerValue]] : @0;
-    
-    id servstatus = [properties valueForKey:@"servstatus"];
-    task.servstatus = task.recentlyVisited ? [NSNumber numberWithBool:YES] : [NSNumber numberWithBool:[servstatus boolValue]];
-    
-    NSDate *doBeforeDate = [self extractDateFrom:properties forKey:@"do-before"];
-    task.doBefore = doBeforeDate;
-    
-    NSDate *servstatusDate = [self extractDateFrom:properties forKey:@"servstatus_date"];
-    task.servstatusDate = servstatusDate;
-    
-    NSDictionary *terminalData = [properties valueForKey:@"terminal"];
-    NSData *terminalXid = [self dataFromString:[[terminalData valueForKey:@"xid"] stringByReplacingOccurrencesOfString:@"-" withString:@""]];
-    
-    STTTAgentTerminal *terminal = (STTTAgentTerminal*)[self entityByClass:[STTTAgentTerminal class] andXid:terminalXid];
-    task.terminal = terminal;
-    if (task.lts == nil) {
-        self.newTasksCount++;
+        task.terminalBreakName = [properties valueForKey:@"terminal_break_name"];
+        task.commentText = [properties valueForKey:@"techinfo"];
+        id routePriority = [properties valueForKey:@"route_priority"];
+        task.routePriority = [routePriority respondsToSelector:@selector(integerValue)] ? [NSNumber numberWithInteger:[routePriority integerValue]] : @0;
+        
+        id servstatus = [properties valueForKey:@"servstatus"];
+        task.servstatus = task.recentlyVisited ? [NSNumber numberWithBool:YES] : [NSNumber numberWithBool:[servstatus boolValue]];
+        
+        NSDate *doBeforeDate = [self extractDateFrom:properties forKey:@"do-before"];
+        task.doBefore = doBeforeDate;
+        
+        NSDate *servstatusDate = [self extractDateFrom:properties forKey:@"servstatus_date"];
+        task.servstatusDate = servstatusDate;
+        
+        NSDictionary *terminalData = [properties valueForKey:@"terminal"];
+        NSData *terminalXid = [self dataFromString:[[terminalData valueForKey:@"xid"] stringByReplacingOccurrencesOfString:@"-" withString:@""]];
+        
+        STTTAgentTerminal *terminal = (STTTAgentTerminal*)[self entityByClass:[STTTAgentTerminal class] andXid:terminalXid];
+        task.terminal = terminal;
+        if (task.lts == nil) {
+            self.newTasksCount++;
+        }
+        task.lts = [NSDate date];
+        
+        NSLog(@"get task.xid %@", task.xid);
+
     }
-    task.lts = [NSDate date];
-    
-    NSLog(@"get task.xid %@", task.xid);
 
 }
 
@@ -587,22 +773,30 @@
 }
 
 - (STComment*)entityByClass:(Class)entityClass andXid:(NSData *)xid {
+    
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:NSStringFromClass(entityClass)];
     request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"ts" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
     request.predicate = [NSPredicate predicateWithFormat:@"SELF.xid == %@", xid];
+    
     NSError *error;
     NSArray *fetchResult = [self.session.document.managedObjectContext executeFetchRequest:request error:&error];
     
     STComment *entity;
     
     if ([fetchResult lastObject]) {
+        
         entity = [fetchResult lastObject];
+        
     } else {
-        entity = (STComment *)[NSEntityDescription insertNewObjectForEntityForName:NSStringFromClass(entityClass) inManagedObjectContext:self.session.document.managedObjectContext];
+        
+        entity = (STComment *)[NSEntityDescription insertNewObjectForEntityForName:NSStringFromClass(entityClass)
+                                                            inManagedObjectContext:self.session.document.managedObjectContext];
+        entity.ts = [NSDate date];
         entity.xid = xid;
+        
     }
-    
     return entity;
+    
 }
 
 - (void)syncerSettingsChanged:(NSNotification *)notification {
@@ -620,6 +814,36 @@
         self.sendDataServerURI = [notification.userInfo valueForKey:key];
         
     }
+    
+}
+
+
+#pragma mark - info methods
+
+- (void)showDataInfo {
+    
+#ifdef DEBUG
+    
+    NSArray *entityNames = @[NSStringFromClass([STTTAgentTask class]),
+                             NSStringFromClass([STTTAgentTerminal class]),
+                             NSStringFromClass([STTTAgentRepairCode class]),
+                             NSStringFromClass([STTTAgentDefectCode class]),
+                             NSStringFromClass([STTTAgentComponent class])];
+
+    for (NSString *entityName in entityNames) {
+        
+        NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:entityName];
+        NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"id" ascending:YES];
+        request.sortDescriptors = @[sortDescriptor];
+        
+        NSUInteger resultCount = [[(STSession *)self.session document].managedObjectContext countForFetchRequest:request error:nil];
+        
+        NSLog(@"%@ — %d", entityName, resultCount);
+        
+    }
+    
+    
+#endif
     
 }
 

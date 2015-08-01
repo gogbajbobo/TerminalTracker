@@ -18,6 +18,9 @@
 #import "STTTAgentTaskRepair.h"
 #import "STTTAgentDefectCode.h"
 #import "STTTAgentTaskDefect.h"
+#import "STTTAgentComponent.h"
+#import "STTTAgentTaskComponent.h"
+
 
 @interface STTTMainTVC () <UIAlertViewDelegate>
 
@@ -478,11 +481,18 @@
 - (void)clearDatabase {
     
     [self removeObjectWithName:NSStringFromClass([STTTAgentTask class])];
+    
     [self removeObjectWithName:NSStringFromClass([STTTAgentTerminal class])];
+    
     [self removeObjectWithName:NSStringFromClass([STTTAgentRepairCode class])];
     [self removeObjectWithName:NSStringFromClass([STTTAgentTaskRepair class])];
+    
     [self removeObjectWithName:NSStringFromClass([STTTAgentDefectCode class])];
     [self removeObjectWithName:NSStringFromClass([STTTAgentTaskDefect class])];
+
+    [self removeObjectWithName:NSStringFromClass([STTTAgentComponent class])];
+    [self removeObjectWithName:NSStringFromClass([STTTAgentTaskComponent class])];
+
     [self removeObjectWithName:NSStringFromClass([STLogMessage class])];
 
     [(STTTSyncer *)self.session.syncer setDataOffset:nil];
