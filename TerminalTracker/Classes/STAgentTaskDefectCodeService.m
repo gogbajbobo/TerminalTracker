@@ -82,16 +82,16 @@
                 continue;
             }
             
-            addNew = NO;
+            BOOL isdeleted = taskDefect.isdeleted.boolValue;
             
-            if ([taskDefect.isdeleted boolValue] != !isChecked) {
+            addNew = addNew && isdeleted && isChecked;
+            
+            if (!(isChecked || isdeleted)) {
                 
-                taskDefect.isdeleted = @(!isChecked);
+                taskDefect.isdeleted = @(YES);
                 task.ts = [NSDate date];
                 
             }
-            
-            break;
             
         }
         
