@@ -27,11 +27,14 @@
 #import "STTTComponentsController.h"
 
 
-@interface STTTSyncer()
+@interface STTTSyncer() <NSFetchedResultsControllerDelegate>
 
 @property (nonatomic, strong) NSString *recieveDataServerURI;
 @property (nonatomic, strong) NSString *sendDataServerURI;
 @property (nonatomic) NSUInteger newTasksCount;
+
+@property (nonatomic, strong) NSFetchedResultsController *resultsController;
+
 
 @end
 
@@ -92,6 +95,40 @@
     return requestParameters;
 }
 
+
+#pragma mark - NSFetchedResultsController
+
+- (NSFetchedResultsController *)resultsController {
+    
+    if (!_resultsController) {
+        
+        if ([(STSession *)self.session document].managedObjectContext) {
+            
+            NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:NSStringFromClass([STTTAgentTask class])];
+            request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"sqts" ascending:YES selector:@selector(compare:)]];
+            [request setIncludesSubentities:YES];
+            request.predicate = [NSPredicate predicateWithFormat:@"SELF.lts == %@ || SELF.ts > SELF.lts", nil];
+            request.fetchLimit = self.fetchLimit;
+            
+            _resultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request
+                                                                     managedObjectContext:[(STSession *)self.session document].managedObjectContext
+                                                                       sectionNameKeyPath:nil
+                                                                                cacheName:nil];
+            _resultsController.delegate = self;
+
+        }
+
+    }
+    return _resultsController;
+    
+}
+
+- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"numberOfNonsyncedTasksChanged" object:self];
+    
+}
+
 - (void)syncData {
     
     if (!self.syncing) {
@@ -99,36 +136,29 @@
         self.syncing = YES;
         self.newTasksCount = 0;
         
-        NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:NSStringFromClass([STTTAgentTask class])];
-        request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"sqts" ascending:YES selector:@selector(compare:)]];
-        [request setIncludesSubentities:YES];
-        request.predicate = [NSPredicate predicateWithFormat:@"SELF.lts == %@ || SELF.ts > SELF.lts", nil];
-        request.fetchLimit = self.fetchLimit;
+        NSArray *nonsyncedTasks = [self nonsyncedTasks];
         
-        NSError *error;
-        NSArray *fetchResult = [[(STSession *)self.session document].managedObjectContext executeFetchRequest:request error:&error];
+        NSString *logMessage = [NSString stringWithFormat:@"unsynced object count %d", nonsyncedTasks.count];
+        [[(STSession *)self.session logger] saveLogMessageWithText:logMessage type:@""];
         
-        if (error) {
-            NSLog(@"syncer executeFetchRequest error: %@", error);
-        } else {
-            NSString *logMessage = [NSString stringWithFormat:@"unsynced object count %d", fetchResult.count];
-            [[(STSession *)self.session logger] saveLogMessageWithText:logMessage type:@""];
+        if (nonsyncedTasks.count == 0) {
             
-            if (fetchResult.count == 0) {
-                
 //                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(30 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    [self sendData:nil toServer:self.recieveDataServerURI withParameters:self.requestParameters];
+                [self sendData:nil toServer:self.recieveDataServerURI withParameters:self.requestParameters];
 //                });
-            
-            } else {
-                
-                [self sendData:[self JSONFrom:fetchResult] toServer:self.sendDataServerURI withParameters:nil];
-                
-            }
-            
+        
+        } else {
+            [self sendData:[self JSONFrom:nonsyncedTasks] toServer:self.sendDataServerURI withParameters:nil];
         }
+
     }
         
+}
+
+- (NSArray *)nonsyncedTasks {
+    
+    return self.resultsController.fetchedObjects;
+
 }
 
 - (NSData *)JSONFrom:(NSArray *)dataForSyncing {

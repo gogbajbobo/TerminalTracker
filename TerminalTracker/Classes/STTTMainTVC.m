@@ -37,6 +37,8 @@
     return [[STSessionManager sharedManager] currentSession];
 }
 
+
+
 - (void)viewInit {
     
     [self addLogButton];
@@ -82,9 +84,26 @@
     } else {
         
         [[self.refreshCell.contentView viewWithTag:1] removeFromSuperview];
-        self.deleteCell.textLabel.textColor = [UIColor blackColor];
+        
+        [self refreshDeleteCell];
         
     }
+}
+
+- (void)numberOfNonsyncedTasksChanged {
+    [self refreshDeleteCell];
+}
+
+- (void)refreshDeleteCell {
+
+    if (self.deleteCell) {
+        
+        NSIndexPath *indexPath = [self.tableView indexPathForCell:self.deleteCell];
+        
+        if (indexPath) [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+        
+    }
+
 }
 
 - (void)sessionStatusChanged:(NSNotification *)notification {
@@ -114,17 +133,40 @@
 }
 
 - (void)addObservers {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(currentLocationUpdated:) name:@"currentLocationUpdated" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(taskControllerDidChangeContent:) name:@"taskControllerDidChangeContent" object:self.taskController];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(terminalControllerDidChangeContent:) name:@"terminalControllerDidChangeContent" object:self.terminalController];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(syncStatusChanged:) name:@"syncStatusChanged" object:self.session.syncer];
+
+    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+    
+    [nc addObserver:self
+           selector:@selector(currentLocationUpdated:)
+               name:@"currentLocationUpdated"
+             object:nil];
+    
+    [nc addObserver:self
+           selector:@selector(taskControllerDidChangeContent:)
+               name:@"taskControllerDidChangeContent"
+             object:self.taskController];
+    
+    [nc addObserver:self
+           selector:@selector(terminalControllerDidChangeContent:)
+               name:@"terminalControllerDidChangeContent"
+             object:self.terminalController];
+    
+    [nc addObserver:self
+           selector:@selector(syncStatusChanged:)
+               name:@"syncStatusChanged"
+             object:self.session.syncer];
+
+    [nc addObserver:self
+           selector:@selector(numberOfNonsyncedTasksChanged)
+               name:@"numberOfNonsyncedTasksChanged"
+             object:self.session.syncer];
+
 }
 
 - (void)removeObservers {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"currentLocationUpdated" object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"taskControllerDidChangeContent" object:self.taskController];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"terminalControllerDidChangeContent" object:self.terminalController];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"syncStatusChanged" object:self.session.syncer];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
 }
 
 - (void)navBarDoubleTap {
@@ -289,8 +331,30 @@
 }
 
 - (void)configureDeleteCell:(STTTInfoCell *)cell {
-    
+
     cell.textLabel.text = @"Очистить базу данных";
+    cell.detailTextLabel.text = nil;
+
+    UIColor *textColor;
+    
+    NSInteger nonsyncedTasksCount = [(STTTSyncer *)self.session.syncer nonsyncedTasks].count;
+    
+    if (nonsyncedTasksCount == 0) {
+        
+        textColor = [UIColor blackColor];
+        cell.selectionStyle = UITableViewCellSelectionStyleDefault;
+        
+    } else {
+
+        textColor = [UIColor lightGrayColor];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        
+        cell.detailTextLabel.text = @"Есть неотправленные данные";
+
+    }
+
+    cell.textLabel.textColor = textColor;
+    cell.detailTextLabel.textColor = textColor;
     
 }
 
@@ -442,7 +506,7 @@
             
         } else if (indexPath.row == 1) {
             
-            if (!self.session.syncer.syncing) {
+            if (!self.session.syncer.syncing && [(STTTSyncer *)self.session.syncer nonsyncedTasks].count == 0) {
                 
                 [self showDeleteAlert];
                 
