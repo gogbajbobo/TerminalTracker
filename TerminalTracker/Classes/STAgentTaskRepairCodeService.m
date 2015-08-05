@@ -71,7 +71,8 @@
 
 + (void)updateRepairsForTask:(STTTAgentTask *)task fromList:(NSArray *)repairsList {
     
-    NSManagedObjectContext* managedObjectContext = [[STSessionManager sharedManager] currentSession].document.managedObjectContext;
+    STManagedDocument *document = [[STSessionManager sharedManager] currentSession].document;
+    NSManagedObjectContext* managedObjectContext = document.managedObjectContext;
     
     for (NSDictionary *repairData in repairsList) {
         
@@ -105,14 +106,21 @@
             entity.task = task;
             entity.repairCode = [STAgentTaskRepairCodeService findRepairCodeByXid:repairXid inContext:managedObjectContext];
             
+            task.ts = [NSDate date];
+
         }
         
     }
     
-    if (managedObjectContext.hasChanges) {
-        NSError* error;
-        [managedObjectContext save:&error];
-    }
+    [document saveDocument:^(BOOL success) {
+        
+    }];
+    
+//    if (managedObjectContext.hasChanges) {
+//        NSError* error;
+//        [managedObjectContext save:&error];
+//    }
+
 }
 
 @end
