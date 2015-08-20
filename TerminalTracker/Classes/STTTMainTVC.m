@@ -31,6 +31,9 @@
 @property (nonatomic, strong) STTTInfoCell *deleteCell;
 @property (nonatomic, strong) STTTInfoCell *refreshCell;
 
+@property (nonatomic) BOOL haveToClearDatabase;
+@property (nonatomic, strong) UIView *spinnerView;
+
 
 @end
 
@@ -40,7 +43,26 @@
     return [[STSessionManager sharedManager] currentSession];
 }
 
+- (UIView *)spinnerView {
+    
+    if (!_spinnerView) {
+        
+        UIView *view = [[UIView alloc] initWithFrame:self.view.frame];
+        view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        view.backgroundColor = [UIColor grayColor];
+        view.alpha = 0.75;
+        UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+        spinner.center = view.center;
+        spinner.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
+        [spinner startAnimating];
+        [view addSubview:spinner];
+        
+        _spinnerView = view;
 
+    }
+    return _spinnerView;
+    
+}
 
 - (void)viewInit {
     
@@ -88,7 +110,8 @@
         NSDate *currentDateZeroHour = [dateFormatter dateFromString:[dateFormatter stringFromDate:currentDate]];
         NSDate *clearDatabaseTime = [NSDate dateWithTimeInterval:seconds sinceDate:currentDateZeroHour];
 
-        if ([clearDatabaseTime compare:lastClearDatabaseTimestamp] == NSOrderedDescending) {
+#warning - don't forget to change back to NSOrderedDescending
+        if ([clearDatabaseTime compare:lastClearDatabaseTimestamp] == NSOrderedAscending) {
             [self prepareForClearDatabase];
         }
         
@@ -97,11 +120,25 @@
 }
 
 - (void)prepareForClearDatabase {
-    
-    // have to check unsynced tasks
-    // clear database
-    NSLog(@"prepareForClearDatabase");
-    
+
+    if (!self.session.syncer.syncing) {
+        
+        if ([(STTTSyncer *)self.session.syncer nonsyncedTasks].count == 0) {
+            
+            [self clearDatabase];
+            [self.session.syncer syncData];
+            
+        } else {
+            
+            self.haveToClearDatabase = YES;
+            [self.session.syncer syncData];
+            
+        }
+        
+    } else {
+        self.haveToClearDatabase = YES;
+    }
+
 }
 
 - (void)addLogButton {
@@ -118,6 +155,7 @@
 }
 
 - (void)syncStatusChanged:(NSNotification *)notification {
+    
     if (self.session.syncer.syncing) {
         
         UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
@@ -140,7 +178,15 @@
         
         [self refreshDeleteCell];
         
+        if (self.haveToClearDatabase) {
+            
+            self.haveToClearDatabase = NO;
+            [self prepareForClearDatabase];
+            
+        }
+        
     }
+    
 }
 
 - (void)numberOfNonsyncedTasksChanged {
@@ -604,6 +650,8 @@
 
 - (void)clearDatabase {
     
+    [self.view addSubview:self.spinnerView];
+    
     [self removeObjectWithName:NSStringFromClass([STTTAgentTask class])];
     
     [self removeObjectWithName:NSStringFromClass([STTTAgentTerminal class])];
@@ -625,6 +673,8 @@
     NSDate *currentDate = [NSDate date];
     [defaults setObject:currentDate forKey:CLEAR_DB_TIMESTAMP];
     [defaults synchronize];
+    
+    [self.spinnerView removeFromSuperview];
     
 }
 
