@@ -132,6 +132,7 @@
         if (nonsyncedTasksCount == 0) {
             
             [self clearDatabase];
+            self.haveToClearDatabase = NO;
             [self.session.syncer syncData];
             
         } else {
@@ -703,8 +704,6 @@
     [defaults setObject:currentDate forKey:CLEAR_DB_TIMESTAMP];
     [defaults synchronize];
     
-    self.haveToClearDatabase = NO;
-
     [self.spinnerView removeFromSuperview];
     
 }
