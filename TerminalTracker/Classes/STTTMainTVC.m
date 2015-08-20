@@ -110,8 +110,9 @@
         NSDate *currentDateZeroHour = [dateFormatter dateFromString:[dateFormatter stringFromDate:currentDate]];
         NSDate *clearDatabaseTime = [NSDate dateWithTimeInterval:seconds sinceDate:currentDateZeroHour];
 
-#warning - don't forget to change back to NSOrderedDescending
-        if ([clearDatabaseTime compare:lastClearDatabaseTimestamp] == NSOrderedAscending) {
+        NSComparisonResult comparisonResult = [clearDatabaseTime compare:lastClearDatabaseTimestamp];
+        
+        if (comparisonResult == NSOrderedDescending) {
             [self prepareForClearDatabase];
         }
         
@@ -121,17 +122,31 @@
 
 - (void)prepareForClearDatabase {
 
+    [self.spinnerView removeFromSuperview];
+    [self.view addSubview:self.spinnerView];
+
     if (!self.session.syncer.syncing) {
         
-        if ([(STTTSyncer *)self.session.syncer nonsyncedTasks].count == 0) {
+        NSUInteger nonsyncedTasksCount = [(STTTSyncer *)self.session.syncer nonsyncedTasks].count;
+        
+        if (nonsyncedTasksCount == 0) {
             
             [self clearDatabase];
             [self.session.syncer syncData];
             
         } else {
             
-            self.haveToClearDatabase = YES;
-            [self.session.syncer syncData];
+            if (self.haveToClearDatabase) {
+
+                self.haveToClearDatabase = NO;
+                [self showNoConnectionError];
+                
+            } else {
+            
+                self.haveToClearDatabase = YES;
+                [self.session.syncer syncData];
+
+            }
             
         }
         
@@ -139,6 +154,22 @@
         self.haveToClearDatabase = YES;
     }
 
+}
+
+- (void)showNoConnectionError {
+    
+    NSString *alertTitle = @"Ошибка";
+    NSString *alertMessage = @"Не удаётся передать данные на сервер. Необходимо подключение к интернет.";
+    NSString *buttonTitle = @"Попробовать ещё раз";
+    
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:alertTitle
+                                                        message:alertMessage
+                                                       delegate:self
+                                              cancelButtonTitle:buttonTitle
+                                              otherButtonTitles:nil];
+    alertView.tag = 2;
+    [alertView show];
+    
 }
 
 - (void)addLogButton {
@@ -179,10 +210,7 @@
         [self refreshDeleteCell];
         
         if (self.haveToClearDatabase) {
-            
-            self.haveToClearDatabase = NO;
             [self prepareForClearDatabase];
-            
         }
         
     }
@@ -631,8 +659,8 @@
 
 }
 
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    
     if (alertView.tag == 1) {
         
         if (buttonIndex == 0) {
@@ -645,12 +673,13 @@
         
         self.deleteCell.selected = NO;
         
+    } else if (alertView.tag == 2) {
+        [self prepareForClearDatabase];
     }
+    
 }
 
 - (void)clearDatabase {
-    
-    [self.view addSubview:self.spinnerView];
     
     [self removeObjectWithName:NSStringFromClass([STTTAgentTask class])];
     
@@ -674,6 +703,8 @@
     [defaults setObject:currentDate forKey:CLEAR_DB_TIMESTAMP];
     [defaults synchronize];
     
+    self.haveToClearDatabase = NO;
+
     [self.spinnerView removeFromSuperview];
     
 }
