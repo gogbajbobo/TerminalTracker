@@ -21,6 +21,9 @@
 #import "STTTAgentComponent.h"
 #import "STTTAgentTaskComponent.h"
 
+#define CLEAR_DB_TIMESTAMP @"clearDatabaseTimestamp"
+#define CLEAR_DB_HOUR 5
+
 
 @interface STTTMainTVC () <UIAlertViewDelegate>
 
@@ -42,12 +45,62 @@
 - (void)viewInit {
     
     [self addLogButton];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"sessionStatusChanged" object:self.session];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sessionStatusChanged:) name:@"sessionStatusChanged" object:self.session];
+    
+    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+    
+    [nc removeObserver:self
+                  name:@"sessionStatusChanged"
+                object:self.session];
+    
+    [nc addObserver:self
+           selector:@selector(sessionStatusChanged:)
+               name:@"sessionStatusChanged"
+             object:self.session];
+
     if ([self.session.status isEqualToString:@"running"]) {
+        
         [self sessionStatusChanged:nil];
         [self syncStatusChanged:nil];
+        
     }
+    
+}
+
+- (void)appWillEnterForeground {
+    [self checkClearDatabaseTimestamp];
+}
+
+- (void)checkClearDatabaseTimestamp {
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSDate *lastClearDatabaseTimestamp = [defaults valueForKey:CLEAR_DB_TIMESTAMP];
+    
+    if (!lastClearDatabaseTimestamp) {
+        
+        [self prepareForClearDatabase];
+        
+    } else {
+        
+        NSDate *currentDate = [NSDate date];
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        dateFormatter.dateStyle = NSDateFormatterShortStyle;
+        double seconds = CLEAR_DB_HOUR * 3600;
+        NSDate *currentDateZeroHour = [dateFormatter dateFromString:[dateFormatter stringFromDate:currentDate]];
+        NSDate *clearDatabaseTime = [NSDate dateWithTimeInterval:seconds sinceDate:currentDateZeroHour];
+
+        if ([clearDatabaseTime compare:lastClearDatabaseTimestamp] == NSOrderedDescending) {
+            [self prepareForClearDatabase];
+        }
+        
+    }
+    
+}
+
+- (void)prepareForClearDatabase {
+    
+    // have to check unsynced tasks
+    // clear database
+    NSLog(@"prepareForClearDatabase");
     
 }
 
@@ -110,6 +163,8 @@
     
     if ([self.session.status isEqualToString:@"running"]) {
         
+        [self checkClearDatabaseTimestamp];
+        
         self.terminalController = [[STTTTerminalController alloc] init];
         self.terminalController.session = self.session;
         
@@ -160,6 +215,11 @@
            selector:@selector(numberOfNonsyncedTasksChanged)
                name:@"numberOfNonsyncedTasksChanged"
              object:self.session.syncer];
+
+    [nc addObserver:self
+           selector:@selector(appWillEnterForeground)
+               name:UIApplicationWillEnterForegroundNotification
+             object:nil];
 
 }
 
@@ -560,6 +620,11 @@
     [self removeObjectWithName:NSStringFromClass([STLogMessage class])];
 
     [(STTTSyncer *)self.session.syncer setDataOffset:nil];
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSDate *currentDate = [NSDate date];
+    [defaults setObject:currentDate forKey:CLEAR_DB_TIMESTAMP];
+    [defaults synchronize];
     
 }
 
