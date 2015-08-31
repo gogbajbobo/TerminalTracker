@@ -101,14 +101,20 @@
             taskDefect.task = task;
             taskDefect.defectCode = [STAgentTaskDefectCodeService findDefectCodeByXid:defectXid inContext:context];
             
+            task.ts = [NSDate date];
+            
         }
         
     }
     
-    if (context.hasChanges) {
-        NSError* error;
-        [context save:&error];
-    }
+    [document saveDocument:^(BOOL success) {
+        
+    }];
+    
+//    if (context.hasChanges) {
+//        NSError* error;
+//        [context save:&error];
+//    }
     
 }
 
