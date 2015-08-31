@@ -15,4 +15,7 @@
 @property (nonatomic, strong) NSString *restServerURI;
 @property (nonatomic, strong) NSString *dataOffset;
 
+- (NSArray *)nonsyncedTasks;
+
+
 @end

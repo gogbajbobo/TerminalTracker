@@ -21,12 +21,18 @@
 #import "STTTAgentComponent.h"
 #import "STTTAgentTaskComponent.h"
 
+#define CLEAR_DB_TIMESTAMP @"clearDatabaseTimestamp"
+#define CLEAR_DB_HOUR 5
+
 
 @interface STTTMainTVC () <UIAlertViewDelegate>
 
 @property (nonatomic, strong) STSession *session;
 @property (nonatomic, strong) STTTInfoCell *deleteCell;
 @property (nonatomic, strong) STTTInfoCell *refreshCell;
+
+@property (nonatomic) BOOL haveToClearDatabase;
+@property (nonatomic, strong) UIView *spinnerView;
 
 
 @end
@@ -37,15 +43,133 @@
     return [[STSessionManager sharedManager] currentSession];
 }
 
+- (UIView *)spinnerView {
+    
+    if (!_spinnerView) {
+        
+        UIView *view = [[UIView alloc] initWithFrame:self.view.frame];
+        view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        view.backgroundColor = [UIColor grayColor];
+        view.alpha = 0.75;
+        UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+        spinner.center = view.center;
+        spinner.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
+        [spinner startAnimating];
+        [view addSubview:spinner];
+        
+        _spinnerView = view;
+
+    }
+    return _spinnerView;
+    
+}
+
 - (void)viewInit {
     
     [self addLogButton];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"sessionStatusChanged" object:self.session];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sessionStatusChanged:) name:@"sessionStatusChanged" object:self.session];
+    
+    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+    
+    [nc removeObserver:self
+                  name:@"sessionStatusChanged"
+                object:self.session];
+    
+    [nc addObserver:self
+           selector:@selector(sessionStatusChanged:)
+               name:@"sessionStatusChanged"
+             object:self.session];
+
     if ([self.session.status isEqualToString:@"running"]) {
+        
         [self sessionStatusChanged:nil];
         [self syncStatusChanged:nil];
+        
     }
+    
+}
+
+- (void)appWillEnterForeground {
+    [self checkClearDatabaseTimestamp];
+}
+
+- (void)checkClearDatabaseTimestamp {
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSDate *lastClearDatabaseTimestamp = [defaults valueForKey:CLEAR_DB_TIMESTAMP];
+    
+    if (!lastClearDatabaseTimestamp) {
+        
+        [self prepareForClearDatabase];
+        
+    } else {
+        
+        NSDate *currentDate = [NSDate date];
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        dateFormatter.dateStyle = NSDateFormatterShortStyle;
+        double seconds = CLEAR_DB_HOUR * 3600;
+        NSDate *currentDateZeroHour = [dateFormatter dateFromString:[dateFormatter stringFromDate:currentDate]];
+        NSDate *clearDatabaseTime = [NSDate dateWithTimeInterval:seconds sinceDate:currentDateZeroHour];
+
+        NSComparisonResult comparisonResult = [clearDatabaseTime compare:lastClearDatabaseTimestamp];
+        
+        if (comparisonResult == NSOrderedDescending) {
+            [self prepareForClearDatabase];
+        }
+        
+    }
+    
+}
+
+- (void)prepareForClearDatabase {
+
+    [self.spinnerView removeFromSuperview];
+    [self.view addSubview:self.spinnerView];
+
+    if (!self.session.syncer.syncing) {
+        
+        NSUInteger nonsyncedTasksCount = [(STTTSyncer *)self.session.syncer nonsyncedTasks].count;
+        
+        if (nonsyncedTasksCount == 0) {
+            
+            [self clearDatabase];
+            self.haveToClearDatabase = NO;
+            [self.session.syncer syncData];
+            
+        } else {
+            
+            if (self.haveToClearDatabase) {
+
+                self.haveToClearDatabase = NO;
+                [self showNoConnectionError];
+                
+            } else {
+            
+                self.haveToClearDatabase = YES;
+                [self.session.syncer syncData];
+
+            }
+            
+        }
+        
+    } else {
+        self.haveToClearDatabase = YES;
+    }
+
+}
+
+- (void)showNoConnectionError {
+    
+    NSString *alertTitle = @"Ошибка";
+    NSString *alertMessage = @"Не удаётся передать данные на сервер. Необходимо подключение к интернет.";
+    NSString *buttonTitle = @"Попробовать ещё раз";
+    
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:alertTitle
+                                                        message:alertMessage
+                                                       delegate:self
+                                              cancelButtonTitle:buttonTitle
+                                              otherButtonTitles:nil];
+    alertView.tag = 2;
+    [alertView show];
     
 }
 
@@ -63,6 +187,7 @@
 }
 
 - (void)syncStatusChanged:(NSNotification *)notification {
+    
     if (self.session.syncer.syncing) {
         
         UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
@@ -82,14 +207,38 @@
     } else {
         
         [[self.refreshCell.contentView viewWithTag:1] removeFromSuperview];
-        self.deleteCell.textLabel.textColor = [UIColor blackColor];
+        
+        [self refreshDeleteCell];
+        
+        if (self.haveToClearDatabase) {
+            [self prepareForClearDatabase];
+        }
         
     }
+    
+}
+
+- (void)numberOfNonsyncedTasksChanged {
+    [self refreshDeleteCell];
+}
+
+- (void)refreshDeleteCell {
+
+    if (self.deleteCell) {
+        
+        NSIndexPath *indexPath = [self.tableView indexPathForCell:self.deleteCell];
+        
+        if (indexPath) [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+        
+    }
+
 }
 
 - (void)sessionStatusChanged:(NSNotification *)notification {
     
     if ([self.session.status isEqualToString:@"running"]) {
+        
+        [self checkClearDatabaseTimestamp];
         
         self.terminalController = [[STTTTerminalController alloc] init];
         self.terminalController.session = self.session;
@@ -114,17 +263,45 @@
 }
 
 - (void)addObservers {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(currentLocationUpdated:) name:@"currentLocationUpdated" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(taskControllerDidChangeContent:) name:@"taskControllerDidChangeContent" object:self.taskController];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(terminalControllerDidChangeContent:) name:@"terminalControllerDidChangeContent" object:self.terminalController];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(syncStatusChanged:) name:@"syncStatusChanged" object:self.session.syncer];
+
+    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+    
+    [nc addObserver:self
+           selector:@selector(currentLocationUpdated:)
+               name:@"currentLocationUpdated"
+             object:nil];
+    
+    [nc addObserver:self
+           selector:@selector(taskControllerDidChangeContent:)
+               name:@"taskControllerDidChangeContent"
+             object:self.taskController];
+    
+    [nc addObserver:self
+           selector:@selector(terminalControllerDidChangeContent:)
+               name:@"terminalControllerDidChangeContent"
+             object:self.terminalController];
+    
+    [nc addObserver:self
+           selector:@selector(syncStatusChanged:)
+               name:@"syncStatusChanged"
+             object:self.session.syncer];
+
+    [nc addObserver:self
+           selector:@selector(numberOfNonsyncedTasksChanged)
+               name:@"numberOfNonsyncedTasksChanged"
+             object:self.session.syncer];
+
+    [nc addObserver:self
+           selector:@selector(appWillEnterForeground)
+               name:UIApplicationWillEnterForegroundNotification
+             object:nil];
+
 }
 
 - (void)removeObservers {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"currentLocationUpdated" object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"taskControllerDidChangeContent" object:self.taskController];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"terminalControllerDidChangeContent" object:self.terminalController];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"syncStatusChanged" object:self.session.syncer];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
 }
 
 - (void)navBarDoubleTap {
@@ -289,8 +466,30 @@
 }
 
 - (void)configureDeleteCell:(STTTInfoCell *)cell {
-    
+
     cell.textLabel.text = @"Очистить базу данных";
+    cell.detailTextLabel.text = nil;
+
+    UIColor *textColor;
+    
+    NSInteger nonsyncedTasksCount = [(STTTSyncer *)self.session.syncer nonsyncedTasks].count;
+    
+    if (nonsyncedTasksCount == 0) {
+        
+        textColor = [UIColor blackColor];
+        cell.selectionStyle = UITableViewCellSelectionStyleDefault;
+        
+    } else {
+
+        textColor = [UIColor lightGrayColor];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        
+        cell.detailTextLabel.text = @"Есть неотправленные данные";
+
+    }
+
+    cell.textLabel.textColor = textColor;
+    cell.detailTextLabel.textColor = textColor;
     
 }
 
@@ -442,7 +641,7 @@
             
         } else if (indexPath.row == 1) {
             
-            if (!self.session.syncer.syncing) {
+            if (!self.session.syncer.syncing && [(STTTSyncer *)self.session.syncer nonsyncedTasks].count == 0) {
                 
                 [self showDeleteAlert];
                 
@@ -461,8 +660,8 @@
 
 }
 
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    
     if (alertView.tag == 1) {
         
         if (buttonIndex == 0) {
@@ -475,7 +674,10 @@
         
         self.deleteCell.selected = NO;
         
+    } else if (alertView.tag == 2) {
+        [self prepareForClearDatabase];
     }
+    
 }
 
 - (void)clearDatabase {
@@ -496,6 +698,13 @@
     [self removeObjectWithName:NSStringFromClass([STLogMessage class])];
 
     [(STTTSyncer *)self.session.syncer setDataOffset:nil];
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSDate *currentDate = [NSDate date];
+    [defaults setObject:currentDate forKey:CLEAR_DB_TIMESTAMP];
+    [defaults synchronize];
+    
+    [self.spinnerView removeFromSuperview];
     
 }
 

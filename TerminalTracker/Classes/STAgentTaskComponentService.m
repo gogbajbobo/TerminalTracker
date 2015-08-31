@@ -115,14 +115,20 @@
             taskComponent.task = task;
             taskComponent.component = [STAgentTaskComponentService findComponentByXid:componentXid inContext:context];
             
+            task.ts = [NSDate date];
+
         }
         
     }
     
-    if (context.hasChanges) {
-        NSError* error;
-        [context save:&error];
-    }
+    [document saveDocument:^(BOOL success) {
+        
+    }];
+    
+//    if (context.hasChanges) {
+//        NSError* error;
+//        [context save:&error];
+//    }
 
 }
 
