@@ -433,9 +433,18 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = ST;
-				LastTestingUpgradeCheck = 0630;
-				LastUpgradeCheck = 0460;
+				LastTestingUpgradeCheck = 0700;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "Maxim Grigoriev";
+				TargetAttributes = {
+					2CE32656176F29E800BAA1D4 = {
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
+					};
+				};
 			};
 			buildConfigurationList = 2CE32652176F29E800BAA1D4 /* Build configuration list for PBXProject "TerminalTracker" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -637,6 +646,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -688,6 +698,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TerminalTracker/TerminalTracker-Prefix.pch";
 				INFOPLIST_FILE = "TerminalTracker/TerminalTracker-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "net.unact.ios.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -700,6 +711,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TerminalTracker/TerminalTracker-Prefix.pch";
 				INFOPLIST_FILE = "TerminalTracker/TerminalTracker-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "net.unact.ios.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -716,6 +728,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TerminalTracker/TerminalTracker-Prefix.pch";
 				INFOPLIST_FILE = "TerminalTrackerTests/TerminalTrackerTests-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "grigoriev.maxim-gmail.com.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = octest;
@@ -733,6 +746,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TerminalTracker/TerminalTracker-Prefix.pch";
 				INFOPLIST_FILE = "TerminalTrackerTests/TerminalTrackerTests-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "grigoriev.maxim-gmail.com.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = octest;
