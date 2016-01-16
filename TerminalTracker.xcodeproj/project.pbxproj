@@ -25,6 +25,11 @@
 		2C93A5C4178597940014001B /* STTTCommentVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A5C3178597930014001B /* STTTCommentVC.m */; };
 		2CA06B061C4A897C00383AC9 /* STTTAgentTerminal+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CA06B031C4A897C00383AC9 /* STTTAgentTerminal+CoreDataProperties.m */; };
 		2CA06B071C4A897C00383AC9 /* STTTAgentTerminal.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CA06B051C4A897C00383AC9 /* STTTAgentTerminal.m */; };
+		2CA06B0F1C4A8E8C00383AC9 /* tele2.png in Resources */ = {isa = PBXBuildFile; fileRef = 2CA06B0A1C4A8E8C00383AC9 /* tele2.png */; };
+		2CA06B101C4A8E8C00383AC9 /* mts.png in Resources */ = {isa = PBXBuildFile; fileRef = 2CA06B0B1C4A8E8C00383AC9 /* mts.png */; };
+		2CA06B111C4A8E8C00383AC9 /* megafon.png in Resources */ = {isa = PBXBuildFile; fileRef = 2CA06B0C1C4A8E8C00383AC9 /* megafon.png */; };
+		2CA06B121C4A8E8C00383AC9 /* beeline.png in Resources */ = {isa = PBXBuildFile; fileRef = 2CA06B0D1C4A8E8C00383AC9 /* beeline.png */; };
+		2CA06B131C4A8E8C00383AC9 /* unknown.png in Resources */ = {isa = PBXBuildFile; fileRef = 2CA06B0E1C4A8E8C00383AC9 /* unknown.png */; };
 		2CC47BDE1AE69109008F5250 /* STTTAgentTaskDefect.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CC47BDD1AE69109008F5250 /* STTTAgentTaskDefect.m */; };
 		2CC47BE41AE6910A008F5250 /* STTTAgentDefectCode.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CC47BE31AE6910A008F5250 /* STTTAgentDefectCode.m */; };
 		2CC47BE71AE767EB008F5250 /* STEditTaskDefectCodesTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CC47BE61AE767EB008F5250 /* STEditTaskDefectCodesTVC.m */; };
@@ -115,6 +120,11 @@
 		2CA06B031C4A897C00383AC9 /* STTTAgentTerminal+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "STTTAgentTerminal+CoreDataProperties.m"; sourceTree = "<group>"; };
 		2CA06B041C4A897C00383AC9 /* STTTAgentTerminal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTAgentTerminal.h; sourceTree = "<group>"; };
 		2CA06B051C4A897C00383AC9 /* STTTAgentTerminal.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTAgentTerminal.m; sourceTree = "<group>"; };
+		2CA06B0A1C4A8E8C00383AC9 /* tele2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tele2.png; sourceTree = "<group>"; };
+		2CA06B0B1C4A8E8C00383AC9 /* mts.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mts.png; sourceTree = "<group>"; };
+		2CA06B0C1C4A8E8C00383AC9 /* megafon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = megafon.png; sourceTree = "<group>"; };
+		2CA06B0D1C4A8E8C00383AC9 /* beeline.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = beeline.png; sourceTree = "<group>"; };
+		2CA06B0E1C4A8E8C00383AC9 /* unknown.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = unknown.png; sourceTree = "<group>"; };
 		2CC47BD21AE68DE9008F5250 /* STTTDataModel 4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "STTTDataModel 4.xcdatamodel"; sourceTree = "<group>"; };
 		2CC47BDC1AE69109008F5250 /* STTTAgentTaskDefect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTAgentTaskDefect.h; sourceTree = "<group>"; };
 		2CC47BDD1AE69109008F5250 /* STTTAgentTaskDefect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTAgentTaskDefect.m; sourceTree = "<group>"; };
@@ -208,6 +218,26 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2CA06B081C4A8E5A00383AC9 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				2CA06B091C4A8E7300383AC9 /* Images */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		2CA06B091C4A8E7300383AC9 /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				2CA06B0A1C4A8E8C00383AC9 /* tele2.png */,
+				2CA06B0B1C4A8E8C00383AC9 /* mts.png */,
+				2CA06B0C1C4A8E8C00383AC9 /* megafon.png */,
+				2CA06B0D1C4A8E8C00383AC9 /* beeline.png */,
+				2CA06B0E1C4A8E8C00383AC9 /* unknown.png */,
+			);
+			path = Images;
+			sourceTree = "<group>";
+		};
 		2CE3264E176F29E800BAA1D4 = {
 			isa = PBXGroup;
 			children = (
@@ -245,6 +275,7 @@
 		2CE32660176F29E800BAA1D4 /* TerminalTracker */ = {
 			isa = PBXGroup;
 			children = (
+				2CA06B081C4A8E5A00383AC9 /* Resources */,
 				2CE7E4C9179FC98800113A6A /* STTTtest.json */,
 				2CE326A5176F2FED00BAA1D4 /* Data Model */,
 				2CE32698176F2BB600BAA1D4 /* Classes */,
@@ -466,13 +497,18 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2CA06B0F1C4A8E8C00383AC9 /* tele2.png in Resources */,
 				2CE32665176F29E800BAA1D4 /* InfoPlist.strings in Resources */,
 				2CE3266D176F29E800BAA1D4 /* Default.png in Resources */,
 				2CE3266F176F29E800BAA1D4 /* Default@2x.png in Resources */,
+				2CA06B121C4A8E8C00383AC9 /* beeline.png in Resources */,
 				2CE32671176F29E800BAA1D4 /* Default-568h@2x.png in Resources */,
+				2CA06B131C4A8E8C00383AC9 /* unknown.png in Resources */,
 				2CE32674176F29E800BAA1D4 /* STTTMainStoryboard_iPhone.storyboard in Resources */,
+				2CA06B101C4A8E8C00383AC9 /* mts.png in Resources */,
 				2CE32677176F29E800BAA1D4 /* STTTMainStoryboard_iPad.storyboard in Resources */,
 				2CE7E4CA179FC98800113A6A /* STTTtest.json in Resources */,
+				2CA06B111C4A8E8C00383AC9 /* megafon.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -15,7 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface STTTAgentTerminal : STComment
 
-// Insert code here to declare functionality of your managed object subclass
+- (UIImage *)mobileOpLogo;
+
 
 @end
 

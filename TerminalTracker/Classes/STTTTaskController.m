@@ -272,10 +272,11 @@
     if (task.numberOfTasksOnSameTerminal) {
         moreTasksOnThisTerminal = [NSString stringWithFormat:@" (+%i)", task.numberOfTasksOnSameTerminal];
     }
-    cell.textLabel.text = [NSString stringWithFormat:@"%i|%@ : %@%@",[task.routePriority intValue]
-                                ,task.terminal.code
-                                ,task.terminalBreakName
-                                ,moreTasksOnThisTerminal];
+    
+    cell.textLabel.text = [NSString stringWithFormat:@"%i|%@ : %@%@", [task.routePriority intValue],
+                                                                        task.terminal.code,
+                                                                        task.terminalBreakName,
+                                                                        moreTasksOnThisTerminal];
     cell.detailTextLabel.text = task.terminal.address;
     cell.detailTextLabel.numberOfLines = 2;
     cell.detailTextLabel.lineBreakMode = NSLineBreakByWordWrapping;
@@ -308,7 +309,20 @@
     [[cell.contentView viewWithTag:666] removeFromSuperview];
     [cell.contentView addSubview:infoLabel];
     
+    if ([task.terminalBreakName isEqualToString:@"НС"]) {
+        
+        cell.imageView.image = [task.terminal mobileOpLogo];
+        
+    } else {
+        
+        cell.imageView.image = nil;
+        
+    }
+    
     return cell;
 }
+
+
+
 
 @end
