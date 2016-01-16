@@ -40,7 +40,6 @@
 		2CE32671176F29E800BAA1D4 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2CE32670176F29E800BAA1D4 /* Default-568h@2x.png */; };
 		2CE32674176F29E800BAA1D4 /* STTTMainStoryboard_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2CE32672176F29E800BAA1D4 /* STTTMainStoryboard_iPhone.storyboard */; };
 		2CE32677176F29E800BAA1D4 /* STTTMainStoryboard_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2CE32675176F29E800BAA1D4 /* STTTMainStoryboard_iPad.storyboard */; };
-		2CE32682176F29E800BAA1D4 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE32681176F29E800BAA1D4 /* SenTestingKit.framework */; };
 		2CE32683176F29E800BAA1D4 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE3265A176F29E800BAA1D4 /* UIKit.framework */; };
 		2CE32684176F29E800BAA1D4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE3265C176F29E800BAA1D4 /* Foundation.framework */; };
 		2CE3268C176F29E800BAA1D4 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2CE3268A176F29E800BAA1D4 /* InfoPlist.strings */; };
@@ -140,8 +139,7 @@
 		2CE32670176F29E800BAA1D4 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		2CE32673176F29E800BAA1D4 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/STTTMainStoryboard_iPhone.storyboard; sourceTree = "<group>"; };
 		2CE32676176F29E800BAA1D4 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/STTTMainStoryboard_iPad.storyboard; sourceTree = "<group>"; };
-		2CE32680176F29E800BAA1D4 /* TerminalTrackerTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TerminalTrackerTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
-		2CE32681176F29E800BAA1D4 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		2CE32680176F29E800BAA1D4 /* TerminalTrackerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TerminalTrackerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CE32689176F29E800BAA1D4 /* TerminalTrackerTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TerminalTrackerTests-Info.plist"; sourceTree = "<group>"; };
 		2CE3268B176F29E800BAA1D4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		2CE3268D176F29E800BAA1D4 /* TerminalTrackerTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TerminalTrackerTests.h; sourceTree = "<group>"; };
@@ -201,7 +199,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2CE32682176F29E800BAA1D4 /* SenTestingKit.framework in Frameworks */,
 				2CE32683176F29E800BAA1D4 /* UIKit.framework in Frameworks */,
 				2CE32684176F29E800BAA1D4 /* Foundation.framework in Frameworks */,
 			);
@@ -225,7 +222,7 @@
 			isa = PBXGroup;
 			children = (
 				2CE32657176F29E800BAA1D4 /* TerminalTracker.app */,
-				2CE32680176F29E800BAA1D4 /* TerminalTrackerTests.octest */,
+				2CE32680176F29E800BAA1D4 /* TerminalTrackerTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -239,7 +236,6 @@
 				2CE3265A176F29E800BAA1D4 /* UIKit.framework */,
 				2CE3265C176F29E800BAA1D4 /* Foundation.framework */,
 				2CE3265E176F29E800BAA1D4 /* CoreGraphics.framework */,
-				2CE32681176F29E800BAA1D4 /* SenTestingKit.framework */,
 				3F26E7DA269E4C8AB402C081 /* libPods.a */,
 			);
 			name = Frameworks;
@@ -423,8 +419,8 @@
 			);
 			name = TerminalTrackerTests;
 			productName = TerminalTrackerTests;
-			productReference = 2CE32680176F29E800BAA1D4 /* TerminalTrackerTests.octest */;
-			productType = "com.apple.product-type.bundle.ocunit-test";
+			productReference = 2CE32680176F29E800BAA1D4 /* TerminalTrackerTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -433,7 +429,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = ST;
-				LastTestingUpgradeCheck = 0700;
+				LastTestingUpgradeCheck = 0720;
 				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "Maxim Grigoriev";
 				TargetAttributes = {
@@ -724,6 +720,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
 					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+					"$(inherited)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TerminalTracker/TerminalTracker-Prefix.pch";
@@ -731,7 +728,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "grigoriev.maxim-gmail.com.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = octest;
 			};
 			name = Debug;
 		};
@@ -742,6 +738,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
 					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+					"$(inherited)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TerminalTracker/TerminalTracker-Prefix.pch";
@@ -749,7 +746,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "grigoriev.maxim-gmail.com.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = octest;
 			};
 			name = Release;
 		};
