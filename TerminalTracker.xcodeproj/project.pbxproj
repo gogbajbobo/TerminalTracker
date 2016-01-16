@@ -20,11 +20,11 @@
 		2C93A5A317817AAE0014001B /* STTTTerminalLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A5A217817AAE0014001B /* STTTTerminalLocation.m */; };
 		2C93A5A617817AAE0014001B /* STTTTaskLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A5A517817AAE0014001B /* STTTTaskLocation.m */; };
 		2C93A5AC1781BA800014001B /* STTTLocationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A5AB1781BA800014001B /* STTTLocationController.m */; };
-		2C93A5AF178209AD0014001B /* STTTAgentTerminal+distance.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A5AE178209AD0014001B /* STTTAgentTerminal+distance.m */; };
 		2C93A5B8178420DC0014001B /* STTTAgentTask+remainingTime.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A5B7178420DC0014001B /* STTTAgentTask+remainingTime.m */; };
 		2C93A5C1178471B60014001B /* STTTMapAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A5C0178471B50014001B /* STTTMapAnnotation.m */; };
 		2C93A5C4178597940014001B /* STTTCommentVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A5C3178597930014001B /* STTTCommentVC.m */; };
-		2C93A5C717859F880014001B /* STTTAgentTerminal.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A5C617859F880014001B /* STTTAgentTerminal.m */; };
+		2CA06B061C4A897C00383AC9 /* STTTAgentTerminal+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CA06B031C4A897C00383AC9 /* STTTAgentTerminal+CoreDataProperties.m */; };
+		2CA06B071C4A897C00383AC9 /* STTTAgentTerminal.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CA06B051C4A897C00383AC9 /* STTTAgentTerminal.m */; };
 		2CC47BDE1AE69109008F5250 /* STTTAgentTaskDefect.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CC47BDD1AE69109008F5250 /* STTTAgentTaskDefect.m */; };
 		2CC47BE41AE6910A008F5250 /* STTTAgentDefectCode.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CC47BE31AE6910A008F5250 /* STTTAgentDefectCode.m */; };
 		2CC47BE71AE767EB008F5250 /* STEditTaskDefectCodesTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CC47BE61AE767EB008F5250 /* STEditTaskDefectCodesTVC.m */; };
@@ -104,16 +104,17 @@
 		2C93A5A517817AAE0014001B /* STTTTaskLocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTTaskLocation.m; sourceTree = "<group>"; };
 		2C93A5AA1781BA800014001B /* STTTLocationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTLocationController.h; sourceTree = "<group>"; };
 		2C93A5AB1781BA800014001B /* STTTLocationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTLocationController.m; sourceTree = "<group>"; };
-		2C93A5AD178209AD0014001B /* STTTAgentTerminal+distance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "STTTAgentTerminal+distance.h"; sourceTree = "<group>"; };
-		2C93A5AE178209AD0014001B /* STTTAgentTerminal+distance.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "STTTAgentTerminal+distance.m"; sourceTree = "<group>"; };
 		2C93A5B6178420DB0014001B /* STTTAgentTask+remainingTime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "STTTAgentTask+remainingTime.h"; sourceTree = "<group>"; };
 		2C93A5B7178420DC0014001B /* STTTAgentTask+remainingTime.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "STTTAgentTask+remainingTime.m"; sourceTree = "<group>"; };
 		2C93A5BF178471B50014001B /* STTTMapAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTMapAnnotation.h; sourceTree = "<group>"; };
 		2C93A5C0178471B50014001B /* STTTMapAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTMapAnnotation.m; sourceTree = "<group>"; };
 		2C93A5C2178597930014001B /* STTTCommentVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTCommentVC.h; sourceTree = "<group>"; };
 		2C93A5C3178597930014001B /* STTTCommentVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTCommentVC.m; sourceTree = "<group>"; };
-		2C93A5C517859F880014001B /* STTTAgentTerminal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTAgentTerminal.h; sourceTree = "<group>"; };
-		2C93A5C617859F880014001B /* STTTAgentTerminal.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTAgentTerminal.m; sourceTree = "<group>"; };
+		2CA06AFE1C4A890A00383AC9 /* STTTDataModel 9.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "STTTDataModel 9.xcdatamodel"; sourceTree = "<group>"; };
+		2CA06B021C4A897C00383AC9 /* STTTAgentTerminal+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "STTTAgentTerminal+CoreDataProperties.h"; sourceTree = "<group>"; };
+		2CA06B031C4A897C00383AC9 /* STTTAgentTerminal+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "STTTAgentTerminal+CoreDataProperties.m"; sourceTree = "<group>"; };
+		2CA06B041C4A897C00383AC9 /* STTTAgentTerminal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTAgentTerminal.h; sourceTree = "<group>"; };
+		2CA06B051C4A897C00383AC9 /* STTTAgentTerminal.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTAgentTerminal.m; sourceTree = "<group>"; };
 		2CC47BD21AE68DE9008F5250 /* STTTDataModel 4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "STTTDataModel 4.xcdatamodel"; sourceTree = "<group>"; };
 		2CC47BDC1AE69109008F5250 /* STTTAgentTaskDefect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTAgentTaskDefect.h; sourceTree = "<group>"; };
 		2CC47BDD1AE69109008F5250 /* STTTAgentTaskDefect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTAgentTaskDefect.m; sourceTree = "<group>"; };
@@ -360,10 +361,10 @@
 				2CC47BDD1AE69109008F5250 /* STTTAgentTaskDefect.m */,
 				A50B028019EF6E98008612CD /* STTTAgentTaskRepair.h */,
 				A50B028119EF6E98008612CD /* STTTAgentTaskRepair.m */,
-				2C93A5C517859F880014001B /* STTTAgentTerminal.h */,
-				2C93A5C617859F880014001B /* STTTAgentTerminal.m */,
-				2C93A5AD178209AD0014001B /* STTTAgentTerminal+distance.h */,
-				2C93A5AE178209AD0014001B /* STTTAgentTerminal+distance.m */,
+				2CA06B041C4A897C00383AC9 /* STTTAgentTerminal.h */,
+				2CA06B051C4A897C00383AC9 /* STTTAgentTerminal.m */,
+				2CA06B021C4A897C00383AC9 /* STTTAgentTerminal+CoreDataProperties.h */,
+				2CA06B031C4A897C00383AC9 /* STTTAgentTerminal+CoreDataProperties.m */,
 				2C93A5A417817AAE0014001B /* STTTTaskLocation.h */,
 				2C93A5A517817AAE0014001B /* STTTTaskLocation.m */,
 				2C93A5A117817AAE0014001B /* STTTTerminalLocation.h */,
@@ -547,7 +548,6 @@
 				2C93A5A617817AAE0014001B /* STTTTaskLocation.m in Sources */,
 				2C93A5AC1781BA800014001B /* STTTLocationController.m in Sources */,
 				2C42ECA81B05F13400B5C91A /* STTTAgentRepairCode.m in Sources */,
-				2C93A5AF178209AD0014001B /* STTTAgentTerminal+distance.m in Sources */,
 				2C93A5B8178420DC0014001B /* STTTAgentTask+remainingTime.m in Sources */,
 				A50B027C19EF5C46008612CD /* STAgentTaskRepairCodeService.m in Sources */,
 				2C93A5C1178471B60014001B /* STTTMapAnnotation.m in Sources */,
@@ -557,13 +557,14 @@
 				2C93A5C4178597940014001B /* STTTCommentVC.m in Sources */,
 				A54DEE8E19D2501600D7D1C7 /* STTTAgentTask+cellcoloring.m in Sources */,
 				2C0CDDDA1B47BDE0000CA183 /* STTTAgentTask.m in Sources */,
+				2CA06B061C4A897C00383AC9 /* STTTAgentTerminal+CoreDataProperties.m in Sources */,
 				A59C60F419C92DDE0028A8F7 /* STTTDataModel2.xcdatamodeld in Sources */,
 				A50B028219EF6E98008612CD /* STTTAgentTaskRepair.m in Sources */,
-				2C93A5C717859F880014001B /* STTTAgentTerminal.m in Sources */,
 				2C0CDDDD1B47BF06000CA183 /* STAgentTaskComponentService.m in Sources */,
 				2C0CDDE61B47C914000CA183 /* STEditTaskComponentsTVC.m in Sources */,
 				2CE7E4B5179D31B000113A6A /* STTTMainTVC.m in Sources */,
 				2C0CDDE91B491763000CA183 /* STTTComponentsController.m in Sources */,
+				2CA06B071C4A897C00383AC9 /* STTTAgentTerminal.m in Sources */,
 				2CC47BEA1AE76872008F5250 /* STAgentTaskDefectCodeService.m in Sources */,
 				2CE7E4BA179D5CE300113A6A /* STTTInfoTVC.m in Sources */,
 				2C0CDDD41B47BDDF000CA183 /* STTTAgentComponent.m in Sources */,
@@ -785,6 +786,7 @@
 		A59C60F119C92DDE0028A8F7 /* STTTDataModel2.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				2CA06AFE1C4A890A00383AC9 /* STTTDataModel 9.xcdatamodel */,
 				2C0CDDC81B47BBDF000CA183 /* STTTDataModel 8.xcdatamodel */,
 				2C42ECBD1B14575F00B5C91A /* STTTDataModel 7.xcdatamodel */,
 				2C42ECA51B05F0F800B5C91A /* STTTDataModel 6.xcdatamodel */,
@@ -794,7 +796,7 @@
 				A505080E19E75F0100632027 /* STTTDataModel 3.xcdatamodel */,
 				A59C60F319C92DDE0028A8F7 /* STTTDataModel.xcdatamodel */,
 			);
-			currentVersion = 2C0CDDC81B47BBDF000CA183 /* STTTDataModel 8.xcdatamodel */;
+			currentVersion = 2CA06AFE1C4A890A00383AC9 /* STTTDataModel 9.xcdatamodel */;
 			path = STTTDataModel2.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

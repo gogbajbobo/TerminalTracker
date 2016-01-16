@@ -2,33 +2,23 @@
 //  STTTAgentTerminal.h
 //  TerminalTracker
 //
-//  Created by Maxim Grigoriev on 7/4/13.
-//  Copyright (c) 2013 Maxim Grigoriev. All rights reserved.
+//  Created by Maxim Grigoriev on 16/01/16.
+//  Copyright © 2016 Maxim Grigoriev. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
-#import <CoreData/CoreData.h>
 #import "STComment.h"
 
 @class STTTAgentTask, STTTTerminalLocation;
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface STTTAgentTerminal : STComment
 
-@property (nonatomic, retain) NSString * address;
-@property (nonatomic, retain) NSString * code;
-@property (nonatomic, retain) NSNumber * distance;
-@property (nonatomic, retain) NSString * errorText;
-@property (nonatomic, retain) NSDate * lastActivityTime;
-@property (nonatomic, retain) NSString * srcSystemName;
-@property (nonatomic, retain) STTTTerminalLocation *location;
-@property (nonatomic, retain) NSSet *tasks;
-@end
-
-@interface STTTAgentTerminal (CoreDataGeneratedAccessors)
-
-- (void)addTasksObject:(STTTAgentTask *)value;
-- (void)removeTasksObject:(STTTAgentTask *)value;
-- (void)addTasks:(NSSet *)values;
-- (void)removeTasks:(NSSet *)values;
+// Insert code here to declare functionality of your managed object subclass
 
 @end
+
+NS_ASSUME_NONNULL_END
+
+#import "STTTAgentTerminal+CoreDataProperties.h"
