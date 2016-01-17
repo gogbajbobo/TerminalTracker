@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
   s.platform     = :ios, '5.0'
 
   s.source_files = 'TerminalTracker/*.lproj/Localizable.strings', 'TerminalTracker/Classes/ST*.{h,m}', 'TerminalTracker/Data Model/ST*.{h,m}'
-  s.resources = 'TerminalTracker/*.lproj/ST*.storyboard', 'TerminalTracker/Data Model/*.{xcdatamodel,xcdatamodeld}', 'TerminalTracker/Resources/*'
+  s.resources = 'TerminalTracker/*.lproj/ST*.storyboard', 'TerminalTracker/Data Model/*.{xcdatamodel,xcdatamodeld}', 'TerminalTracker/Resources/Images/*'
 
   s.frameworks = 'SystemConfiguration', 'CoreData', 'MapKit', 'CoreLocation', 'UIKit', 'Foundation', 'CoreGraphics'
 
