@@ -30,7 +30,7 @@
 #import "STAgentTaskComponentService.h"
 
 
-@interface STTTTaskTVC ()
+@interface STTTTaskTVC () <UIAlertViewDelegate>
 
 @property (nonatomic) BOOL waitingLocation;
 
@@ -139,6 +139,16 @@
     
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    
+    [super viewDidAppear:animated];
+    
+    if ([self isMovingToParentViewController]) {
+        if (!self.task.terminalBarcode) [self showAddTerminalCodeAlert];
+    }
+    
+}
+
 - (void)viewWillDisappear:(BOOL)animated {
     
     [super viewWillDisappear:animated];
@@ -168,7 +178,7 @@
             return 1;
             break;
         case 3:
-            return 3;
+            return 4;
             break;
             
         default:
@@ -239,13 +249,17 @@
             switch (indexPath.row) {
                 case 0:
                     cell = [cell initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
-                    [self addInfoToCell:cell];
+                    [self addTerminalCodeToCell:cell];
                     break;
                 case 1:
                     cell = [cell initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
-                    [self addAddressToCell:cell];
+                    [self addInfoToCell:cell];
                     break;
                 case 2:
+                    cell = [cell initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
+                    [self addAddressToCell:cell];
+                    break;
+                case 3:
                     cell = [cell initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
                     [self addMapToCell:cell];
                     break;
@@ -349,6 +363,22 @@
     }
     
     self.buttonsCell = cell;
+    
+}
+
+- (void)addTerminalCodeToCell:(UITableViewCell *)cell {
+    
+    if (self.task.terminalBarcode) {
+
+        cell.textLabel.text = self.task.terminalBarcode;
+        cell.textLabel.textColor = [UIColor blackColor];
+
+    } else {
+        
+        cell.textLabel.text = @"Сканировать инв. номер";
+        cell.textLabel.textColor = [UIColor redColor];
+
+    }
     
 }
 
@@ -478,7 +508,11 @@
             break;
             
         case 3:
-            [self performSegueWithIdentifier:@"goToTerminal" sender:self.task.terminal];
+            if (indexPath.row == 0 && !self.task.terminalBarcode) {
+                [self showAddTerminalCodeAlert];
+            } else {
+                [self performSegueWithIdentifier:@"goToTerminal" sender:self.task.terminal];
+            }
             break;
             
         default:
@@ -661,6 +695,33 @@
     NSIndexPath *componentCellIndexPath = [self.tableView indexPathForCell:self.componentsCell];
     
     [self.tableView reloadRowsAtIndexPaths:@[buttonCellIndexPath, repairCellIndexPath, componentCellIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+    
+}
+
+- (void)showAddTerminalCodeAlert {
+    
+    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Внимание!"
+                                                        message:@"Необходимо отсканировать штрихкод терминала"
+                                                       delegate:self
+                                              cancelButtonTitle:@"Отмена"
+                                              otherButtonTitles:@"OK", nil];
+        
+        alert.tag = 16;
+        [alert show];
+        
+    }];
+    
+}
+
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
+    
+    if (alertView.tag == 16) {
+        
+        NSLog(@"buttonIndex %d", buttonIndex);
+        
+    }
     
 }
 
