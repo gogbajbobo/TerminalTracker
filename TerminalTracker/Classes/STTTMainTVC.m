@@ -9,7 +9,7 @@
 #import "STTTMainTVC.h"
 #import <STManagedTracker/STSessionManager.h>
 #import "STTTLocationController.h"
-#import "STTTAgentTask+remainingTime.h"
+#import "STTTAgentTask.h"
 #import "STTTInfoTVC.h"
 #import "STTTInfoCell.h"
 #import "STTTSyncer.h"

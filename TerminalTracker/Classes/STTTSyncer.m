@@ -13,7 +13,7 @@
 #import "STTTTerminalLocation.h"
 #import "STTTTaskLocation.h"
 
-#import "STTTAgentTask+remainingTime.h"
+#import "STTTAgentTask.h"
 
 #import "STTTAgentRepairCode.h"
 #import "STTTAgentTaskRepair.h"
@@ -301,8 +301,10 @@
     [propertiesDictionary setValue:[object valueForKey:@"commentText"] forKey:@"commentText"];
     [propertiesDictionary setValue:[NSNumber numberWithDouble:latitude] forKey:@"latitude"];
     [propertiesDictionary setValue:[NSNumber numberWithDouble:longitude] forKey:@"longitude"];
+    [propertiesDictionary setValue:[object valueForKey:@"terminalBarcode"] forKey:@"terminalBarcode"];
     
     return propertiesDictionary;
+    
 }
 
 - (void)parseResponse:(NSData *)responseData fromConnection:(NSURLConnection *)connection {
@@ -713,6 +715,7 @@
         
     } else {
 
+        task.terminalBarcode = [properties valueForKey:@"terminalBarcode"];
         task.terminalBreakName = [properties valueForKey:@"terminal_break_name"];
         task.commentText = [properties valueForKey:@"techinfo"];
         id routePriority = [properties valueForKey:@"route_priority"];
