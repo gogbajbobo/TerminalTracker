@@ -27,6 +27,8 @@
 		2C5617CE1C64C65300EA463C /* STTTTerminalLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C5617BD1C64C65300EA463C /* STTTTerminalLocation.m */; };
 		2C5617D41C64C96900EA463C /* STTTAgentTask+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C5617D11C64C96900EA463C /* STTTAgentTask+CoreDataProperties.m */; };
 		2C5617D51C64C96900EA463C /* STTTAgentTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C5617D31C64C96900EA463C /* STTTAgentTask.m */; };
+		2C5617D81C64D3F700EA463C /* STMBarCodeScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C5617D71C64D3F700EA463C /* STMBarCodeScanner.m */; };
+		2C5617DB1C64D6C300EA463C /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C5617DA1C64D6C300EA463C /* AVFoundation.framework */; };
 		2C93A562177D795E0014001B /* STTTTerminalController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A561177D795E0014001B /* STTTTerminalController.m */; };
 		2C93A565177D79790014001B /* STTTTaskController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A564177D79790014001B /* STTTTaskController.m */; };
 		2C93A568177D79C10014001B /* STTTSyncer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A567177D79C10014001B /* STTTSyncer.m */; };
@@ -133,6 +135,10 @@
 		2C5617D11C64C96900EA463C /* STTTAgentTask+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "STTTAgentTask+CoreDataProperties.m"; sourceTree = "<group>"; };
 		2C5617D21C64C96900EA463C /* STTTAgentTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTAgentTask.h; sourceTree = "<group>"; };
 		2C5617D31C64C96900EA463C /* STTTAgentTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTAgentTask.m; sourceTree = "<group>"; };
+		2C5617D61C64D3F700EA463C /* STMBarCodeScanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STMBarCodeScanner.h; sourceTree = "<group>"; };
+		2C5617D71C64D3F700EA463C /* STMBarCodeScanner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STMBarCodeScanner.m; sourceTree = "<group>"; };
+		2C5617D91C64D42100EA463C /* STMBarCodeScannerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STMBarCodeScannerDelegate.h; sourceTree = "<group>"; };
+		2C5617DA1C64D6C300EA463C /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		2C93A560177D795E0014001B /* STTTTerminalController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTTerminalController.h; sourceTree = "<group>"; };
 		2C93A561177D795E0014001B /* STTTTerminalController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTTerminalController.m; sourceTree = "<group>"; };
 		2C93A563177D79790014001B /* STTTTaskController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTTaskController.h; sourceTree = "<group>"; };
@@ -210,6 +216,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2C5617DB1C64D6C300EA463C /* AVFoundation.framework in Frameworks */,
 				2CE326A4176F2F3E00BAA1D4 /* MapKit.framework in Frameworks */,
 				2CE326A2176F2F3500BAA1D4 /* CoreLocation.framework in Frameworks */,
 				2CE326A0176F2F2C00BAA1D4 /* CoreData.framework in Frameworks */,
@@ -275,6 +282,7 @@
 		2CE32659176F29E800BAA1D4 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2C5617DA1C64D6C300EA463C /* AVFoundation.framework */,
 				2CE326A3176F2F3E00BAA1D4 /* MapKit.framework */,
 				2CE326A1176F2F3500BAA1D4 /* CoreLocation.framework */,
 				2CE3269F176F2F2C00BAA1D4 /* CoreData.framework */,
@@ -338,6 +346,9 @@
 		2CE32698176F2BB600BAA1D4 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				2C5617D91C64D42100EA463C /* STMBarCodeScannerDelegate.h */,
+				2C5617D61C64D3F700EA463C /* STMBarCodeScanner.h */,
+				2C5617D71C64D3F700EA463C /* STMBarCodeScanner.m */,
 				A50B027719EDFCD0008612CD /* STEditTaskRepairCodesTVC.h */,
 				A50B027819EDFCD0008612CD /* STEditTaskRepairCodesTVC.m */,
 				2CC47BE51AE767EB008F5250 /* STEditTaskDefectCodesTVC.h */,
@@ -617,6 +628,7 @@
 				2C93A5C1178471B60014001B /* STTTMapAnnotation.m in Sources */,
 				2C5617C71C64C65300EA463C /* STTTAgentTaskComponent+CoreDataProperties.m in Sources */,
 				A50B027919EDFCD0008612CD /* STEditTaskRepairCodesTVC.m in Sources */,
+				2C5617D81C64D3F700EA463C /* STMBarCodeScanner.m in Sources */,
 				2C5617CA1C64C65300EA463C /* STTTAgentTerminal.m in Sources */,
 				A56429BD18841A2300168724 /* STUtilities.m in Sources */,
 				2CC47BE71AE767EB008F5250 /* STEditTaskDefectCodesTVC.m in Sources */,
