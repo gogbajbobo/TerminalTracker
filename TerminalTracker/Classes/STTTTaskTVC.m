@@ -416,8 +416,10 @@
     lastActivityLabel.tag = 666;
     lastActivityLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
     
-    [[cell.contentView viewWithTag:666] removeFromSuperview];
-    [cell.contentView addSubview:lastActivityLabel];
+//    [[cell.contentView viewWithTag:666] removeFromSuperview];
+//    [cell.contentView addSubview:lastActivityLabel];
+
+    cell.accessoryView = lastActivityLabel;
     
 }
 
