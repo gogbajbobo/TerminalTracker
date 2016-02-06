@@ -15,6 +15,7 @@
 @required
 
 - (UIView *)viewForScanner:(STMBarCodeScanner *)scanner;
+- (void)cameraLayer:(CALayer *)layer;
 
 - (void)barCodeScanner:(STMBarCodeScanner *)scanner receiveBarCode:(NSString *)barcode;
 - (void)barCodeScanner:(STMBarCodeScanner *)scanner receiveError:(NSError *)error;

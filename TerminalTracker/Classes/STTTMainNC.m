@@ -14,13 +14,13 @@
 
 @implementation STTTMainNC
 
-- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
-    
+//- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
+//
 //    return (self.shouldRotate) ? UIInterfaceOrientationMaskAll : UIInterfaceOrientationMaskPortrait;
-
-    return UIInterfaceOrientationMaskPortrait;
-    
-}
+//
+//    return UIInterfaceOrientationMaskAll;
+//
+//}
 
 
 - (void)viewDidLoad {

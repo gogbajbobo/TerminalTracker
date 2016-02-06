@@ -150,6 +150,8 @@
     
     [self.session stopRunning];
     [self.preview removeFromSuperlayer];
+    
+    [self.delegate cameraLayer:nil];
 
     self.preview = nil;
     self.output = nil;
@@ -189,10 +191,34 @@
 
     AVCaptureConnection *con = self.preview.connection;
     
-    con.videoOrientation = AVCaptureVideoOrientationPortrait;
-
-    [superView.layer insertSublayer:self.preview above:superView.layer];
+    UIInterfaceOrientation interfaceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
     
+    switch (interfaceOrientation) {
+        case UIInterfaceOrientationUnknown: {
+            break;
+        }
+        case UIInterfaceOrientationPortrait: {
+            con.videoOrientation = AVCaptureVideoOrientationPortrait;
+            break;
+        }
+        case UIInterfaceOrientationPortraitUpsideDown: {
+            con.videoOrientation = AVCaptureVideoOrientationPortraitUpsideDown;
+            break;
+        }
+        case UIInterfaceOrientationLandscapeLeft: {
+            con.videoOrientation = AVCaptureVideoOrientationLandscapeLeft;
+            break;
+        }
+        case UIInterfaceOrientationLandscapeRight: {
+            con.videoOrientation = AVCaptureVideoOrientationLandscapeRight;
+            break;
+        }
+    }
+    
+    [superView.layer insertSublayer:self.preview above:superView.layer];
+
+    [self.delegate cameraLayer:self.preview];
+
     [self.session startRunning];
 
 }

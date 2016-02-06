@@ -32,6 +32,8 @@
 #import "STMBarCodeScanner.h"
 #import "STTTMainNC.h"
 
+#import <AVFoundation/AVFoundation.h>
+
 
 @interface STTTTaskTVC () <UIAlertViewDelegate, STMBarCodeScannerDelegate>
 
@@ -52,6 +54,7 @@
 @property (nonatomic) BOOL taskCompleted;
 
 @property (nonatomic, strong) STMBarCodeScanner *cameraBarCodeScanner;
+@property (nonatomic, weak) AVCaptureVideoPreviewLayer *cameraLayer;
 
 
 @end
@@ -148,16 +151,18 @@
     
     [super viewDidAppear:animated];
     
-    if ([self isMovingToParentViewController]) {
-        if (!self.task.terminalBarcode) [self showAddTerminalCodeAlert];
-    }
+//    if ([self isMovingToParentViewController]) {
+//        if (!self.task.terminalBarcode) [self showAddTerminalCodeAlert];
+//    }
     
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     
     [super viewWillDisappear:animated];
+    
     [self removeObservers];
+    [self stopCameraScanner];
     
 }
 
@@ -469,6 +474,10 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
+    if (self.cameraBarCodeScanner.status == STMBarCodeScannerStarted) {
+        return;
+    }
+    
     switch (indexPath.section) {
         case 0:
             // do nothing
@@ -780,11 +789,51 @@
     
 }
 
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    
+    self.cameraLayer.frame = self.view.bounds;
+ 
+    AVCaptureConnection *con = self.cameraLayer.connection;
+    
+    UIInterfaceOrientation interfaceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
+    
+    switch (interfaceOrientation) {
+        case UIInterfaceOrientationUnknown: {
+            break;
+        }
+        case UIInterfaceOrientationPortrait: {
+            con.videoOrientation = AVCaptureVideoOrientationPortrait;
+            break;
+        }
+        case UIInterfaceOrientationPortraitUpsideDown: {
+            con.videoOrientation = AVCaptureVideoOrientationPortraitUpsideDown;
+            break;
+        }
+        case UIInterfaceOrientationLandscapeLeft: {
+            con.videoOrientation = AVCaptureVideoOrientationLandscapeLeft;
+            break;
+        }
+        case UIInterfaceOrientationLandscapeRight: {
+            con.videoOrientation = AVCaptureVideoOrientationLandscapeRight;
+            break;
+        }
+    }
+
+}
+
 
 #pragma mark - STMBarCodeScannerDelegate
 
 - (UIView *)viewForScanner:(STMBarCodeScanner *)scanner {
     return self.view;
+}
+
+- (void)cameraLayer:(CALayer *)layer {
+    
+    if ([layer isKindOfClass:[AVCaptureVideoPreviewLayer class]]) {
+        self.cameraLayer = (AVCaptureVideoPreviewLayer *)layer;
+    }
+    
 }
 
 - (void)barCodeScanner:(STMBarCodeScanner *)scanner receiveBarCode:(NSString *)barcode {
