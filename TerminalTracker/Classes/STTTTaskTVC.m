@@ -182,7 +182,7 @@
             return 1;
             break;
         case 1:
-            return 4;
+            return (self.task.terminalBarcode) ? 4 : 5;
             break;
         case 2:
             return 1;
@@ -244,7 +244,11 @@
                     cell = [cell initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
                     [self addButtonsToCell:cell];
                     break;
-                    
+                case 4:
+                    cell = [cell initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+                    [self addTerminalCodeToCell:cell];
+                    break;
+
                 default:
                     break;
             }
@@ -258,7 +262,7 @@
         case 3:
             switch (indexPath.row) {
                 case 0:
-                    cell = [cell initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
+                    cell = [cell initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
                     [self addTerminalCodeToCell:cell];
                     break;
                 case 1:
@@ -382,11 +386,13 @@
 
         cell.textLabel.text = [NSString stringWithFormat:@"Инв. номер: %@", self.task.terminalBarcode];
         cell.textLabel.textColor = [UIColor blackColor];
+        cell.textLabel.textAlignment = NSTextAlignmentLeft;
 
     } else {
         
         cell.textLabel.text = @"Сканировать инв. номер";
         cell.textLabel.textColor = [UIColor redColor];
+        cell.textLabel.textAlignment = NSTextAlignmentCenter;
 
     }
     
@@ -513,7 +519,11 @@
                         }
                     }
                     break;
-        
+                    
+                case 4:
+                    [self startCameraScanner];
+                    break;
+                    
                 default:
                     break;
             }
@@ -844,7 +854,8 @@
     
     self.task.terminalBarcode = barcode;
 //    [self saveDocument];
-    
+
+    [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationNone];
     [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:3]] withRowAnimation:UITableViewRowAnimationNone];
     
     [self stopCameraScanner];
