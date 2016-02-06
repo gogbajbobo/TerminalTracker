@@ -20,14 +20,4 @@
 - (void)barCodeScanner:(STMBarCodeScanner *)scanner receiveError:(NSError *)error;
 
 
-@optional
-
-- (void)deviceArrivalForBarCodeScanner:(STMBarCodeScanner *)scanner;
-- (void)deviceRemovalForBarCodeScanner:(STMBarCodeScanner *)scanner;
-
-- (void)receiveScannerBeepStatus:(BOOL)isBeepEnabled;
-- (void)receiveScannerRumbleStatus:(BOOL)isRumbleEnabled;
-- (void)receiveBatteryLevel:(NSNumber *)batteryLevel;
-
-
 @end

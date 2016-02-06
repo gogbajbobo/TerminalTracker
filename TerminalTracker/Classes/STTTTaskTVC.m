@@ -29,8 +29,11 @@
 #import "STAgentTaskDefectCodeService.h"
 #import "STAgentTaskComponentService.h"
 
+#import "STMBarCodeScanner.h"
+#import "STTTMainNC.h"
 
-@interface STTTTaskTVC () <UIAlertViewDelegate>
+
+@interface STTTTaskTVC () <UIAlertViewDelegate, STMBarCodeScannerDelegate>
 
 @property (nonatomic) BOOL waitingLocation;
 
@@ -47,6 +50,8 @@
 @property (nonatomic, strong) CLLocation *location;
 
 @property (nonatomic) BOOL taskCompleted;
+
+@property (nonatomic, strong) STMBarCodeScanner *cameraBarCodeScanner;
 
 
 @end
@@ -370,7 +375,7 @@
     
     if (self.task.terminalBarcode) {
 
-        cell.textLabel.text = self.task.terminalBarcode;
+        cell.textLabel.text = [NSString stringWithFormat:@"Инв. номер: %@", self.task.terminalBarcode];
         cell.textLabel.textColor = [UIColor blackColor];
 
     } else {
@@ -446,7 +451,7 @@
     switch (indexPath.section) {
         case 3:
             switch (indexPath.row) {
-                case 2:
+                case 3:
                     return 160;
                     break;
                     
@@ -508,8 +513,8 @@
             break;
             
         case 3:
-            if (indexPath.row == 0 && !self.task.terminalBarcode) {
-                [self showAddTerminalCodeAlert];
+            if (indexPath.row == 0) {
+                [self startCameraScanner];
             } else {
                 [self performSegueWithIdentifier:@"goToTerminal" sender:self.task.terminal];
             }
@@ -719,10 +724,87 @@
     
     if (alertView.tag == 16) {
         
-        NSLog(@"buttonIndex %d", buttonIndex);
+        if (buttonIndex == 1) {
+            
+            [self startCameraScanner];
+            
+        }
         
     }
     
+}
+
+
+#pragma mark - barcode scanning
+
+- (void)startCameraScanner {
+    
+    if ([STMBarCodeScanner isCameraAvailable]) {
+        
+        self.cameraBarCodeScanner = [[STMBarCodeScanner alloc] initWithMode:STMBarCodeScannerCameraMode];
+        self.cameraBarCodeScanner.delegate = self;
+
+        UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
+                                                                                      target:self
+                                                                                      action:@selector(cameraBarCodeScannerButtonPressed)];
+        
+        self.navigationItem.leftBarButtonItem = cancelButton;
+        
+//        if ([self.navigationController isKindOfClass:[STTTMainNC class]]) {
+//            [(STTTMainNC *)self.navigationController setShouldRotate:NO];
+//        }
+        
+        [self.cameraBarCodeScanner startScan];
+
+    }
+    
+}
+
+- (void)stopCameraScanner {
+    
+//    if ([self.navigationController isKindOfClass:[STTTMainNC class]]) {
+//        [(STTTMainNC *)self.navigationController setShouldRotate:YES];
+//    }
+
+    [self.cameraBarCodeScanner stopScan];
+    self.cameraBarCodeScanner = nil;
+    self.navigationItem.leftBarButtonItem = nil;
+
+}
+
+- (void)cameraBarCodeScannerButtonPressed {
+    
+    if (self.cameraBarCodeScanner.status == STMBarCodeScannerStarted) {
+        [self stopCameraScanner];
+    }
+    
+}
+
+
+#pragma mark - STMBarCodeScannerDelegate
+
+- (UIView *)viewForScanner:(STMBarCodeScanner *)scanner {
+    return self.view;
+}
+
+- (void)barCodeScanner:(STMBarCodeScanner *)scanner receiveBarCode:(NSString *)barcode {
+    
+    NSLog(@"barCodeScanner receiveBarCode: %@", barcode);
+    
+    self.task.terminalBarcode = barcode;
+//    [self saveDocument];
+    
+    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:3]] withRowAnimation:UITableViewRowAnimationNone];
+    
+    [self stopCameraScanner];
+
+}
+
+- (void)barCodeScanner:(STMBarCodeScanner *)scanner receiveError:(NSError *)error {
+    
+    NSLog(@"barCodeScanner receiveError: %@", error.localizedDescription);
+    [self stopCameraScanner];
+
 }
 
 

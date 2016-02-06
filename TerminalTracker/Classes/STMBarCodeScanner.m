@@ -185,8 +185,8 @@
     self.preview.videoGravity = AVLayerVideoGravityResizeAspectFill;
     
     UIView *superView = [self.delegate viewForScanner:self];
-    self.preview.frame = CGRectMake(0, 0, superView.frame.size.width, superView.frame.size.height);
-    
+    self.preview.frame = superView.bounds;
+
     AVCaptureConnection *con = self.preview.connection;
     
     con.videoOrientation = AVCaptureVideoOrientationPortrait;
