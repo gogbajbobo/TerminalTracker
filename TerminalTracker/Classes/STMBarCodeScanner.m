@@ -11,6 +11,9 @@
 #import <CoreData/CoreData.h>
 #import <AVFoundation/AVFoundation.h>
 
+#import "STTTAgentBarcodeType.h"
+#import <STManagedTracker/STSessionManager.h>
+
 
 @interface STMBarCodeScanner() <UITextFieldDelegate, AVCaptureMetadataOutputObjectsDelegate>
 
@@ -21,6 +24,8 @@
 @property (nonatomic, strong) AVCaptureSession *session;
 @property (nonatomic, strong) AVCaptureMetadataOutput *output;
 @property (nonatomic, strong) AVCaptureVideoPreviewLayer *preview;
+
+@property (nonatomic) BOOL isCheckingBarcode;
 
 
 @end
@@ -115,10 +120,91 @@
 
 }
 
-- (void)checkScannedBarcode:(NSString *)barcode {
+- (void)checkScannedBarcode:(NSString *)barcode withType:(NSString *)type {
     
-    [self.delegate barCodeScanner:self receiveBarCode:barcode];
+    self.isCheckingBarcode = YES;
+    
+    if ([type isEqualToString:AVMetadataObjectTypeCode128Code]) {
+        
+        BOOL barcodeIsGood = NO;
+        
+        NSArray *masks = [self terminalInvNumberBarcodeMasks];
+        
+        for (NSString *mask in masks) {
+            
+            if (mask) {
+                
+                NSError *error = nil;
+                NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:(NSString * _Nonnull)mask
+                                                                                       options:NSRegularExpressionCaseInsensitive
+                                                                                         error:&error];
+                
+                NSUInteger numberOfMatches = [regex numberOfMatchesInString:barcode
+                                                                    options:0
+                                                                      range:NSMakeRange(0, barcode.length)];
+                
+                if (numberOfMatches > 0) {
+                    
+                    barcodeIsGood = YES;
+                    break;
+                    
+                }
+                
+            }
+            
+        }
+        
+        if (barcodeIsGood) {
+            [self didSuccessfullyScan:barcode];
+        }
+        
+    }
+    
+    self.isCheckingBarcode = NO;
 
+}
+
+- (NSArray *)terminalInvNumberBarcodeMasks {
+    
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:NSStringFromClass([STTTAgentBarcodeType class])];
+    request.predicate = [NSPredicate predicateWithFormat:@"type == %@ && symbology == %@", [self terminalInvNumberType], [self terminalInvNumberSymbology]];
+    
+    NSManagedObjectContext *context = [[STSessionManager sharedManager].currentSession document].managedObjectContext;
+
+    NSArray *result = [context executeFetchRequest:request error:nil];
+    
+    NSArray *masks = [result valueForKeyPath:@"@distinctUnionOfObjects.mask"];
+    
+    return masks;
+    
+}
+
+- (NSString *)terminalInvNumberType {
+    return @"terminal-inv-number";
+}
+
+- (NSString *)terminalInvNumberSymbology {
+    return [self symbologyForMachineReadableObjectType:AVMetadataObjectTypeCode128Code];
+}
+
+- (NSString *)machineReadableObjectTypeForSymbology:(NSString *)symbology {
+    
+    if ([symbology isEqualToString:@"Code 128"]) {
+        return AVMetadataObjectTypeCode128Code;
+    }
+    
+    return nil;
+    
+}
+
+- (NSString *)symbologyForMachineReadableObjectType:(NSString *)type {
+    
+    if ([type isEqualToString:AVMetadataObjectTypeCode128Code]) {
+        return @"Code 128";
+    }
+    
+    return nil;
+    
 }
 
 
@@ -232,8 +318,17 @@
         
         if([current isKindOfClass:[AVMetadataMachineReadableCodeObject class]]) {
             
-            NSString *scannedValue = [(AVMetadataMachineReadableCodeObject *)current stringValue];
-            [self didSuccessfullyScan:scannedValue];
+            AVMetadataMachineReadableCodeObject *readableCodeObject = (AVMetadataMachineReadableCodeObject *)current;
+            
+            NSLog(@"readableCodeObject.type %@", readableCodeObject.type);
+            
+            NSString *scannedValue = readableCodeObject.stringValue;
+            
+            NSLog(@"scannedValue %@", scannedValue);
+            
+            if (!self.isCheckingBarcode) {
+                [self checkScannedBarcode:scannedValue withType:readableCodeObject.type];
+            }
             
         }
         
@@ -244,8 +339,9 @@
 - (void)didSuccessfullyScan:(NSString *)aScannedValue {
     
     //    NSLog(@"aScannedValue %@", aScannedValue);
-    
-    [self checkScannedBarcode:aScannedValue];
+
+    [self.delegate barCodeScanner:self receiveBarCode:aScannedValue];
+
     [self stopScan];
     
 }
@@ -291,7 +387,7 @@
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField{
     
-    [self checkScannedBarcode:textField.text];
+    [self checkScannedBarcode:textField.text withType:nil];
     textField.text = @"";
     
     return NO;
