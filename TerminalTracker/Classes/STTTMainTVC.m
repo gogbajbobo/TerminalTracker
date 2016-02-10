@@ -20,6 +20,8 @@
 #import "STTTAgentTaskDefect.h"
 #import "STTTAgentComponent.h"
 #import "STTTAgentTaskComponent.h"
+#import "STTTAgentBarcodeType.h"
+
 
 #define CLEAR_DB_TIMESTAMP @"clearDatabaseTimestamp"
 #define CLEAR_DB_HOUR 5
@@ -694,6 +696,8 @@
 
     [self removeObjectWithName:NSStringFromClass([STTTAgentComponent class])];
     [self removeObjectWithName:NSStringFromClass([STTTAgentTaskComponent class])];
+
+    [self removeObjectWithName:NSStringFromClass([STTTAgentBarcodeType class])];
 
     [self removeObjectWithName:NSStringFromClass([STLogMessage class])];
 

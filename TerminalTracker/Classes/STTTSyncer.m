@@ -24,6 +24,8 @@
 #import "STTTAgentComponent.h"
 #import "STTTAgentTaskComponent.h"
 
+#import "STTTAgentBarcodeType.h"
+
 #import "STTTComponentsController.h"
 
 
@@ -370,7 +372,7 @@
 
                         if ([pageRowCount intValue] < [pageSize intValue]) {
 
-                            [[(STSession *)self.session logger] saveLogMessageWithText:@"All data recieved" type:@""];
+                            [[(STSession *)self.session logger] saveLogMessageWithText:@"All data received" type:@""];
                             [self showNewTaskNotification:nil];
                             self.newTasksCount = 0;
             
@@ -499,8 +501,14 @@
         
         [self newTaskComponentWithXid:xidData andProperties:properties];
 
+    } else if ([name isEqualToString:@"megaport.iAgentBarcodeType"]) {
+        
+        [self newBarcodeTypeWithXid:xidData andProperties:properties];
+        
     } else {
+        
         NSLog(@"object %@", object);
+        
     }
 
 }
@@ -746,6 +754,21 @@
 
 }
 
+- (void)newBarcodeTypeWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties {
+    
+    STTTAgentBarcodeType *barcodeType = (STTTAgentBarcodeType *)[self entityByClass:[STTTAgentBarcodeType class] andXid:xidData];
+    barcodeType.name = [properties valueForKey:@"name"];
+    barcodeType.type = [properties valueForKey:@"type"];
+    barcodeType.mask = [properties valueForKey:@"mask"];
+    barcodeType.symbology = [properties valueForKey:@"symbology"];
+
+    barcodeType.lts = [NSDate date];
+    
+    NSLog(@"get barcodeType.xid %@", barcodeType.xid);
+
+}
+
+
 - (NSDate*)extractDateFrom:(NSDictionary*)properties forKey:(NSString*)key{
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss.SSS Z"];
@@ -862,7 +885,8 @@
                              NSStringFromClass([STTTAgentTerminal class]),
                              NSStringFromClass([STTTAgentRepairCode class]),
                              NSStringFromClass([STTTAgentDefectCode class]),
-                             NSStringFromClass([STTTAgentComponent class])];
+                             NSStringFromClass([STTTAgentComponent class]),
+                             NSStringFromClass([STTTAgentBarcodeType class])];
 
     for (NSString *entityName in entityNames) {
         

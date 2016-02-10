@@ -30,6 +30,8 @@
 		2C5617D81C64D3F700EA463C /* STMBarCodeScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C5617D71C64D3F700EA463C /* STMBarCodeScanner.m */; };
 		2C5617DB1C64D6C300EA463C /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C5617DA1C64D6C300EA463C /* AVFoundation.framework */; };
 		2C5617DE1C65E2B100EA463C /* STTTMainNC.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C5617DD1C65E2B100EA463C /* STTTMainNC.m */; };
+		2C8226451C6B561800D11D94 /* STTTAgentBarcodeType+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8226421C6B561800D11D94 /* STTTAgentBarcodeType+CoreDataProperties.m */; };
+		2C8226461C6B561800D11D94 /* STTTAgentBarcodeType.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8226441C6B561800D11D94 /* STTTAgentBarcodeType.m */; };
 		2C93A562177D795E0014001B /* STTTTerminalController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A561177D795E0014001B /* STTTTerminalController.m */; };
 		2C93A565177D79790014001B /* STTTTaskController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A564177D79790014001B /* STTTTaskController.m */; };
 		2C93A568177D79C10014001B /* STTTSyncer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A567177D79C10014001B /* STTTSyncer.m */; };
@@ -142,6 +144,11 @@
 		2C5617DA1C64D6C300EA463C /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		2C5617DC1C65E2B100EA463C /* STTTMainNC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTMainNC.h; sourceTree = "<group>"; };
 		2C5617DD1C65E2B100EA463C /* STTTMainNC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTMainNC.m; sourceTree = "<group>"; };
+		2C8226401C6B55C600D11D94 /* STTTDataModel 12.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "STTTDataModel 12.xcdatamodel"; sourceTree = "<group>"; };
+		2C8226411C6B561800D11D94 /* STTTAgentBarcodeType+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "STTTAgentBarcodeType+CoreDataProperties.h"; sourceTree = "<group>"; };
+		2C8226421C6B561800D11D94 /* STTTAgentBarcodeType+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "STTTAgentBarcodeType+CoreDataProperties.m"; sourceTree = "<group>"; };
+		2C8226431C6B561800D11D94 /* STTTAgentBarcodeType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTAgentBarcodeType.h; sourceTree = "<group>"; };
+		2C8226441C6B561800D11D94 /* STTTAgentBarcodeType.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTAgentBarcodeType.m; sourceTree = "<group>"; };
 		2C93A560177D795E0014001B /* STTTTerminalController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTTerminalController.h; sourceTree = "<group>"; };
 		2C93A561177D795E0014001B /* STTTTerminalController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTTerminalController.m; sourceTree = "<group>"; };
 		2C93A563177D79790014001B /* STTTTaskController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTTaskController.h; sourceTree = "<group>"; };
@@ -406,6 +413,10 @@
 			isa = PBXGroup;
 			children = (
 				2C5617AF1C64C65300EA463C /* STTTDataModel2.xcdatamodeld */,
+				2C8226431C6B561800D11D94 /* STTTAgentBarcodeType.h */,
+				2C8226441C6B561800D11D94 /* STTTAgentBarcodeType.m */,
+				2C8226411C6B561800D11D94 /* STTTAgentBarcodeType+CoreDataProperties.h */,
+				2C8226421C6B561800D11D94 /* STTTAgentBarcodeType+CoreDataProperties.m */,
 				2C5617931C64C65300EA463C /* STTTAgentComponent.h */,
 				2C5617941C64C65300EA463C /* STTTAgentComponent.m */,
 				2C5617951C64C65300EA463C /* STTTAgentComponent+CoreDataProperties.h */,
@@ -635,6 +646,7 @@
 				A50B027919EDFCD0008612CD /* STEditTaskRepairCodesTVC.m in Sources */,
 				2C5617D81C64D3F700EA463C /* STMBarCodeScanner.m in Sources */,
 				2C5617CA1C64C65300EA463C /* STTTAgentTerminal.m in Sources */,
+				2C8226461C6B561800D11D94 /* STTTAgentBarcodeType.m in Sources */,
 				A56429BD18841A2300168724 /* STUtilities.m in Sources */,
 				2CC47BE71AE767EB008F5250 /* STEditTaskDefectCodesTVC.m in Sources */,
 				2C93A5C4178597940014001B /* STTTCommentVC.m in Sources */,
@@ -644,6 +656,7 @@
 				2CE7E4B5179D31B000113A6A /* STTTMainTVC.m in Sources */,
 				2C5617C11C64C65300EA463C /* STTTAgentComponentGroup+CoreDataProperties.m in Sources */,
 				2C5617DE1C65E2B100EA463C /* STTTMainNC.m in Sources */,
+				2C8226451C6B561800D11D94 /* STTTAgentBarcodeType+CoreDataProperties.m in Sources */,
 				2C0CDDE91B491763000CA183 /* STTTComponentsController.m in Sources */,
 				2CC47BEA1AE76872008F5250 /* STAgentTaskDefectCodeService.m in Sources */,
 				2CE7E4BA179D5CE300113A6A /* STTTInfoTVC.m in Sources */,
@@ -866,6 +879,7 @@
 		2C5617AF1C64C65300EA463C /* STTTDataModel2.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				2C8226401C6B55C600D11D94 /* STTTDataModel 12.xcdatamodel */,
 				2C5617CF1C64C90F00EA463C /* STTTDataModel 11.xcdatamodel */,
 				2C5617B01C64C65300EA463C /* STTTDataModel 10.xcdatamodel */,
 				2C5617B11C64C65300EA463C /* STTTDataModel 2.xcdatamodel */,
@@ -878,7 +892,7 @@
 				2C5617B81C64C65300EA463C /* STTTDataModel 9.xcdatamodel */,
 				2C5617B91C64C65300EA463C /* STTTDataModel.xcdatamodel */,
 			);
-			currentVersion = 2C5617CF1C64C90F00EA463C /* STTTDataModel 11.xcdatamodel */;
+			currentVersion = 2C8226401C6B55C600D11D94 /* STTTDataModel 12.xcdatamodel */;
 			path = STTTDataModel2.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
