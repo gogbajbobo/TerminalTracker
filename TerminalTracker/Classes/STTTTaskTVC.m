@@ -547,6 +547,23 @@
     
 }
 
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    return ([indexPath compare:[NSIndexPath indexPathForRow:0 inSection:3]] == NSOrderedSame && self.task.terminalBarcode);
+    
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        
+        self.task.terminalBarcode = nil;
+        [self terminalBarcodeValueChanged];
+        
+    }
+    
+}
+
 - (BOOL)isDataCompleted {
     
     if (self.defectsCount > 0 && self.repairsCount > 0) {
@@ -853,11 +870,8 @@
     NSLog(@"barCodeScanner receiveBarCode: %@", barcode);
     
     self.task.terminalBarcode = barcode;
-//    [self saveDocument];
 
-    [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationNone];
-    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:3]] withRowAnimation:UITableViewRowAnimationNone];
-    
+    [self terminalBarcodeValueChanged];
     [self stopCameraScanner];
 
 }
@@ -866,6 +880,13 @@
     
     NSLog(@"barCodeScanner receiveError: %@", error.localizedDescription);
     [self stopCameraScanner];
+
+}
+
+- (void)terminalBarcodeValueChanged {
+    
+    [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationNone];
+    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:3]] withRowAnimation:UITableViewRowAnimationNone];
 
 }
 
