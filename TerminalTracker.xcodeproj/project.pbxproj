@@ -20,11 +20,16 @@
 		2C93A5A317817AAE0014001B /* STTTTerminalLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A5A217817AAE0014001B /* STTTTerminalLocation.m */; };
 		2C93A5A617817AAE0014001B /* STTTTaskLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A5A517817AAE0014001B /* STTTTaskLocation.m */; };
 		2C93A5AC1781BA800014001B /* STTTLocationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A5AB1781BA800014001B /* STTTLocationController.m */; };
-		2C93A5AF178209AD0014001B /* STTTAgentTerminal+distance.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A5AE178209AD0014001B /* STTTAgentTerminal+distance.m */; };
 		2C93A5B8178420DC0014001B /* STTTAgentTask+remainingTime.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A5B7178420DC0014001B /* STTTAgentTask+remainingTime.m */; };
 		2C93A5C1178471B60014001B /* STTTMapAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A5C0178471B50014001B /* STTTMapAnnotation.m */; };
 		2C93A5C4178597940014001B /* STTTCommentVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A5C3178597930014001B /* STTTCommentVC.m */; };
-		2C93A5C717859F880014001B /* STTTAgentTerminal.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93A5C617859F880014001B /* STTTAgentTerminal.m */; };
+		2CA06B061C4A897C00383AC9 /* STTTAgentTerminal+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CA06B031C4A897C00383AC9 /* STTTAgentTerminal+CoreDataProperties.m */; };
+		2CA06B071C4A897C00383AC9 /* STTTAgentTerminal.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CA06B051C4A897C00383AC9 /* STTTAgentTerminal.m */; };
+		2CA06B0F1C4A8E8C00383AC9 /* tele2.png in Resources */ = {isa = PBXBuildFile; fileRef = 2CA06B0A1C4A8E8C00383AC9 /* tele2.png */; };
+		2CA06B101C4A8E8C00383AC9 /* mts.png in Resources */ = {isa = PBXBuildFile; fileRef = 2CA06B0B1C4A8E8C00383AC9 /* mts.png */; };
+		2CA06B111C4A8E8C00383AC9 /* megafon.png in Resources */ = {isa = PBXBuildFile; fileRef = 2CA06B0C1C4A8E8C00383AC9 /* megafon.png */; };
+		2CA06B121C4A8E8C00383AC9 /* beeline.png in Resources */ = {isa = PBXBuildFile; fileRef = 2CA06B0D1C4A8E8C00383AC9 /* beeline.png */; };
+		2CA06B131C4A8E8C00383AC9 /* unknown.png in Resources */ = {isa = PBXBuildFile; fileRef = 2CA06B0E1C4A8E8C00383AC9 /* unknown.png */; };
 		2CC47BDE1AE69109008F5250 /* STTTAgentTaskDefect.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CC47BDD1AE69109008F5250 /* STTTAgentTaskDefect.m */; };
 		2CC47BE41AE6910A008F5250 /* STTTAgentDefectCode.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CC47BE31AE6910A008F5250 /* STTTAgentDefectCode.m */; };
 		2CC47BE71AE767EB008F5250 /* STEditTaskDefectCodesTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CC47BE61AE767EB008F5250 /* STEditTaskDefectCodesTVC.m */; };
@@ -40,7 +45,6 @@
 		2CE32671176F29E800BAA1D4 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2CE32670176F29E800BAA1D4 /* Default-568h@2x.png */; };
 		2CE32674176F29E800BAA1D4 /* STTTMainStoryboard_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2CE32672176F29E800BAA1D4 /* STTTMainStoryboard_iPhone.storyboard */; };
 		2CE32677176F29E800BAA1D4 /* STTTMainStoryboard_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2CE32675176F29E800BAA1D4 /* STTTMainStoryboard_iPad.storyboard */; };
-		2CE32682176F29E800BAA1D4 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE32681176F29E800BAA1D4 /* SenTestingKit.framework */; };
 		2CE32683176F29E800BAA1D4 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE3265A176F29E800BAA1D4 /* UIKit.framework */; };
 		2CE32684176F29E800BAA1D4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE3265C176F29E800BAA1D4 /* Foundation.framework */; };
 		2CE3268C176F29E800BAA1D4 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2CE3268A176F29E800BAA1D4 /* InfoPlist.strings */; };
@@ -105,16 +109,22 @@
 		2C93A5A517817AAE0014001B /* STTTTaskLocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTTaskLocation.m; sourceTree = "<group>"; };
 		2C93A5AA1781BA800014001B /* STTTLocationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTLocationController.h; sourceTree = "<group>"; };
 		2C93A5AB1781BA800014001B /* STTTLocationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTLocationController.m; sourceTree = "<group>"; };
-		2C93A5AD178209AD0014001B /* STTTAgentTerminal+distance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "STTTAgentTerminal+distance.h"; sourceTree = "<group>"; };
-		2C93A5AE178209AD0014001B /* STTTAgentTerminal+distance.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "STTTAgentTerminal+distance.m"; sourceTree = "<group>"; };
 		2C93A5B6178420DB0014001B /* STTTAgentTask+remainingTime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "STTTAgentTask+remainingTime.h"; sourceTree = "<group>"; };
 		2C93A5B7178420DC0014001B /* STTTAgentTask+remainingTime.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "STTTAgentTask+remainingTime.m"; sourceTree = "<group>"; };
 		2C93A5BF178471B50014001B /* STTTMapAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTMapAnnotation.h; sourceTree = "<group>"; };
 		2C93A5C0178471B50014001B /* STTTMapAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTMapAnnotation.m; sourceTree = "<group>"; };
 		2C93A5C2178597930014001B /* STTTCommentVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTCommentVC.h; sourceTree = "<group>"; };
 		2C93A5C3178597930014001B /* STTTCommentVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTCommentVC.m; sourceTree = "<group>"; };
-		2C93A5C517859F880014001B /* STTTAgentTerminal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTAgentTerminal.h; sourceTree = "<group>"; };
-		2C93A5C617859F880014001B /* STTTAgentTerminal.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTAgentTerminal.m; sourceTree = "<group>"; };
+		2CA06AFE1C4A890A00383AC9 /* STTTDataModel 9.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "STTTDataModel 9.xcdatamodel"; sourceTree = "<group>"; };
+		2CA06B021C4A897C00383AC9 /* STTTAgentTerminal+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "STTTAgentTerminal+CoreDataProperties.h"; sourceTree = "<group>"; };
+		2CA06B031C4A897C00383AC9 /* STTTAgentTerminal+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "STTTAgentTerminal+CoreDataProperties.m"; sourceTree = "<group>"; };
+		2CA06B041C4A897C00383AC9 /* STTTAgentTerminal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTAgentTerminal.h; sourceTree = "<group>"; };
+		2CA06B051C4A897C00383AC9 /* STTTAgentTerminal.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTAgentTerminal.m; sourceTree = "<group>"; };
+		2CA06B0A1C4A8E8C00383AC9 /* tele2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tele2.png; sourceTree = "<group>"; };
+		2CA06B0B1C4A8E8C00383AC9 /* mts.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mts.png; sourceTree = "<group>"; };
+		2CA06B0C1C4A8E8C00383AC9 /* megafon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = megafon.png; sourceTree = "<group>"; };
+		2CA06B0D1C4A8E8C00383AC9 /* beeline.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = beeline.png; sourceTree = "<group>"; };
+		2CA06B0E1C4A8E8C00383AC9 /* unknown.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = unknown.png; sourceTree = "<group>"; };
 		2CC47BD21AE68DE9008F5250 /* STTTDataModel 4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "STTTDataModel 4.xcdatamodel"; sourceTree = "<group>"; };
 		2CC47BDC1AE69109008F5250 /* STTTAgentTaskDefect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTAgentTaskDefect.h; sourceTree = "<group>"; };
 		2CC47BDD1AE69109008F5250 /* STTTAgentTaskDefect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTAgentTaskDefect.m; sourceTree = "<group>"; };
@@ -140,8 +150,7 @@
 		2CE32670176F29E800BAA1D4 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		2CE32673176F29E800BAA1D4 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/STTTMainStoryboard_iPhone.storyboard; sourceTree = "<group>"; };
 		2CE32676176F29E800BAA1D4 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/STTTMainStoryboard_iPad.storyboard; sourceTree = "<group>"; };
-		2CE32680176F29E800BAA1D4 /* TerminalTrackerTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TerminalTrackerTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
-		2CE32681176F29E800BAA1D4 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		2CE32680176F29E800BAA1D4 /* TerminalTrackerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TerminalTrackerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CE32689176F29E800BAA1D4 /* TerminalTrackerTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TerminalTrackerTests-Info.plist"; sourceTree = "<group>"; };
 		2CE3268B176F29E800BAA1D4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		2CE3268D176F29E800BAA1D4 /* TerminalTrackerTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TerminalTrackerTests.h; sourceTree = "<group>"; };
@@ -201,7 +210,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2CE32682176F29E800BAA1D4 /* SenTestingKit.framework in Frameworks */,
 				2CE32683176F29E800BAA1D4 /* UIKit.framework in Frameworks */,
 				2CE32684176F29E800BAA1D4 /* Foundation.framework in Frameworks */,
 			);
@@ -210,6 +218,26 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2CA06B081C4A8E5A00383AC9 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				2CA06B091C4A8E7300383AC9 /* Images */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		2CA06B091C4A8E7300383AC9 /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				2CA06B0A1C4A8E8C00383AC9 /* tele2.png */,
+				2CA06B0B1C4A8E8C00383AC9 /* mts.png */,
+				2CA06B0C1C4A8E8C00383AC9 /* megafon.png */,
+				2CA06B0D1C4A8E8C00383AC9 /* beeline.png */,
+				2CA06B0E1C4A8E8C00383AC9 /* unknown.png */,
+			);
+			path = Images;
+			sourceTree = "<group>";
+		};
 		2CE3264E176F29E800BAA1D4 = {
 			isa = PBXGroup;
 			children = (
@@ -225,7 +253,7 @@
 			isa = PBXGroup;
 			children = (
 				2CE32657176F29E800BAA1D4 /* TerminalTracker.app */,
-				2CE32680176F29E800BAA1D4 /* TerminalTrackerTests.octest */,
+				2CE32680176F29E800BAA1D4 /* TerminalTrackerTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -239,7 +267,6 @@
 				2CE3265A176F29E800BAA1D4 /* UIKit.framework */,
 				2CE3265C176F29E800BAA1D4 /* Foundation.framework */,
 				2CE3265E176F29E800BAA1D4 /* CoreGraphics.framework */,
-				2CE32681176F29E800BAA1D4 /* SenTestingKit.framework */,
 				3F26E7DA269E4C8AB402C081 /* libPods.a */,
 			);
 			name = Frameworks;
@@ -248,6 +275,7 @@
 		2CE32660176F29E800BAA1D4 /* TerminalTracker */ = {
 			isa = PBXGroup;
 			children = (
+				2CA06B081C4A8E5A00383AC9 /* Resources */,
 				2CE7E4C9179FC98800113A6A /* STTTtest.json */,
 				2CE326A5176F2FED00BAA1D4 /* Data Model */,
 				2CE32698176F2BB600BAA1D4 /* Classes */,
@@ -364,10 +392,10 @@
 				2CC47BDD1AE69109008F5250 /* STTTAgentTaskDefect.m */,
 				A50B028019EF6E98008612CD /* STTTAgentTaskRepair.h */,
 				A50B028119EF6E98008612CD /* STTTAgentTaskRepair.m */,
-				2C93A5C517859F880014001B /* STTTAgentTerminal.h */,
-				2C93A5C617859F880014001B /* STTTAgentTerminal.m */,
-				2C93A5AD178209AD0014001B /* STTTAgentTerminal+distance.h */,
-				2C93A5AE178209AD0014001B /* STTTAgentTerminal+distance.m */,
+				2CA06B041C4A897C00383AC9 /* STTTAgentTerminal.h */,
+				2CA06B051C4A897C00383AC9 /* STTTAgentTerminal.m */,
+				2CA06B021C4A897C00383AC9 /* STTTAgentTerminal+CoreDataProperties.h */,
+				2CA06B031C4A897C00383AC9 /* STTTAgentTerminal+CoreDataProperties.m */,
 				2C93A5A417817AAE0014001B /* STTTTaskLocation.h */,
 				2C93A5A517817AAE0014001B /* STTTTaskLocation.m */,
 				2C93A5A117817AAE0014001B /* STTTTerminalLocation.h */,
@@ -423,8 +451,8 @@
 			);
 			name = TerminalTrackerTests;
 			productName = TerminalTrackerTests;
-			productReference = 2CE32680176F29E800BAA1D4 /* TerminalTrackerTests.octest */;
-			productType = "com.apple.product-type.bundle.ocunit-test";
+			productReference = 2CE32680176F29E800BAA1D4 /* TerminalTrackerTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -433,9 +461,18 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = ST;
-				LastTestingUpgradeCheck = 0630;
-				LastUpgradeCheck = 0460;
+				LastTestingUpgradeCheck = 0720;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "Maxim Grigoriev";
+				TargetAttributes = {
+					2CE32656176F29E800BAA1D4 = {
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
+					};
+				};
 			};
 			buildConfigurationList = 2CE32652176F29E800BAA1D4 /* Build configuration list for PBXProject "TerminalTracker" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -460,13 +497,18 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2CA06B0F1C4A8E8C00383AC9 /* tele2.png in Resources */,
 				2CE32665176F29E800BAA1D4 /* InfoPlist.strings in Resources */,
 				2CE3266D176F29E800BAA1D4 /* Default.png in Resources */,
 				2CE3266F176F29E800BAA1D4 /* Default@2x.png in Resources */,
+				2CA06B121C4A8E8C00383AC9 /* beeline.png in Resources */,
 				2CE32671176F29E800BAA1D4 /* Default-568h@2x.png in Resources */,
+				2CA06B131C4A8E8C00383AC9 /* unknown.png in Resources */,
 				2CE32674176F29E800BAA1D4 /* STTTMainStoryboard_iPhone.storyboard in Resources */,
+				2CA06B101C4A8E8C00383AC9 /* mts.png in Resources */,
 				2CE32677176F29E800BAA1D4 /* STTTMainStoryboard_iPad.storyboard in Resources */,
 				2CE7E4CA179FC98800113A6A /* STTTtest.json in Resources */,
+				2CA06B111C4A8E8C00383AC9 /* megafon.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -542,7 +584,6 @@
 				2C93A5A617817AAE0014001B /* STTTTaskLocation.m in Sources */,
 				2C93A5AC1781BA800014001B /* STTTLocationController.m in Sources */,
 				2C42ECA81B05F13400B5C91A /* STTTAgentRepairCode.m in Sources */,
-				2C93A5AF178209AD0014001B /* STTTAgentTerminal+distance.m in Sources */,
 				2C93A5B8178420DC0014001B /* STTTAgentTask+remainingTime.m in Sources */,
 				A50B027C19EF5C46008612CD /* STAgentTaskRepairCodeService.m in Sources */,
 				2C93A5C1178471B60014001B /* STTTMapAnnotation.m in Sources */,
@@ -552,13 +593,14 @@
 				2C93A5C4178597940014001B /* STTTCommentVC.m in Sources */,
 				A54DEE8E19D2501600D7D1C7 /* STTTAgentTask+cellcoloring.m in Sources */,
 				2C0CDDDA1B47BDE0000CA183 /* STTTAgentTask.m in Sources */,
+				2CA06B061C4A897C00383AC9 /* STTTAgentTerminal+CoreDataProperties.m in Sources */,
 				A59C60F419C92DDE0028A8F7 /* STTTDataModel2.xcdatamodeld in Sources */,
 				A50B028219EF6E98008612CD /* STTTAgentTaskRepair.m in Sources */,
-				2C93A5C717859F880014001B /* STTTAgentTerminal.m in Sources */,
 				2C0CDDDD1B47BF06000CA183 /* STAgentTaskComponentService.m in Sources */,
 				2C0CDDE61B47C914000CA183 /* STEditTaskComponentsTVC.m in Sources */,
 				2CE7E4B5179D31B000113A6A /* STTTMainTVC.m in Sources */,
 				2C0CDDE91B491763000CA183 /* STTTComponentsController.m in Sources */,
+				2CA06B071C4A897C00383AC9 /* STTTAgentTerminal.m in Sources */,
 				2CC47BEA1AE76872008F5250 /* STAgentTaskDefectCodeService.m in Sources */,
 				2CE7E4BA179D5CE300113A6A /* STTTInfoTVC.m in Sources */,
 				2C0CDDD41B47BDDF000CA183 /* STTTAgentComponent.m in Sources */,
@@ -637,6 +679,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -688,6 +731,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TerminalTracker/TerminalTracker-Prefix.pch";
 				INFOPLIST_FILE = "TerminalTracker/TerminalTracker-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "net.unact.ios.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -700,6 +744,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TerminalTracker/TerminalTracker-Prefix.pch";
 				INFOPLIST_FILE = "TerminalTracker/TerminalTracker-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "net.unact.ios.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -712,13 +757,14 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
 					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+					"$(inherited)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TerminalTracker/TerminalTracker-Prefix.pch";
 				INFOPLIST_FILE = "TerminalTrackerTests/TerminalTrackerTests-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "grigoriev.maxim-gmail.com.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = octest;
 			};
 			name = Debug;
 		};
@@ -729,13 +775,14 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
 					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+					"$(inherited)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TerminalTracker/TerminalTracker-Prefix.pch";
 				INFOPLIST_FILE = "TerminalTrackerTests/TerminalTrackerTests-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "grigoriev.maxim-gmail.com.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = octest;
 			};
 			name = Release;
 		};
@@ -775,6 +822,7 @@
 		A59C60F119C92DDE0028A8F7 /* STTTDataModel2.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				2CA06AFE1C4A890A00383AC9 /* STTTDataModel 9.xcdatamodel */,
 				2C0CDDC81B47BBDF000CA183 /* STTTDataModel 8.xcdatamodel */,
 				2C42ECBD1B14575F00B5C91A /* STTTDataModel 7.xcdatamodel */,
 				2C42ECA51B05F0F800B5C91A /* STTTDataModel 6.xcdatamodel */,
@@ -784,7 +832,7 @@
 				A505080E19E75F0100632027 /* STTTDataModel 3.xcdatamodel */,
 				A59C60F319C92DDE0028A8F7 /* STTTDataModel.xcdatamodel */,
 			);
-			currentVersion = 2C0CDDC81B47BBDF000CA183 /* STTTDataModel 8.xcdatamodel */;
+			currentVersion = 2CA06AFE1C4A890A00383AC9 /* STTTDataModel 9.xcdatamodel */;
 			path = STTTDataModel2.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

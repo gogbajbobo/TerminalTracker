@@ -665,9 +665,10 @@
         terminal.location = location;
     }
     
-    terminal.code = [properties valueForKey:@"code"];
-    terminal.errorText = [properties valueForKey:@"errortext"];
-    terminal.srcSystemName = [properties valueForKey:@"src_system_name"];
+    terminal.code = properties[@"code"];
+    terminal.errorText = properties[@"errortext"];
+    terminal.srcSystemName = properties[@"src_system_name"];
+    terminal.mobileop = properties[@"mobileop"];
     
     NSDate *lastActivityTime = [self extractDateFrom:properties forKey:@"lastactivitytime"];
     

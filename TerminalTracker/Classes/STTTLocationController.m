@@ -75,16 +75,29 @@
 }
 
 - (CLLocationManager *)locationManager {
+    
     if (!_locationManager) {
+        
         _locationManager = [[CLLocationManager alloc] init];
         _locationManager.delegate = self;
         _locationManager.distanceFilter = self.distanceFilter;
         _locationManager.desiredAccuracy = self.desiredAccuracy;
-        self.locationManager.pausesLocationUpdatesAutomatically = NO;
+        _locationManager.pausesLocationUpdatesAutomatically = NO;
+        
+        if ([_locationManager respondsToSelector:@selector(allowsBackgroundLocationUpdates)]) {
+            
+            _locationManager.allowsBackgroundLocationUpdates = YES;
+            NSLog(@"STTTLocationController allowsBackgroundLocationUpdates set");
+            
+        }
+
     }
+
 //    NSLog(@"distanceFilter %f", _locationManager.distanceFilter);
 //    NSLog(@"desiredAccuracy %f", _locationManager.desiredAccuracy);
+    
     return _locationManager;
+    
 }
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
