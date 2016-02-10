@@ -319,12 +319,10 @@
         if([current isKindOfClass:[AVMetadataMachineReadableCodeObject class]]) {
             
             AVMetadataMachineReadableCodeObject *readableCodeObject = (AVMetadataMachineReadableCodeObject *)current;
-            
-            NSLog(@"readableCodeObject.type %@", readableCodeObject.type);
+//            NSLog(@"readableCodeObject.type %@", readableCodeObject.type);
             
             NSString *scannedValue = readableCodeObject.stringValue;
-            
-            NSLog(@"scannedValue %@", scannedValue);
+//            NSLog(@"scannedValue %@", scannedValue);
             
             if (!self.isCheckingBarcode) {
                 [self checkScannedBarcode:scannedValue withType:readableCodeObject.type];
