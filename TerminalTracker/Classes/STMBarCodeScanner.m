@@ -122,6 +122,9 @@
 
 - (void)checkScannedBarcode:(NSString *)barcode withType:(NSString *)type {
     
+    if (self.isCheckingBarcode) return;
+
+    
     self.isCheckingBarcode = YES;
     
     if ([type isEqualToString:AVMetadataObjectTypeCode128Code]) {
@@ -144,6 +147,9 @@
                                                                       range:NSMakeRange(0, barcode.length)];
                 
                 if (numberOfMatches > 0) {
+                    
+                    NSString *logMessage = [NSString stringWithFormat:@"barcode %@ matches with mask %@", barcode, mask];
+                    [[(STSession *)[STSessionManager sharedManager].currentSession logger] saveLogMessageWithText:logMessage type:@""];
                     
                     barcodeIsGood = YES;
                     break;
