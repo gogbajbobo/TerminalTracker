@@ -103,20 +103,30 @@
 
 #pragma mark - NSFetchedResultsController
 
+- (NSFetchRequest *)nonsyncedTasksRequest {
+    
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:NSStringFromClass([STTTAgentTask class])];
+    request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"sqts"
+                                                                                     ascending:YES
+                                                                                      selector:@selector(compare:)]];
+    [request setIncludesSubentities:YES];
+    request.predicate = [NSPredicate predicateWithFormat:@"lts == %@ || ts > lts", nil];
+    request.fetchLimit = self.fetchLimit;
+
+    return request;
+    
+}
+
 - (NSFetchedResultsController *)resultsController {
     
     if (!_resultsController) {
         
-        if ([(STSession *)self.session document].managedObjectContext) {
+        NSManagedObjectContext *context = [(STSession *)self.session document].managedObjectContext;
+        
+        if (context) {
             
-            NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:NSStringFromClass([STTTAgentTask class])];
-            request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"sqts" ascending:YES selector:@selector(compare:)]];
-            [request setIncludesSubentities:YES];
-            request.predicate = [NSPredicate predicateWithFormat:@"SELF.lts == %@ || SELF.ts > SELF.lts", nil];
-            request.fetchLimit = self.fetchLimit;
-            
-            _resultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request
-                                                                     managedObjectContext:[(STSession *)self.session document].managedObjectContext
+            _resultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:[self nonsyncedTasksRequest]
+                                                                     managedObjectContext:context
                                                                        sectionNameKeyPath:nil
                                                                                 cacheName:nil];
             _resultsController.delegate = self;
@@ -165,10 +175,24 @@
 }
 
 - (NSArray *)nonsyncedTasks {
-    return self.resultsController.fetchedObjects;
+    
+    NSManagedObjectContext *context = [(STSession *)self.session document].managedObjectContext;
+    
+    if (context) {
+        
+        return [context executeFetchRequest:[self nonsyncedTasksRequest] error:nil];
+        
+    } else {
+        
+        return nil;
+        
+    }
+
 }
 
 - (NSArray *)nonsyncedLogMessages {
+    
+    return nil;
     
     NSManagedObjectContext *context = [(STSession *)self.session document].managedObjectContext;
     
@@ -179,7 +203,7 @@
                                                                                          ascending:YES
                                                                                           selector:@selector(compare:)]];
         [request setIncludesSubentities:YES];
-        request.predicate = [NSPredicate predicateWithFormat:@"SELF.ts != nil AND (SELF.lts == %@ || SELF.ts > SELF.lts)", nil];
+        request.predicate = [NSPredicate predicateWithFormat:@"ts != nil AND (lts == %@ || ts > lts)", nil];
         request.fetchLimit = self.fetchLimit;
         
         return [context executeFetchRequest:request error:nil];
@@ -378,19 +402,25 @@
 //    NSLog(@"URL %@", connection.originalRequest.URL.absoluteString);
     
     if (![responseJSON isKindOfClass:[NSDictionary class]]) {
+        
         [[(STSession *)self.session logger] saveLogMessageWithText:@"Sync: response is not dictionary" type:@"error"];
         self.syncing = NO;
         
     } else {
+        
         NSString *errorString = [(NSDictionary *)responseJSON valueForKey:@"error"];
         
         if (errorString && ![errorString isEqualToString:@"ok"]) {
+            
             [[(STSession *)self.session logger] saveLogMessageWithText:[NSString stringWithFormat:@"Sync: response error: %@", errorString] type:@"error"];
             self.syncing = NO;
             
         } else {
+            
             id objectsArray = [(NSDictionary *)responseJSON valueForKey:@"data"];
+            
             if ([objectsArray isKindOfClass:[NSArray class]]) {
+                
                 NSUInteger objectsCount = [(NSArray *)objectsArray count];
                 
                 NSLog(@"originalRequest.URL %@", connection.originalRequest.URL.absoluteString);
@@ -422,8 +452,14 @@
                     
                 }
                 
+                [[self.session document] saveDocument:^(BOOL success) {
+                    
+                }];
+                
                 if (self.syncing) {
+                    
                     self.syncing = NO;
+                    
                     if ([[NSString stringWithFormat:@"%@", connection.originalRequest.URL] isEqualToString:self.recieveDataServerURI]) {
                         
                         self.dataOffset = [(NSDictionary *)responseJSON valueForKey:@"newsNextOffset"];
