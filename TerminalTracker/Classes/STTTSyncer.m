@@ -8,6 +8,9 @@
 
 #import "STTTSyncer.h"
 #import <STManagedTracker/STSession.h>
+
+#import "STLogMessage.h"
+
 #import "STTTAgentTerminal.h"
 #import "STTTAgentTask.h"
 #import "STTTTerminalLocation.h"
@@ -140,7 +143,7 @@
         
         NSArray *nonsyncedTasks = [self nonsyncedTasks];
         
-        NSString *logMessage = [NSString stringWithFormat:@"unsynced object count %d", nonsyncedTasks.count];
+        NSString *logMessage = [NSString stringWithFormat:@"unsynced tasks count %d", nonsyncedTasks.count];
         [[(STSession *)self.session logger] saveLogMessageWithText:logMessage type:@""];
         
         if (nonsyncedTasks.count == 0) {
@@ -150,7 +153,11 @@
 //                });
         
         } else {
-            [self sendData:[self JSONFrom:nonsyncedTasks] toServer:self.sendDataServerURI withParameters:nil];
+            
+            NSArray *nonsyncedObjects = [nonsyncedTasks arrayByAddingObjectsFromArray:[self nonsyncedLogMessages]];
+
+            [self sendData:[self JSONFrom:nonsyncedObjects] toServer:self.sendDataServerURI withParameters:nil];
+            
         }
 
     }
@@ -158,8 +165,30 @@
 }
 
 - (NSArray *)nonsyncedTasks {
-    
     return self.resultsController.fetchedObjects;
+}
+
+- (NSArray *)nonsyncedLogMessages {
+    
+    NSManagedObjectContext *context = [(STSession *)self.session document].managedObjectContext;
+    
+    if (context) {
+        
+        NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:NSStringFromClass([STLogMessage class])];
+        request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"sqts"
+                                                                                         ascending:YES
+                                                                                          selector:@selector(compare:)]];
+        [request setIncludesSubentities:YES];
+        request.predicate = [NSPredicate predicateWithFormat:@"SELF.ts != nil AND (SELF.lts == %@ || SELF.ts > SELF.lts)", nil];
+        request.fetchLimit = self.fetchLimit;
+        
+        return [context executeFetchRequest:request error:nil];
+        
+    } else {
+        
+        return nil;
+        
+    }
 
 }
 
@@ -168,15 +197,17 @@
     NSMutableArray *syncDataArray = [NSMutableArray array];
     
     for (NSManagedObject *object in dataForSyncing) {
+
+        [object setPrimitiveValue:[NSDate date] forKey:@"sts"];
+
+        NSMutableDictionary *objectDictionary = [self dictionaryForObject:object];
+        NSMutableDictionary *propertiesDictionary = [self propertiesDictionaryForObject:object];
         
+        objectDictionary[@"properties"] = propertiesDictionary;
+        [syncDataArray addObject:objectDictionary];
+
         if ([object isKindOfClass:[STTTAgentTask class]]) {
             
-            [object setPrimitiveValue:[NSDate date] forKey:@"sts"];
-            NSMutableDictionary *objectDictionary = [self dictionaryForObject:object];
-            NSMutableDictionary *propertiesDictionary = [self propertiesDictionaryForObject:object];
-            
-            [objectDictionary setObject:propertiesDictionary forKey:@"properties"];
-            [syncDataArray addObject:objectDictionary];
             [syncDataArray addObjectsFromArray:[self arrayWithTaskRepaisToSync:(STTTAgentTask*)object]];
             [syncDataArray addObjectsFromArray:[self arrayWithTaskDefectsToSync:(STTTAgentTask*)object]];
             [syncDataArray addObjectsFromArray:[self arrayWithTaskComponentsToSync:(STTTAgentTask*)object]];
@@ -282,30 +313,59 @@
 
 - (NSMutableDictionary *)dictionaryForObject:(NSManagedObject *)object {
     
-    NSString *name = @"megaport.iAgentTask";
+    NSString *name = @"";
+    
+    if ([object isKindOfClass:[STTTAgentTask class]]) {
+        name = @"megaport.iAgentTask";
+    } else if ([object isKindOfClass:[STLogMessage class]]) {
+        name = @"megaport.iLogMessage";
+    }
+
     NSString *xid = [NSString stringWithFormat:@"%@", [object valueForKey:@"xid"]];
     NSCharacterSet *charsToRemove = [NSCharacterSet characterSetWithCharactersInString:@"< >"];
     xid = [[xid stringByTrimmingCharactersInSet:charsToRemove] stringByReplacingOccurrencesOfString:@" " withString:@""];
     
-    return [NSMutableDictionary dictionaryWithObjectsAndKeys:name, @"name", xid, @"xid", nil];
-    
+    return @{@"name": name, @"xid": xid}.mutableCopy;
+
 }
 
 - (NSMutableDictionary *)propertiesDictionaryForObject:(NSManagedObject *)object {
     
-    double latitude = [[(STTTAgentTask *)object visitLocation].latitude doubleValue];
-    double longitude = [[(STTTAgentTask *)object visitLocation].longitude doubleValue];
+    if ([object isKindOfClass:[STTTAgentTask class]]) {
+        
+        STTTAgentTask *task = (STTTAgentTask *)object;
 
-    NSMutableDictionary *propertiesDictionary = [NSMutableDictionary dictionary];
-    
-    [propertiesDictionary setValue:[NSString stringWithFormat:@"%@", [object valueForKey:@"ts"]] forKey:@"ts"];
-    [propertiesDictionary setValue:[object valueForKey:@"servstatus"] forKey:@"servstatus"];
-    [propertiesDictionary setValue:[object valueForKey:@"commentText"] forKey:@"commentText"];
-    [propertiesDictionary setValue:[NSNumber numberWithDouble:latitude] forKey:@"latitude"];
-    [propertiesDictionary setValue:[NSNumber numberWithDouble:longitude] forKey:@"longitude"];
-    [propertiesDictionary setValue:[object valueForKey:@"terminalBarcode"] forKey:@"terminalBarcode"];
-    
-    return propertiesDictionary;
+        double latitude = task.visitLocation.latitude.doubleValue;
+        double longitude = task.visitLocation.longitude.doubleValue;
+        
+        NSMutableDictionary *propertiesDictionary = [NSMutableDictionary dictionary];
+        
+        propertiesDictionary[@"ts"] = [NSString stringWithFormat:@"%@", task.ts];
+        propertiesDictionary[@"servstatus"] = task.servstatus;
+        propertiesDictionary[@"commentText"] = task.commentText;
+        propertiesDictionary[@"latitude"] = [NSNumber numberWithDouble:latitude];
+        propertiesDictionary[@"longitude"] = [NSNumber numberWithDouble:longitude];
+        propertiesDictionary[@"terminalBarcode"] = task.terminalBarcode;
+        
+        return propertiesDictionary;
+
+    } else if ([object isKindOfClass:[STLogMessage class]]) {
+        
+        STLogMessage *logMessage = (STLogMessage *)object;
+
+        NSMutableDictionary *propertiesDictionary = [NSMutableDictionary dictionary];
+        
+        propertiesDictionary[@"ts"] = [NSString stringWithFormat:@"%@", logMessage.ts];
+        propertiesDictionary[@"text"] = logMessage.text;
+        propertiesDictionary[@"type"] = logMessage.type;
+        
+        return propertiesDictionary;
+
+    } else {
+        
+        return nil;
+        
+    }
     
 }
 
