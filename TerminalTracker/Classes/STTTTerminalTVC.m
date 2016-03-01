@@ -12,7 +12,7 @@
 #import <CoreLocation/CoreLocation.h>
 #import "STTTMapAnnotation.h"
 #import "STTTTerminalLocation.h"
-#import "STTTAgentTask+remainingTime.h"
+#import "STTTAgentTask.h"
 #import "STTTTaskTVC.h"
 #import "STUtilities.h"
 #import "STTTAgentTask+cellcoloring.h"

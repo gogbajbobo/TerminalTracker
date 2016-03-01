@@ -2,7 +2,7 @@
 //  STTTAgentTerminal+CoreDataProperties.h
 //  TerminalTracker
 //
-//  Created by Maxim Grigoriev on 16/01/16.
+//  Created by Maxim Grigoriev on 20/01/16.
 //  Copyright © 2016 Maxim Grigoriev. All rights reserved.
 //
 //  Choose "Create NSManagedObject Subclass…" from the Core Data editor menu
@@ -20,10 +20,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, nonatomic, retain) NSNumber *distance;
 @property (nullable, nonatomic, retain) NSString *errorText;
 @property (nullable, nonatomic, retain) NSDate *lastActivityTime;
-@property (nullable, nonatomic, retain) NSString *srcSystemName;
 @property (nullable, nonatomic, retain) NSString *mobileop;
+@property (nullable, nonatomic, retain) NSString *srcSystemName;
 @property (nullable, nonatomic, retain) STTTTerminalLocation *location;
 @property (nullable, nonatomic, retain) NSSet<STTTAgentTask *> *tasks;
+@property (nullable, nonatomic, retain) NSSet<STTTAgentTaskComponent *> *components;
 
 @end
 
@@ -33,6 +34,11 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)removeTasksObject:(STTTAgentTask *)value;
 - (void)addTasks:(NSSet<STTTAgentTask *> *)values;
 - (void)removeTasks:(NSSet<STTTAgentTask *> *)values;
+
+- (void)addComponentsObject:(STTTAgentTaskComponent *)value;
+- (void)removeComponentsObject:(STTTAgentTaskComponent *)value;
+- (void)addComponents:(NSSet<STTTAgentTaskComponent *> *)values;
+- (void)removeComponents:(NSSet<STTTAgentTaskComponent *> *)values;
 
 @end
 

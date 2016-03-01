@@ -1,5 +1,5 @@
 //
-//  STTTAgentComponent.h
+//  STTTAgentComponentGroup.h
 //  TerminalTracker
 //
 //  Created by Maxim Grigoriev on 20/01/16.
@@ -9,11 +9,11 @@
 #import <Foundation/Foundation.h>
 #import "STComment.h"
 
-@class STTTAgentComponentGroup, STTTAgentTaskComponent;
+@class STTTAgentComponent;
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface STTTAgentComponent : STComment
+@interface STTTAgentComponentGroup : STComment
 
 // Insert code here to declare functionality of your managed object subclass
 
@@ -21,4 +21,4 @@ NS_ASSUME_NONNULL_BEGIN
 
 NS_ASSUME_NONNULL_END
 
-#import "STTTAgentComponent+CoreDataProperties.h"
+#import "STTTAgentComponentGroup+CoreDataProperties.h"

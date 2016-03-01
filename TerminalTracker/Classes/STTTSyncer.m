@@ -13,7 +13,7 @@
 #import "STTTTerminalLocation.h"
 #import "STTTTaskLocation.h"
 
-#import "STTTAgentTask+remainingTime.h"
+#import "STTTAgentTask.h"
 
 #import "STTTAgentRepairCode.h"
 #import "STTTAgentTaskRepair.h"
@@ -23,6 +23,8 @@
 
 #import "STTTAgentComponent.h"
 #import "STTTAgentTaskComponent.h"
+
+#import "STTTAgentBarcodeType.h"
 
 #import "STTTComponentsController.h"
 
@@ -301,8 +303,10 @@
     [propertiesDictionary setValue:[object valueForKey:@"commentText"] forKey:@"commentText"];
     [propertiesDictionary setValue:[NSNumber numberWithDouble:latitude] forKey:@"latitude"];
     [propertiesDictionary setValue:[NSNumber numberWithDouble:longitude] forKey:@"longitude"];
+    [propertiesDictionary setValue:[object valueForKey:@"terminalBarcode"] forKey:@"terminalBarcode"];
     
     return propertiesDictionary;
+    
 }
 
 - (void)parseResponse:(NSData *)responseData fromConnection:(NSURLConnection *)connection {
@@ -368,7 +372,7 @@
 
                         if ([pageRowCount intValue] < [pageSize intValue]) {
 
-                            [[(STSession *)self.session logger] saveLogMessageWithText:@"All data recieved" type:@""];
+                            [[(STSession *)self.session logger] saveLogMessageWithText:@"All data received" type:@""];
                             [self showNewTaskNotification:nil];
                             self.newTasksCount = 0;
             
@@ -497,8 +501,14 @@
         
         [self newTaskComponentWithXid:xidData andProperties:properties];
 
+    } else if ([name isEqualToString:@"megaport.iAgentBarcodeType"]) {
+        
+        [self newBarcodeTypeWithXid:xidData andProperties:properties];
+        
     } else {
+        
         NSLog(@"object %@", object);
+        
     }
 
 }
@@ -713,6 +723,7 @@
         
     } else {
 
+        task.terminalBarcode = [properties valueForKey:@"terminalBarcode"];
         task.terminalBreakName = [properties valueForKey:@"terminal_break_name"];
         task.commentText = [properties valueForKey:@"techinfo"];
         id routePriority = [properties valueForKey:@"route_priority"];
@@ -742,6 +753,21 @@
     }
 
 }
+
+- (void)newBarcodeTypeWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties {
+    
+    STTTAgentBarcodeType *barcodeType = (STTTAgentBarcodeType *)[self entityByClass:[STTTAgentBarcodeType class] andXid:xidData];
+    barcodeType.name = [properties valueForKey:@"name"];
+    barcodeType.type = [properties valueForKey:@"type"];
+    barcodeType.mask = [properties valueForKey:@"mask"];
+    barcodeType.symbology = [properties valueForKey:@"symbology"];
+
+    barcodeType.lts = [NSDate date];
+    
+    NSLog(@"get barcodeType.xid %@", barcodeType.xid);
+
+}
+
 
 - (NSDate*)extractDateFrom:(NSDictionary*)properties forKey:(NSString*)key{
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
@@ -859,7 +885,8 @@
                              NSStringFromClass([STTTAgentTerminal class]),
                              NSStringFromClass([STTTAgentRepairCode class]),
                              NSStringFromClass([STTTAgentDefectCode class]),
-                             NSStringFromClass([STTTAgentComponent class])];
+                             NSStringFromClass([STTTAgentComponent class]),
+                             NSStringFromClass([STTTAgentBarcodeType class])];
 
     for (NSString *entityName in entityNames) {
         
