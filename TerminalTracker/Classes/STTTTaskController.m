@@ -88,21 +88,30 @@
 -(void)getAddressForNoAddressTasks {
     
     if (!self.session.syncer.syncing) {
+        
         STTTAgentTerminal *terminal = [self.noAddressTerminals dequeue];
-//        NSLog(@"terminal %@", terminal);
-        if (!terminal) {
-            self.noAddressTerminals = nil;
-        } else {
-            self.session.syncer.syncing = YES;
-            NSString *terminalXid = [NSString stringWithFormat:@"%@", CFUUIDCreateString(nil, CFUUIDCreateFromUUIDBytes(nil, *(CFUUIDBytes *)[terminal.xid bytes]))];
-            NSString *serverURL = [NSString stringWithFormat:@"%@/megaport.iAgentTerminal/%@", [(STTTSyncer *)self.session.syncer restServerURI], terminalXid];
-            
-            NSString *logMessage = [NSString stringWithFormat:@"Get data for terminal %@", terminalXid];
-            [[(STSession *)self.session logger] saveLogMessageWithText:logMessage type:@""];
 
-//            NSLog(@"serverURL %@", serverURL);
-            [self.session.syncer sendData:nil toServer:serverURL withParameters:nil];
+        if (!terminal) {
+            
+            self.noAddressTerminals = nil;
+            
+        } else {
+            
+            if (terminal.xid) {
+            
+                self.session.syncer.syncing = YES;
+                NSString *terminalXid = [NSString stringWithFormat:@"%@", CFUUIDCreateString(nil, CFUUIDCreateFromUUIDBytes(nil, *(CFUUIDBytes *)[terminal.xid bytes]))];
+                NSString *serverURL = [NSString stringWithFormat:@"%@/megaport.iAgentTerminal/%@", [(STTTSyncer *)self.session.syncer restServerURI], terminalXid];
+                
+                NSString *logMessage = [NSString stringWithFormat:@"Get data for terminal %@", terminalXid];
+                [[(STSession *)self.session logger] saveLogMessageWithText:logMessage type:@""];
+                
+                [self.session.syncer sendData:nil toServer:serverURL withParameters:nil];
+
+            }
+            
         }
+        
     }
     
 }
