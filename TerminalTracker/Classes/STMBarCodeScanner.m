@@ -120,6 +120,14 @@
 
 }
 
+// next method just for testing
++ (void)checkBarcode:(NSString *)barcode {
+    
+    STMBarCodeScanner *scanner = [[STMBarCodeScanner alloc] init];
+    [scanner checkScannedBarcode:barcode withType:AVMetadataObjectTypeCode128Code];
+    
+}
+
 - (void)checkScannedBarcode:(NSString *)barcode withType:(NSString *)type {
     
     if (self.isCheckingBarcode) return;
@@ -161,7 +169,16 @@
         }
         
         if (barcodeIsGood) {
+            
             [self didSuccessfullyScan:barcode];
+            
+        } else {
+            
+            NSString *masksString = [masks componentsJoinedByString:@", "];
+            
+            NSString *logMessage = [NSString stringWithFormat:@"barcode %@ not matches with masks %@", barcode, masksString];
+            [[(STSession *)[STSessionManager sharedManager].currentSession logger] saveLogMessageWithText:logMessage type:@"error"];
+
         }
         
     }

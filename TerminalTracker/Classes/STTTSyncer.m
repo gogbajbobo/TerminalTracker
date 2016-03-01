@@ -156,7 +156,9 @@
         NSString *logMessage = [NSString stringWithFormat:@"unsynced tasks count %d", nonsyncedTasks.count];
         [[(STSession *)self.session logger] saveLogMessageWithText:logMessage type:@""];
         
-        if (nonsyncedTasks.count == 0) {
+        NSArray *nonsyncedObjects = [nonsyncedTasks arrayByAddingObjectsFromArray:[self nonsyncedLogMessages]];
+
+        if (nonsyncedObjects.count == 0) {
             
 //                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(30 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [self sendData:nil toServer:self.recieveDataServerURI withParameters:self.requestParameters];
@@ -164,8 +166,6 @@
         
         } else {
             
-            NSArray *nonsyncedObjects = [nonsyncedTasks arrayByAddingObjectsFromArray:[self nonsyncedLogMessages]];
-
             [self sendData:[self JSONFrom:nonsyncedObjects] toServer:self.sendDataServerURI withParameters:nil];
             
         }
@@ -191,9 +191,7 @@
 }
 
 - (NSArray *)nonsyncedLogMessages {
-    
-    return nil;
-    
+
     NSManagedObjectContext *context = [(STSession *)self.session document].managedObjectContext;
     
     if (context) {

@@ -39,4 +39,8 @@ typedef NS_ENUM(NSUInteger, STMBarCodeScannerStatus) {
 - (void)stopScan;
 
 
+// next method just for testing
++ (void)checkBarcode:(NSString *)barcode;
+
+
 @end
