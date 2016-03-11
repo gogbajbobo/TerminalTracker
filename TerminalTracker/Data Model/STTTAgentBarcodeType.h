@@ -1,19 +1,17 @@
 //
-//  STTTAgentComponent.h
+//  STTTAgentBarcodeType.h
 //  TerminalTracker
 //
-//  Created by Maxim Grigoriev on 20/01/16.
+//  Created by Maxim Grigoriev on 10/02/16.
 //  Copyright © 2016 Maxim Grigoriev. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 #import "STComment.h"
 
-@class STTTAgentComponentGroup, STTTAgentTaskComponent;
-
 NS_ASSUME_NONNULL_BEGIN
 
-@interface STTTAgentComponent : STComment
+@interface STTTAgentBarcodeType : STComment
 
 // Insert code here to declare functionality of your managed object subclass
 
@@ -21,4 +19,4 @@ NS_ASSUME_NONNULL_BEGIN
 
 NS_ASSUME_NONNULL_END
 
-#import "STTTAgentComponent+CoreDataProperties.h"
+#import "STTTAgentBarcodeType+CoreDataProperties.h"

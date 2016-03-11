@@ -29,8 +29,13 @@
 #import "STAgentTaskDefectCodeService.h"
 #import "STAgentTaskComponentService.h"
 
+#import "STMBarCodeScanner.h"
+#import "STTTMainNC.h"
 
-@interface STTTTaskTVC ()
+#import <AVFoundation/AVFoundation.h>
+
+
+@interface STTTTaskTVC () <UIAlertViewDelegate, STMBarCodeScannerDelegate>
 
 @property (nonatomic) BOOL waitingLocation;
 
@@ -47,6 +52,9 @@
 @property (nonatomic, strong) CLLocation *location;
 
 @property (nonatomic) BOOL taskCompleted;
+
+@property (nonatomic, strong) STMBarCodeScanner *cameraBarCodeScanner;
+@property (nonatomic, weak) AVCaptureVideoPreviewLayer *cameraLayer;
 
 
 @end
@@ -139,10 +147,22 @@
     
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    
+    [super viewDidAppear:animated];
+    
+//    if ([self isMovingToParentViewController]) {
+//        if (!self.task.terminalBarcode) [self showAddTerminalCodeAlert];
+//    }
+    
+}
+
 - (void)viewWillDisappear:(BOOL)animated {
     
     [super viewWillDisappear:animated];
+    
     [self removeObservers];
+    [self stopCameraScanner];
     
 }
 
@@ -162,13 +182,13 @@
             return 1;
             break;
         case 1:
-            return 4;
+            return (self.task.terminalBarcode) ? 4 : 5;
             break;
         case 2:
             return 1;
             break;
         case 3:
-            return 3;
+            return 4;
             break;
             
         default:
@@ -224,7 +244,11 @@
                     cell = [cell initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
                     [self addButtonsToCell:cell];
                     break;
-                    
+                case 4:
+                    cell = [cell initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+                    [self addTerminalCodeToCell:cell];
+                    break;
+
                 default:
                     break;
             }
@@ -238,14 +262,18 @@
         case 3:
             switch (indexPath.row) {
                 case 0:
-                    cell = [cell initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
-                    [self addInfoToCell:cell];
+                    cell = [cell initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+                    [self addTerminalCodeToCell:cell];
                     break;
                 case 1:
                     cell = [cell initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
-                    [self addAddressToCell:cell];
+                    [self addInfoToCell:cell];
                     break;
                 case 2:
+                    cell = [cell initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
+                    [self addAddressToCell:cell];
+                    break;
+                case 3:
                     cell = [cell initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
                     [self addMapToCell:cell];
                     break;
@@ -352,6 +380,24 @@
     
 }
 
+- (void)addTerminalCodeToCell:(UITableViewCell *)cell {
+    
+    if (self.task.terminalBarcode) {
+
+        cell.textLabel.text = [NSString stringWithFormat:@"Инв. номер: %@", self.task.terminalBarcode];
+        cell.textLabel.textColor = [UIColor blackColor];
+        cell.textLabel.textAlignment = NSTextAlignmentLeft;
+
+    } else {
+        
+        cell.textLabel.text = @"Сканировать инв. номер";
+        cell.textLabel.textColor = [UIColor redColor];
+        cell.textLabel.textAlignment = NSTextAlignmentCenter;
+
+    }
+    
+}
+
 - (void)addInfoToCell:(UITableViewCell *)cell {
     
     cell.textLabel.text = self.task.terminal.code ? self.task.terminal.code : @"Н/Д";
@@ -376,8 +422,10 @@
     lastActivityLabel.tag = 666;
     lastActivityLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
     
-    [[cell.contentView viewWithTag:666] removeFromSuperview];
-    [cell.contentView addSubview:lastActivityLabel];
+//    [[cell.contentView viewWithTag:666] removeFromSuperview];
+//    [cell.contentView addSubview:lastActivityLabel];
+
+    cell.accessoryView = lastActivityLabel;
     
 }
 
@@ -416,7 +464,7 @@
     switch (indexPath.section) {
         case 3:
             switch (indexPath.row) {
-                case 2:
+                case 3:
                     return 160;
                     break;
                     
@@ -434,6 +482,10 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
+    if (self.cameraBarCodeScanner.status == STMBarCodeScannerStarted) {
+        return;
+    }
+    
     switch (indexPath.section) {
         case 0:
             // do nothing
@@ -467,7 +519,11 @@
                         }
                     }
                     break;
-        
+                    
+                case 4:
+                    [self startCameraScanner];
+                    break;
+                    
                 default:
                     break;
             }
@@ -478,11 +534,32 @@
             break;
             
         case 3:
-            [self performSegueWithIdentifier:@"goToTerminal" sender:self.task.terminal];
+            if (indexPath.row == 0) {
+                [self startCameraScanner];
+            } else {
+                [self performSegueWithIdentifier:@"goToTerminal" sender:self.task.terminal];
+            }
             break;
             
         default:
             break;
+    }
+    
+}
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    return ([indexPath compare:[NSIndexPath indexPathForRow:0 inSection:3]] == NSOrderedSame && self.task.terminalBarcode);
+    
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        
+        self.task.terminalBarcode = nil;
+        [self terminalBarcodeValueChanged];
+        
     }
     
 }
@@ -662,6 +739,161 @@
     
     [self.tableView reloadRowsAtIndexPaths:@[buttonCellIndexPath, repairCellIndexPath, componentCellIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
     
+}
+
+- (void)showAddTerminalCodeAlert {
+    
+    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Внимание!"
+                                                        message:@"Необходимо отсканировать штрихкод терминала"
+                                                       delegate:self
+                                              cancelButtonTitle:@"Отмена"
+                                              otherButtonTitles:@"OK", nil];
+        
+        alert.tag = 16;
+        [alert show];
+        
+    }];
+    
+}
+
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
+    
+    if (alertView.tag == 16) {
+        
+        if (buttonIndex == 1) {
+            
+            [self startCameraScanner];
+            
+        }
+        
+    }
+    
+}
+
+
+#pragma mark - barcode scanning
+
+- (void)startCameraScanner {
+    
+    if ([STMBarCodeScanner isCameraAvailable]) {
+        
+        self.cameraBarCodeScanner = [[STMBarCodeScanner alloc] initWithMode:STMBarCodeScannerCameraMode];
+        self.cameraBarCodeScanner.delegate = self;
+
+        UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
+                                                                                      target:self
+                                                                                      action:@selector(cameraBarCodeScannerButtonPressed)];
+        
+        self.navigationItem.leftBarButtonItem = cancelButton;
+        
+//        if ([self.navigationController isKindOfClass:[STTTMainNC class]]) {
+//            [(STTTMainNC *)self.navigationController setShouldRotate:NO];
+//        }
+        
+        [self.cameraBarCodeScanner startScan];
+
+    }
+    
+}
+
+- (void)stopCameraScanner {
+    
+//    if ([self.navigationController isKindOfClass:[STTTMainNC class]]) {
+//        [(STTTMainNC *)self.navigationController setShouldRotate:YES];
+//    }
+
+    [self.cameraBarCodeScanner stopScan];
+    self.cameraBarCodeScanner = nil;
+    self.navigationItem.leftBarButtonItem = nil;
+
+}
+
+- (void)cameraBarCodeScannerButtonPressed {
+    
+    if (self.cameraBarCodeScanner.status == STMBarCodeScannerStarted) {
+        [self stopCameraScanner];
+    }
+    
+}
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    
+    self.cameraLayer.frame = self.view.bounds;
+ 
+    AVCaptureConnection *con = self.cameraLayer.connection;
+    
+    UIInterfaceOrientation interfaceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
+    
+    switch (interfaceOrientation) {
+        case UIInterfaceOrientationUnknown: {
+            break;
+        }
+        case UIInterfaceOrientationPortrait: {
+            con.videoOrientation = AVCaptureVideoOrientationPortrait;
+            break;
+        }
+        case UIInterfaceOrientationPortraitUpsideDown: {
+            con.videoOrientation = AVCaptureVideoOrientationPortraitUpsideDown;
+            break;
+        }
+        case UIInterfaceOrientationLandscapeLeft: {
+            con.videoOrientation = AVCaptureVideoOrientationLandscapeLeft;
+            break;
+        }
+        case UIInterfaceOrientationLandscapeRight: {
+            con.videoOrientation = AVCaptureVideoOrientationLandscapeRight;
+            break;
+        }
+    }
+
+}
+
+
+#pragma mark - STMBarCodeScannerDelegate
+
+- (UIView *)viewForScanner:(STMBarCodeScanner *)scanner {
+    return self.view;
+}
+
+- (void)cameraLayer:(CALayer *)layer {
+    
+    if ([layer isKindOfClass:[AVCaptureVideoPreviewLayer class]]) {
+        self.cameraLayer = (AVCaptureVideoPreviewLayer *)layer;
+    }
+    
+}
+
+- (void)barCodeScanner:(STMBarCodeScanner *)scanner receiveBarCode:(NSString *)barcode {
+    
+    NSLog(@"barCodeScanner receiveBarCode: %@", barcode);
+    
+    self.task.terminalBarcode = barcode;
+
+    NSString *logMessage = [NSString stringWithFormat:@"add barcode %@ to task", barcode];
+    [[(STSession *)[STSessionManager sharedManager].currentSession logger] saveLogMessageWithText:logMessage type:@""];
+
+    logMessage = [NSString stringWithFormat:@"task barcode now is %@", self.task.terminalBarcode];
+    [[(STSession *)[STSessionManager sharedManager].currentSession logger] saveLogMessageWithText:logMessage type:@""];
+
+    [self terminalBarcodeValueChanged];
+    [self stopCameraScanner];
+
+}
+
+- (void)barCodeScanner:(STMBarCodeScanner *)scanner receiveError:(NSError *)error {
+    
+    NSLog(@"barCodeScanner receiveError: %@", error.localizedDescription);
+    [self stopCameraScanner];
+
+}
+
+- (void)terminalBarcodeValueChanged {
+    
+    [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationNone];
+    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:3]] withRowAnimation:UITableViewRowAnimationNone];
+
 }
 
 

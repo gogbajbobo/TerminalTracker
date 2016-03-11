@@ -8,12 +8,15 @@
 
 #import "STTTSyncer.h"
 #import <STManagedTracker/STSession.h>
+
+#import "STLogMessage.h"
+
 #import "STTTAgentTerminal.h"
 #import "STTTAgentTask.h"
 #import "STTTTerminalLocation.h"
 #import "STTTTaskLocation.h"
 
-#import "STTTAgentTask+remainingTime.h"
+#import "STTTAgentTask.h"
 
 #import "STTTAgentRepairCode.h"
 #import "STTTAgentTaskRepair.h"
@@ -23,6 +26,8 @@
 
 #import "STTTAgentComponent.h"
 #import "STTTAgentTaskComponent.h"
+
+#import "STTTAgentBarcodeType.h"
 
 #import "STTTComponentsController.h"
 
@@ -98,20 +103,30 @@
 
 #pragma mark - NSFetchedResultsController
 
+- (NSFetchRequest *)nonsyncedTasksRequest {
+    
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:NSStringFromClass([STTTAgentTask class])];
+    request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"sqts"
+                                                                                     ascending:YES
+                                                                                      selector:@selector(compare:)]];
+    [request setIncludesSubentities:YES];
+    request.predicate = [NSPredicate predicateWithFormat:@"lts == %@ || ts > lts", nil];
+    request.fetchLimit = self.fetchLimit;
+
+    return request;
+    
+}
+
 - (NSFetchedResultsController *)resultsController {
     
     if (!_resultsController) {
         
-        if ([(STSession *)self.session document].managedObjectContext) {
+        NSManagedObjectContext *context = [(STSession *)self.session document].managedObjectContext;
+        
+        if (context) {
             
-            NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:NSStringFromClass([STTTAgentTask class])];
-            request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"sqts" ascending:YES selector:@selector(compare:)]];
-            [request setIncludesSubentities:YES];
-            request.predicate = [NSPredicate predicateWithFormat:@"SELF.lts == %@ || SELF.ts > SELF.lts", nil];
-            request.fetchLimit = self.fetchLimit;
-            
-            _resultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request
-                                                                     managedObjectContext:[(STSession *)self.session document].managedObjectContext
+            _resultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:[self nonsyncedTasksRequest]
+                                                                     managedObjectContext:context
                                                                        sectionNameKeyPath:nil
                                                                                 cacheName:nil];
             _resultsController.delegate = self;
@@ -138,17 +153,21 @@
         
         NSArray *nonsyncedTasks = [self nonsyncedTasks];
         
-        NSString *logMessage = [NSString stringWithFormat:@"unsynced object count %d", nonsyncedTasks.count];
+        NSString *logMessage = [NSString stringWithFormat:@"unsynced tasks count %d", nonsyncedTasks.count];
         [[(STSession *)self.session logger] saveLogMessageWithText:logMessage type:@""];
         
-        if (nonsyncedTasks.count == 0) {
+        NSArray *nonsyncedObjects = [nonsyncedTasks arrayByAddingObjectsFromArray:[self nonsyncedLogMessages]];
+
+        if (nonsyncedObjects.count == 0) {
             
 //                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(30 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [self sendData:nil toServer:self.recieveDataServerURI withParameters:self.requestParameters];
 //                });
         
         } else {
-            [self sendData:[self JSONFrom:nonsyncedTasks] toServer:self.sendDataServerURI withParameters:nil];
+            
+            [self sendData:[self JSONFrom:nonsyncedObjects] toServer:self.sendDataServerURI withParameters:nil];
+            
         }
 
     }
@@ -157,7 +176,41 @@
 
 - (NSArray *)nonsyncedTasks {
     
-    return self.resultsController.fetchedObjects;
+    NSManagedObjectContext *context = [(STSession *)self.session document].managedObjectContext;
+    
+    if (context) {
+        
+        return [context executeFetchRequest:[self nonsyncedTasksRequest] error:nil];
+        
+    } else {
+        
+        return nil;
+        
+    }
+
+}
+
+- (NSArray *)nonsyncedLogMessages {
+
+    NSManagedObjectContext *context = [(STSession *)self.session document].managedObjectContext;
+    
+    if (context) {
+        
+        NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:NSStringFromClass([STLogMessage class])];
+        request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"sqts"
+                                                                                         ascending:YES
+                                                                                          selector:@selector(compare:)]];
+        [request setIncludesSubentities:YES];
+        request.predicate = [NSPredicate predicateWithFormat:@"ts != nil AND (lts == %@ || ts > lts)", nil];
+        request.fetchLimit = self.fetchLimit;
+        
+        return [context executeFetchRequest:request error:nil];
+        
+    } else {
+        
+        return nil;
+        
+    }
 
 }
 
@@ -166,15 +219,17 @@
     NSMutableArray *syncDataArray = [NSMutableArray array];
     
     for (NSManagedObject *object in dataForSyncing) {
+
+        [object setPrimitiveValue:[NSDate date] forKey:@"sts"];
+
+        NSMutableDictionary *objectDictionary = [self dictionaryForObject:object];
+        NSMutableDictionary *propertiesDictionary = [self propertiesDictionaryForObject:object];
         
+        objectDictionary[@"properties"] = propertiesDictionary;
+        [syncDataArray addObject:objectDictionary];
+
         if ([object isKindOfClass:[STTTAgentTask class]]) {
             
-            [object setPrimitiveValue:[NSDate date] forKey:@"sts"];
-            NSMutableDictionary *objectDictionary = [self dictionaryForObject:object];
-            NSMutableDictionary *propertiesDictionary = [self propertiesDictionaryForObject:object];
-            
-            [objectDictionary setObject:propertiesDictionary forKey:@"properties"];
-            [syncDataArray addObject:objectDictionary];
             [syncDataArray addObjectsFromArray:[self arrayWithTaskRepaisToSync:(STTTAgentTask*)object]];
             [syncDataArray addObjectsFromArray:[self arrayWithTaskDefectsToSync:(STTTAgentTask*)object]];
             [syncDataArray addObjectsFromArray:[self arrayWithTaskComponentsToSync:(STTTAgentTask*)object]];
@@ -280,29 +335,60 @@
 
 - (NSMutableDictionary *)dictionaryForObject:(NSManagedObject *)object {
     
-    NSString *name = @"megaport.iAgentTask";
+    NSString *name = @"";
+    
+    if ([object isKindOfClass:[STTTAgentTask class]]) {
+        name = @"megaport.iAgentTask";
+    } else if ([object isKindOfClass:[STLogMessage class]]) {
+        name = @"megaport.iLogMessage";
+    }
+
     NSString *xid = [NSString stringWithFormat:@"%@", [object valueForKey:@"xid"]];
     NSCharacterSet *charsToRemove = [NSCharacterSet characterSetWithCharactersInString:@"< >"];
     xid = [[xid stringByTrimmingCharactersInSet:charsToRemove] stringByReplacingOccurrencesOfString:@" " withString:@""];
     
-    return [NSMutableDictionary dictionaryWithObjectsAndKeys:name, @"name", xid, @"xid", nil];
-    
+    return @{@"name": name, @"xid": xid}.mutableCopy;
+
 }
 
 - (NSMutableDictionary *)propertiesDictionaryForObject:(NSManagedObject *)object {
     
-    double latitude = [[(STTTAgentTask *)object visitLocation].latitude doubleValue];
-    double longitude = [[(STTTAgentTask *)object visitLocation].longitude doubleValue];
+    if ([object isKindOfClass:[STTTAgentTask class]]) {
+        
+        STTTAgentTask *task = (STTTAgentTask *)object;
 
-    NSMutableDictionary *propertiesDictionary = [NSMutableDictionary dictionary];
+        double latitude = task.visitLocation.latitude.doubleValue;
+        double longitude = task.visitLocation.longitude.doubleValue;
+        
+        NSMutableDictionary *propertiesDictionary = [NSMutableDictionary dictionary];
+        
+        propertiesDictionary[@"ts"] = [NSString stringWithFormat:@"%@", task.ts];
+        propertiesDictionary[@"servstatus"] = task.servstatus;
+        propertiesDictionary[@"commentText"] = task.commentText;
+        propertiesDictionary[@"latitude"] = [NSNumber numberWithDouble:latitude];
+        propertiesDictionary[@"longitude"] = [NSNumber numberWithDouble:longitude];
+        propertiesDictionary[@"terminalBarcode"] = task.terminalBarcode;
+        
+        return propertiesDictionary;
+
+    } else if ([object isKindOfClass:[STLogMessage class]]) {
+        
+        STLogMessage *logMessage = (STLogMessage *)object;
+
+        NSMutableDictionary *propertiesDictionary = [NSMutableDictionary dictionary];
+        
+        propertiesDictionary[@"ts"] = [NSString stringWithFormat:@"%@", logMessage.ts];
+        propertiesDictionary[@"text"] = logMessage.text;
+        propertiesDictionary[@"type"] = logMessage.type;
+        
+        return propertiesDictionary;
+
+    } else {
+        
+        return nil;
+        
+    }
     
-    [propertiesDictionary setValue:[NSString stringWithFormat:@"%@", [object valueForKey:@"ts"]] forKey:@"ts"];
-    [propertiesDictionary setValue:[object valueForKey:@"servstatus"] forKey:@"servstatus"];
-    [propertiesDictionary setValue:[object valueForKey:@"commentText"] forKey:@"commentText"];
-    [propertiesDictionary setValue:[NSNumber numberWithDouble:latitude] forKey:@"latitude"];
-    [propertiesDictionary setValue:[NSNumber numberWithDouble:longitude] forKey:@"longitude"];
-    
-    return propertiesDictionary;
 }
 
 - (void)parseResponse:(NSData *)responseData fromConnection:(NSURLConnection *)connection {
@@ -314,19 +400,25 @@
 //    NSLog(@"URL %@", connection.originalRequest.URL.absoluteString);
     
     if (![responseJSON isKindOfClass:[NSDictionary class]]) {
+        
         [[(STSession *)self.session logger] saveLogMessageWithText:@"Sync: response is not dictionary" type:@"error"];
         self.syncing = NO;
         
     } else {
+        
         NSString *errorString = [(NSDictionary *)responseJSON valueForKey:@"error"];
         
         if (errorString && ![errorString isEqualToString:@"ok"]) {
+            
             [[(STSession *)self.session logger] saveLogMessageWithText:[NSString stringWithFormat:@"Sync: response error: %@", errorString] type:@"error"];
             self.syncing = NO;
             
         } else {
+            
             id objectsArray = [(NSDictionary *)responseJSON valueForKey:@"data"];
+            
             if ([objectsArray isKindOfClass:[NSArray class]]) {
+                
                 NSUInteger objectsCount = [(NSArray *)objectsArray count];
                 
                 NSLog(@"originalRequest.URL %@", connection.originalRequest.URL.absoluteString);
@@ -358,8 +450,14 @@
                     
                 }
                 
+                [[self.session document] saveDocument:^(BOOL success) {
+                    
+                }];
+                
                 if (self.syncing) {
+                    
                     self.syncing = NO;
+                    
                     if ([[NSString stringWithFormat:@"%@", connection.originalRequest.URL] isEqualToString:self.recieveDataServerURI]) {
                         
                         self.dataOffset = [(NSDictionary *)responseJSON valueForKey:@"newsNextOffset"];
@@ -368,7 +466,7 @@
 
                         if ([pageRowCount intValue] < [pageSize intValue]) {
 
-                            [[(STSession *)self.session logger] saveLogMessageWithText:@"All data recieved" type:@""];
+                            [[(STSession *)self.session logger] saveLogMessageWithText:@"All data received" type:@""];
                             [self showNewTaskNotification:nil];
                             self.newTasksCount = 0;
             
@@ -497,8 +595,14 @@
         
         [self newTaskComponentWithXid:xidData andProperties:properties];
 
+    } else if ([name isEqualToString:@"megaport.iAgentBarcodeType"]) {
+        
+        [self newBarcodeTypeWithXid:xidData andProperties:properties];
+        
     } else {
+        
         NSLog(@"object %@", object);
+        
     }
 
 }
@@ -713,6 +817,7 @@
         
     } else {
 
+        task.terminalBarcode = [properties valueForKey:@"terminalBarcode"];
         task.terminalBreakName = [properties valueForKey:@"terminal_break_name"];
         task.commentText = [properties valueForKey:@"techinfo"];
         id routePriority = [properties valueForKey:@"route_priority"];
@@ -742,6 +847,21 @@
     }
 
 }
+
+- (void)newBarcodeTypeWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties {
+    
+    STTTAgentBarcodeType *barcodeType = (STTTAgentBarcodeType *)[self entityByClass:[STTTAgentBarcodeType class] andXid:xidData];
+    barcodeType.name = [properties valueForKey:@"name"];
+    barcodeType.type = [properties valueForKey:@"type"];
+    barcodeType.mask = [properties valueForKey:@"mask"];
+    barcodeType.symbology = [properties valueForKey:@"symbology"];
+
+    barcodeType.lts = [NSDate date];
+    
+    NSLog(@"get barcodeType.xid %@", barcodeType.xid);
+
+}
+
 
 - (NSDate*)extractDateFrom:(NSDictionary*)properties forKey:(NSString*)key{
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
@@ -859,7 +979,8 @@
                              NSStringFromClass([STTTAgentTerminal class]),
                              NSStringFromClass([STTTAgentRepairCode class]),
                              NSStringFromClass([STTTAgentDefectCode class]),
-                             NSStringFromClass([STTTAgentComponent class])];
+                             NSStringFromClass([STTTAgentComponent class]),
+                             NSStringFromClass([STTTAgentBarcodeType class])];
 
     for (NSString *entityName in entityNames) {
         

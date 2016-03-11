@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "STComment.h"
 
-@class STTTAgentTask, STTTTerminalLocation;
+@class STTTAgentTask, STTTAgentTaskComponent, STTTTerminalLocation;
 
 NS_ASSUME_NONNULL_BEGIN
 

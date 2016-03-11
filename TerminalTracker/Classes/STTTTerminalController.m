@@ -9,7 +9,7 @@
 #import "STTTTerminalController.h"
 #import "STTTTerminalLocation.h"
 #import "STTTLocationController.h"
-#import "STTTAgentTask+remainingTime.h"
+#import "STTTAgentTask.h"
 #import "STUtilities.h"
 
 @interface STTTTerminalController() <NSFetchedResultsControllerDelegate>

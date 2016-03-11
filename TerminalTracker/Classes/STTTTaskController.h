@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <STManagedTracker/STSession.h>
 #import "STTTAgentTerminal.h"
-#import "STTTAgentTask+remainingTime.h"
+#import "STTTAgentTask.h"
 
 @interface STTTTaskController : NSObject <UITableViewDataSource>
 

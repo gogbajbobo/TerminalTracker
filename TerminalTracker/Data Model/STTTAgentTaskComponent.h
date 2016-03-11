@@ -2,20 +2,23 @@
 //  STTTAgentTaskComponent.h
 //  TerminalTracker
 //
-//  Created by Maxim Grigoriev on 04/07/15.
-//  Copyright (c) 2015 Maxim Grigoriev. All rights reserved.
+//  Created by Maxim Grigoriev on 20/01/16.
+//  Copyright © 2016 Maxim Grigoriev. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
-#import <CoreData/CoreData.h>
 #import "STComment.h"
 
-@class STTTAgentComponent, STTTAgentTask;
+@class STTTAgentComponent, STTTAgentTask, STTTAgentTerminal;
+
+NS_ASSUME_NONNULL_BEGIN
 
 @interface STTTAgentTaskComponent : STComment
 
-@property (nonatomic, retain) NSNumber * isdeleted;
-@property (nonatomic, retain) STTTAgentComponent *component;
-@property (nonatomic, retain) STTTAgentTask *task;
+// Insert code here to declare functionality of your managed object subclass
 
 @end
+
+NS_ASSUME_NONNULL_END
+
+#import "STTTAgentTaskComponent+CoreDataProperties.h"
