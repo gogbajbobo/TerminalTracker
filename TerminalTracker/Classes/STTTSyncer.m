@@ -775,8 +775,11 @@
     terminal.mobileop = properties[@"mobileop"];
     
     NSDate *lastActivityTime = [self extractDateFrom:properties forKey:@"lastactivitytime"];
-    
     terminal.lastActivityTime = lastActivityTime;
+    
+    NSDate *lastPaymentTime = [self extractDateFrom:properties forKey:@"lastpaymenttime"];
+    terminal.lastPaymentTime = lastPaymentTime;
+    
     terminal.address = [NSString stringWithUTF8String:[[properties valueForKey:@"address"] UTF8String]];
     
     terminal.lts = [NSDate date];

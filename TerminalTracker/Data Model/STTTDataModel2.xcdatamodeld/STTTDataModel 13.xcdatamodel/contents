@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="9525" systemVersion="15D21" minimumToolsVersion="Xcode 4.1">
+    <entity name="STBatteryStatus" representedClassName="STBatteryStatus" parentEntity="STComment" syncable="YES">
+        <attribute name="batteryLevel" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="batteryState" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="STComment" representedClassName="STComment" parentEntity="STDatum" syncable="YES">
+        <attribute name="commentText" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="owner" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="STDatum" inverseName="comments" inverseEntity="STDatum" syncable="YES"/>
+    </entity>
+    <entity name="STDatum" representedClassName="STDatum" isAbstract="YES" syncable="YES">
+        <attribute name="cts" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="id" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="lts" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="sqts" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="sts" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="ts" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="xid" optional="YES" attributeType="Binary" syncable="YES"/>
+        <relationship name="comments" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="STComment" inverseName="owner" inverseEntity="STComment" syncable="YES"/>
+    </entity>
+    <entity name="STLocation" representedClassName="STLocation" parentEntity="STComment" syncable="YES">
+        <attribute name="altitude" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="course" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="horizontalAccuracy" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="speed" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="timestamp" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="verticalAccuracy" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+    </entity>
+    <entity name="STLogMessage" representedClassName="STLogMessage" parentEntity="STComment" syncable="YES">
+        <attribute name="text" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="type" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="STSettings" representedClassName="STSettings" parentEntity="STComment" syncable="YES">
+        <attribute name="group" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="value" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="STTTAgentBarcodeType" representedClassName="STTTAgentBarcodeType" parentEntity="STComment" syncable="YES">
+        <attribute name="mask" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="symbology" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="type" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="STTTAgentComponent" representedClassName="STTTAgentComponent" parentEntity="STComment" syncable="YES">
+        <attribute name="serial" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="shortName" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="componentGroup" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="STTTAgentComponentGroup" inverseName="components" inverseEntity="STTTAgentComponentGroup" syncable="YES"/>
+        <relationship name="taskComponent" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="STTTAgentTaskComponent" inverseName="component" inverseEntity="STTTAgentTaskComponent" syncable="YES"/>
+    </entity>
+    <entity name="STTTAgentComponentGroup" representedClassName="STTTAgentComponentGroup" parentEntity="STComment" syncable="YES">
+        <attribute name="isManualReplacement" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="components" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="STTTAgentComponent" inverseName="componentGroup" inverseEntity="STTTAgentComponent" syncable="YES"/>
+    </entity>
+    <entity name="STTTAgentDefectCode" representedClassName="STTTAgentDefectCode" parentEntity="STComment" syncable="YES">
+        <attribute name="active" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="taskDefects" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="STTTAgentTaskDefect" inverseName="defectCode" inverseEntity="STTTAgentTaskDefect" syncable="YES"/>
+    </entity>
+    <entity name="STTTAgentRepairCode" representedClassName="STTTAgentRepairCode" parentEntity="STComment" syncable="YES">
+        <attribute name="active" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="repairName" attributeType="String" syncable="YES"/>
+        <relationship name="taskRepairs" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="STTTAgentTaskRepair" inverseName="repairCode" inverseEntity="STTTAgentTaskRepair" syncable="YES"/>
+    </entity>
+    <entity name="STTTAgentTask" representedClassName="STTTAgentTask" parentEntity="STComment" syncable="YES">
+        <attribute name="doBefore" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="routePriority" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="servstatus" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="servstatusDate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="terminalBarcode" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="terminalBreakName" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="components" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="STTTAgentTaskComponent" inverseName="task" inverseEntity="STTTAgentTaskComponent" syncable="YES"/>
+        <relationship name="defects" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="STTTAgentTaskDefect" inverseName="task" inverseEntity="STTTAgentTaskDefect" syncable="YES"/>
+        <relationship name="repairs" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="STTTAgentTaskRepair" inverseName="task" inverseEntity="STTTAgentTaskRepair" syncable="YES"/>
+        <relationship name="terminal" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="STTTAgentTerminal" inverseName="tasks" inverseEntity="STTTAgentTerminal" syncable="YES"/>
+        <relationship name="visitLocation" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="STTTTaskLocation" inverseName="task" inverseEntity="STTTTaskLocation" syncable="YES"/>
+    </entity>
+    <entity name="STTTAgentTaskComponent" representedClassName="STTTAgentTaskComponent" parentEntity="STComment" syncable="YES">
+        <attribute name="isBroken" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="isdeleted" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <relationship name="component" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="STTTAgentComponent" inverseName="taskComponent" inverseEntity="STTTAgentComponent" syncable="YES"/>
+        <relationship name="task" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="STTTAgentTask" inverseName="components" inverseEntity="STTTAgentTask" syncable="YES"/>
+        <relationship name="terminal" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="STTTAgentTerminal" inverseName="components" inverseEntity="STTTAgentTerminal" syncable="YES"/>
+    </entity>
+    <entity name="STTTAgentTaskDefect" representedClassName="STTTAgentTaskDefect" parentEntity="STComment" syncable="YES">
+        <attribute name="isdeleted" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <relationship name="defectCode" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="STTTAgentDefectCode" inverseName="taskDefects" inverseEntity="STTTAgentDefectCode" syncable="YES"/>
+        <relationship name="task" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="STTTAgentTask" inverseName="defects" inverseEntity="STTTAgentTask" syncable="YES"/>
+    </entity>
+    <entity name="STTTAgentTaskRepair" representedClassName="STTTAgentTaskRepair" parentEntity="STComment" syncable="YES">
+        <attribute name="isdeleted" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <relationship name="repairCode" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="STTTAgentRepairCode" inverseName="taskRepairs" inverseEntity="STTTAgentRepairCode" syncable="YES"/>
+        <relationship name="task" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="STTTAgentTask" inverseName="repairs" inverseEntity="STTTAgentTask" syncable="YES"/>
+    </entity>
+    <entity name="STTTAgentTerminal" representedClassName="STTTAgentTerminal" parentEntity="STComment" syncable="YES">
+        <attribute name="address" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="code" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="distance" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="errorText" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="lastActivityTime" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="lastPaymentTime" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="mobileop" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="srcSystemName" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="components" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="STTTAgentTaskComponent" inverseName="terminal" inverseEntity="STTTAgentTaskComponent" syncable="YES"/>
+        <relationship name="location" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="STTTTerminalLocation" inverseName="terminal" inverseEntity="STTTTerminalLocation" syncable="YES"/>
+        <relationship name="tasks" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="STTTAgentTask" inverseName="terminal" inverseEntity="STTTAgentTask" syncable="YES"/>
+    </entity>
+    <entity name="STTTTaskLocation" representedClassName="STTTTaskLocation" parentEntity="STLocation" syncable="YES">
+        <relationship name="task" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="STTTAgentTask" inverseName="visitLocation" inverseEntity="STTTAgentTask" syncable="YES"/>
+    </entity>
+    <entity name="STTTTerminalLocation" representedClassName="STTTTerminalLocation" parentEntity="STLocation" syncable="YES">
+        <relationship name="terminal" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="STTTAgentTerminal" inverseName="location" inverseEntity="STTTAgentTerminal" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="STBatteryStatus" positionX="-4034" positionY="-1072" width="128" height="73"/>
+        <element name="STComment" positionX="-3800" positionY="-1009" width="128" height="73"/>
+        <element name="STDatum" positionX="-3807" positionY="-1206" width="128" height="163"/>
+        <element name="STLocation" positionX="-3386" positionY="-810" width="128" height="163"/>
+        <element name="STLogMessage" positionX="-4095" positionY="-981" width="128" height="73"/>
+        <element name="STSettings" positionX="-3980" positionY="-1186" width="128" height="88"/>
+        <element name="STTTAgentBarcodeType" positionX="-3584" positionY="-1251" width="128" height="103"/>
+        <element name="STTTAgentComponent" positionX="-3762" positionY="-655" width="128" height="103"/>
+        <element name="STTTAgentComponentGroup" positionX="-3726" positionY="-802" width="128" height="88"/>
+        <element name="STTTAgentDefectCode" positionX="-3872" positionY="-774" width="128" height="88"/>
+        <element name="STTTAgentRepairCode" positionX="-3888" positionY="-891" width="128" height="88"/>
+        <element name="STTTAgentTask" positionX="-3798" positionY="-526" width="128" height="208"/>
+        <element name="STTTAgentTaskComponent" positionX="-3564" positionY="-643" width="128" height="118"/>
+        <element name="STTTAgentTaskDefect" positionX="-4079" positionY="-754" width="128" height="88"/>
+        <element name="STTTAgentTaskRepair" positionX="-4095" positionY="-873" width="128" height="88"/>
+        <element name="STTTAgentTerminal" positionX="-3548" positionY="-1054" width="128" height="208"/>
+        <element name="STTTTaskLocation" positionX="-3422" positionY="-508" width="128" height="58"/>
+        <element name="STTTTerminalLocation" positionX="-3366" positionY="-963" width="128" height="58"/>
+    </elements>
+</model>

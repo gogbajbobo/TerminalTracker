@@ -2,7 +2,7 @@
 //  STTTAgentTerminal+CoreDataProperties.m
 //  TerminalTracker
 //
-//  Created by Maxim Grigoriev on 20/01/16.
+//  Created by Maxim Grigoriev on 11/03/16.
 //  Copyright © 2016 Maxim Grigoriev. All rights reserved.
 //
 //  Choose "Create NSManagedObject Subclass…" from the Core Data editor menu
@@ -20,8 +20,9 @@
 @dynamic lastActivityTime;
 @dynamic mobileop;
 @dynamic srcSystemName;
+@dynamic lastPaymentTime;
+@dynamic components;
 @dynamic location;
 @dynamic tasks;
-@dynamic components;
 
 @end
