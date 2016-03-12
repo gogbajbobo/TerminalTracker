@@ -164,8 +164,6 @@
     
     [super viewWillAppear:animated];
     
-    [self addObservers];
-    
     if (self.defectsCell) [self reloadCell:self.defectsCell];
     if (self.repairsCell) [self reloadCell:self.repairsCell];
     if (self.componentsCell) [self reloadCell:self.componentsCell];
@@ -178,9 +176,9 @@
     
     [super viewDidAppear:animated];
     
-//    if ([self isMovingToParentViewController]) {
-//        if (!self.task.terminalBarcode) [self showAddTerminalCodeAlert];
-//    }
+    if ([self isMovingToParentViewController]) {
+        [self addObservers];
+    }
     
 }
 
@@ -188,9 +186,18 @@
     
     [super viewWillDisappear:animated];
     
-    [self removeObservers];
     [self stopCameraScanner];
     
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    
+    [super viewDidDisappear:animated];
+    
+    if ([self isMovingFromParentViewController]) {
+        [self removeObservers];
+    }
+
 }
 
 
@@ -333,12 +340,16 @@
 - (void)addCommentToCell:(UITableViewCell *)cell {
     
     if (self.task.commentText) {
+        
         cell.textLabel.text = self.task.commentText;
         cell.textLabel.font = [UIFont systemFontOfSize:16];
+        
     } else {
+        
         cell.textLabel.text = @"Добавить комментарий";
         cell.textLabel.textColor = [UIColor blueColor];
         cell.textLabel.textAlignment = NSTextAlignmentCenter;
+        
     }
     
     self.commentsCell = cell;
