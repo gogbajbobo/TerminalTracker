@@ -165,18 +165,28 @@
 }
 
 - (void)addLastActivityTimeToCell:(UITableViewCell *)cell {
+    
     cell.textLabel.text = @"Сигнал:";
-    cell.detailTextLabel.text = [STUtilities stringWithRelativeDateFromDate:self.terminal.lastActivityTime];
+    
+    NSString *lastActivityTime = (self.terminal.lastActivityTime) ? [STUtilities stringWithRelativeDateFromDate:self.terminal.lastActivityTime] : @"Н/Д";
+    cell.detailTextLabel.text = lastActivityTime;
+    
 }
 
 - (void)addLastPaymentTimeToCell:(UITableViewCell *)cell {
+    
     cell.textLabel.text = @"Платёж:";
-    cell.detailTextLabel.text = [STUtilities stringWithRelativeDateFromDate:self.terminal.lastPaymentTime];
+    
+    NSString *lastPaymentTime = (self.terminal.lastPaymentTime) ? [STUtilities stringWithRelativeDateFromDate:self.terminal.lastPaymentTime] : @"Н/Д";
+    cell.detailTextLabel.text = lastPaymentTime;
+    
 }
 
 - (void)addSrcSystemNameToCell:(UITableViewCell *)cell {
+    
     cell.textLabel.text = @"Система:";
-    cell.detailTextLabel.text = self.terminal.srcSystemName;
+    cell.detailTextLabel.text = (self.terminal.srcSystemName) ? self.terminal.srcSystemName : @"Н/Д";
+    
 }
 
 - (void)addTask:(STTTAgentTask *)task toCell:(UITableViewCell *)cell {
