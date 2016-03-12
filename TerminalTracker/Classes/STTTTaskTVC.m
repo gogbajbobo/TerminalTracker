@@ -616,9 +616,13 @@
 - (void)buttonsBehaviorInCell:(UITableViewCell *)cell {
     
     if ([STAgentTaskRepairCodeService getNumberOfSelectedRepairsForTask:self.task] == 0) {
+        
         [self showNoRepairsSelectedAlert];
+        
     } else if (!self.location) {
+        
         if (!self.waitingLocation) {
+            
             self.waitingLocation = YES;
             cell.textLabel.text = @"";
             UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
@@ -627,12 +631,25 @@
             spinner.frame = cell.textLabel.bounds;
             [cell.contentView addSubview:spinner];
             [[STTTLocationController sharedLC] getLocation];
+            
         }
+        
     } else if ([self tooFarFromTerminal]) {
+        
         [self showTooFarAlert];
+        
     } else {
+        
         [self addTaskLocation];
-        [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[self.tableView indexPathForCell:cell]] withRowAnimation:UITableViewRowAnimationAutomatic];
+        
+        NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+        
+        if (indexPath) {
+
+            [self.tableView reloadRowsAtIndexPaths:@[indexPath]
+                                  withRowAnimation:UITableViewRowAnimationAutomatic];
+
+        }
 
     }
 
@@ -964,25 +981,42 @@
         
         self.location = [[STTTLocationController sharedLC] currentLocation];
         self.waitingLocation = NO;
-        [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[self.tableView indexPathForCell:self.buttonsCell]]
-                              withRowAnimation:UITableViewRowAnimationAutomatic];
+        
+        NSIndexPath *buttonCellIndexPath = [self.tableView indexPathForCell:self.buttonsCell];
+        
+        if (buttonCellIndexPath) {
+            
+            [self.tableView reloadRowsAtIndexPaths:@[buttonCellIndexPath]
+                                  withRowAnimation:UITableViewRowAnimationAutomatic];
+
+        }
         
     }
     
 }
 
 - (void)addTaskLocation {
+    
     if (self.location) {
-        STTTTaskLocation *taskLocation = (STTTTaskLocation *)[NSEntityDescription insertNewObjectForEntityForName:NSStringFromClass([STTTTaskLocation class]) inManagedObjectContext:[[STSessionManager sharedManager] currentSession].document.managedObjectContext];
+        
+        NSManagedObjectContext *context = [[STSessionManager sharedManager] currentSession].document.managedObjectContext;
+        
+        STTTTaskLocation *taskLocation = (STTTTaskLocation *)[NSEntityDescription insertNewObjectForEntityForName:NSStringFromClass([STTTTaskLocation class])
+                                                                                           inManagedObjectContext:context];
+        
         taskLocation.latitude = [NSNumber numberWithDouble:self.location.coordinate.latitude];
         taskLocation.longitude = [NSNumber numberWithDouble:self.location.coordinate.longitude];
+        
         self.task.visitLocation = taskLocation;
         self.task.servstatus = [NSNumber numberWithBool:YES];
         self.taskCompleted = YES;
+        
         [self saveDocument];
+        
     } else {
         NSLog(@"No task location");
     }
+    
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
