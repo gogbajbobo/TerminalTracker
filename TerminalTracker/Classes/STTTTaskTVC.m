@@ -101,21 +101,44 @@
 }
 
 - (void)addObservers {
-    [self.task addObserver:self forKeyPath:@"commentText" options:(NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld) context:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(currentLocationUpdated:) name:@"currentLocationUpdated" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(currentAccuracyUpdated:) name:@"currentAccuracyUpdated" object:nil];
+    
+    [self.task addObserver:self
+                forKeyPath:@"commentText"
+                   options:(NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld)
+                   context:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(currentLocationUpdated:)
+                                                 name:@"currentLocationUpdated"
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(currentAccuracyUpdated:)
+                                                 name:@"currentAccuracyUpdated"
+                                               object:nil];
+    
 }
 
 - (void)removeObservers {
-    [self.task removeObserver:self forKeyPath:@"commentText" context:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"currentLocationUpdated" object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"currentAccuracyUpdated" object:nil];
+    
+    [self.task removeObserver:self
+                   forKeyPath:@"commentText"
+                      context:nil];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:@"currentLocationUpdated"
+                                                  object:nil];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:@"currentAccuracyUpdated"
+                                                  object:nil];
+    
 }
 
 #pragma mark - view lifecycle
 
-- (id)initWithStyle:(UITableViewStyle)style
-{
+- (id)initWithStyle:(UITableViewStyle)style {
+    
     self = [super initWithStyle:style];
     if (self) {
         // Custom initialization
@@ -123,14 +146,14 @@
     return self;
 }
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
+    
     [super viewDidLoad];
     [self viewInit];
+    
 }
 
-- (void)didReceiveMemoryWarning
-{
+- (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
 }
 
@@ -144,6 +167,7 @@
     if (self.repairsCell) [self reloadCell:self.repairsCell];
     if (self.componentsCell) [self reloadCell:self.componentsCell];
     if (self.buttonsCell) [self reloadCell:self.buttonsCell];
+//    if (self.commentsCell) [self reloadCell:self.commentsCell];
     
 }
 
@@ -291,13 +315,16 @@
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
     return cell;
+    
 }
 
 - (void)addDoBeforeToCell:(UITableViewCell *)cell {
+    
     cell.textLabel.text = @"Срок:";
     cell.detailTextLabel.text = [STUtilities stringWithRelativeDateFromDate:self.task.doBefore];
     cell.backgroundColor = [self.task getBackgroundColorForDisplaying];
     cell.detailTextLabel.textColor = [self.task getTextColorForDisplaying];
+    
 }
 
 - (void)addCommentToCell:(UITableViewCell *)cell {
@@ -614,13 +641,25 @@
 - (void)reloadCell:(UITableViewCell *)cell {
     
     NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
-    if (indexPath) [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+    
+    if (indexPath) {
+        
+        [self.tableView beginUpdates];
+        [self.tableView reloadRowsAtIndexPaths:@[indexPath]
+                                          withRowAnimation:UITableViewRowAnimationAutomatic];
+        [self.tableView endUpdates];
+        
+    }
     
 }
 
 
-- (BOOL) recentlyChangedServstatus {
-    return abs([self.task.servstatusDate timeIntervalSinceNow]) < [[[STTTSettingsController sharedSTTTSettingsController] getSettingValueForName:@"OkInterval" inGroup:@"general"] doubleValue]*60;
+- (BOOL)recentlyChangedServstatus {
+    
+    double okInterval = [[[STTTSettingsController sharedSTTTSettingsController] getSettingValueForName:@"OkInterval" inGroup:@"general"] doubleValue];
+    
+    return fabs([self.task.servstatusDate timeIntervalSinceNow]) < (okInterval * 60);
+    
 }
 
 - (BOOL)tooFarFromTerminal {
@@ -891,29 +930,45 @@
 
 - (void)terminalBarcodeValueChanged {
     
-    [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationNone];
-    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:3]] withRowAnimation:UITableViewRowAnimationNone];
+    [self.tableView beginUpdates];
+    
+    [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:1]
+                  withRowAnimation:UITableViewRowAnimationNone];
+    
+    [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:3]]
+                          withRowAnimation:UITableViewRowAnimationNone];
 
+    [self.tableView endUpdates];
+    
 }
 
 
 #pragma mark - notifications
 
 - (void)currentAccuracyUpdated:(NSNotification *)notification {
+    
     if (self.waitingLocation) {
+        
         NSString *currentAccuracy = [NSString stringWithFormat:@"%.f", [STTTLocationController sharedLC].currentAccuracy];
         NSString *requiredAccuracy = [NSString stringWithFormat:@"%.f", [STTTLocationController sharedLC].requiredAccuracy];
 //        self.buttonsCell.textLabel.text = [NSString stringWithFormat:@"%@ -> %@", currentAccuracy, requiredAccuracy];
         NSLog(@"accuracy %@", [NSString stringWithFormat:@"%@ -> %@", currentAccuracy, requiredAccuracy]);
+        
     }
+    
 }
 
 - (void)currentLocationUpdated:(NSNotification *)notification {
+    
     if (self.waitingLocation) {
+        
         self.location = [[STTTLocationController sharedLC] currentLocation];
         self.waitingLocation = NO;
-        [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[self.tableView indexPathForCell:self.buttonsCell]] withRowAnimation:UITableViewRowAnimationAutomatic];
+        [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[self.tableView indexPathForCell:self.buttonsCell]]
+                              withRowAnimation:UITableViewRowAnimationAutomatic];
+        
     }
+    
 }
 
 - (void)addTaskLocation {
