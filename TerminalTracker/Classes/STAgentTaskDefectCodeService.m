@@ -69,52 +69,54 @@
     STManagedDocument *document = [[STSessionManager sharedManager] currentSession].document;
     NSManagedObjectContext *context = document.managedObjectContext;
     
-    for (NSDictionary *defectData in defectsList) {
-        
-        BOOL addNew = YES;
-        
-        BOOL isChecked = [defectData[@"isChecked"] boolValue];
-        NSData *defectXid = defectData[@"defectXid"];
-
-        for (STTTAgentTaskDefect *taskDefect in task.defects) {
+    [context performBlockAndWait:^{
+    
+        for (NSDictionary *defectData in defectsList) {
             
-            if(![taskDefect.defectCode.xid isEqualToData:defectXid]) {
-                continue;
+            BOOL addNew = YES;
+            
+            BOOL isChecked = [defectData[@"isChecked"] boolValue];
+            NSData *defectXid = defectData[@"defectXid"];
+            
+            for (STTTAgentTaskDefect *taskDefect in task.defects) {
+                
+                if(![taskDefect.defectCode.xid isEqualToData:defectXid]) {
+                    continue;
+                }
+                
+                BOOL isdeleted = taskDefect.isdeleted.boolValue;
+                
+                addNew = addNew && isdeleted && isChecked;
+                
+                if (!(isChecked || isdeleted)) {
+                    
+                    taskDefect.isdeleted = @(YES);
+                    task.ts = [NSDate date];
+                    
+                }
+                
             }
             
-            BOOL isdeleted = taskDefect.isdeleted.boolValue;
-            
-            addNew = addNew && isdeleted && isChecked;
-            
-            if (!(isChecked || isdeleted)) {
+            if (addNew && isChecked) {
                 
-                taskDefect.isdeleted = @(YES);
+                NSString *taskDefectEntityName = NSStringFromClass([STTTAgentTaskDefect class]);
+                
+                STTTAgentTaskDefect *taskDefect = (STTTAgentTaskDefect *)[NSEntityDescription insertNewObjectForEntityForName:taskDefectEntityName
+                                                                                                       inManagedObjectContext:context];
+                taskDefect.task = task;
+                taskDefect.defectCode = [STAgentTaskDefectCodeService findDefectCodeByXid:defectXid inContext:context];
+                
                 task.ts = [NSDate date];
                 
             }
             
         }
-        
-        if (addNew && isChecked) {
-            
-            STTTAgentTaskDefect *taskDefect = (STTTAgentTaskDefect *)[NSEntityDescription insertNewObjectForEntityForName:NSStringFromClass([STTTAgentTaskDefect class]) inManagedObjectContext:context];
-            taskDefect.task = task;
-            taskDefect.defectCode = [STAgentTaskDefectCodeService findDefectCodeByXid:defectXid inContext:context];
-            
-            task.ts = [NSDate date];
-            
-        }
-        
-    }
+
+    }];
     
     [document saveDocument:^(BOOL success) {
         
     }];
-    
-//    if (context.hasChanges) {
-//        NSError* error;
-//        [context save:&error];
-//    }
     
 }
 

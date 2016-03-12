@@ -72,55 +72,57 @@
 + (void)updateRepairsForTask:(STTTAgentTask *)task fromList:(NSArray *)repairsList {
     
     STManagedDocument *document = [[STSessionManager sharedManager] currentSession].document;
-    NSManagedObjectContext* managedObjectContext = document.managedObjectContext;
+    NSManagedObjectContext *context = document.managedObjectContext;
     
-    for (NSDictionary *repairData in repairsList) {
-        
-        BOOL addNew = YES;
-
-        BOOL isChecked = [repairData[@"isChecked"] boolValue];
-        NSData *repairXid = repairData[@"repairXid"];
-
-        for (STTTAgentTaskRepair *taskRepair in task.repairs) {
+    [context performBlockAndWait:^{
+       
+        for (NSDictionary *repairData in repairsList) {
             
-            if(![taskRepair.repairCode.xid isEqualToData:repairXid]) {
-                continue;
+            BOOL addNew = YES;
+            
+            BOOL isChecked = [repairData[@"isChecked"] boolValue];
+            NSData *repairXid = repairData[@"repairXid"];
+            
+            for (STTTAgentTaskRepair *taskRepair in task.repairs) {
+                
+                if(![taskRepair.repairCode.xid isEqualToData:repairXid]) {
+                    continue;
+                }
+                
+                BOOL isdeleted = taskRepair.isdeleted.boolValue;
+                
+                addNew = addNew && isdeleted && isChecked;
+                
+                if (!(isChecked || isdeleted)) {
+                    
+                    taskRepair.isdeleted = @(YES);
+                    task.ts = [NSDate date];
+                    
+                }
+                
             }
             
-            BOOL isdeleted = taskRepair.isdeleted.boolValue;
-            
-            addNew = addNew && isdeleted && isChecked;
-            
-            if (!(isChecked || isdeleted)) {
+            if(addNew && isChecked) {
                 
-                taskRepair.isdeleted = @(YES);
+                NSString *taskRepairEntityName = NSStringFromClass([STTTAgentTaskRepair class]);
+                
+                STTTAgentTaskRepair *entity = (STTTAgentTaskRepair *)[NSEntityDescription insertNewObjectForEntityForName:taskRepairEntityName
+                                                                                                   inManagedObjectContext:context];
+                entity.task = task;
+                entity.repairCode = [STAgentTaskRepairCodeService findRepairCodeByXid:repairXid inContext:context];
+                
                 task.ts = [NSDate date];
                 
             }
             
         }
         
-        if(addNew && isChecked) {
-            
-            STTTAgentTaskRepair* entity = (STTTAgentTaskRepair *)[NSEntityDescription insertNewObjectForEntityForName:@"STTTAgentTaskRepair" inManagedObjectContext:managedObjectContext];
-            entity.task = task;
-            entity.repairCode = [STAgentTaskRepairCodeService findRepairCodeByXid:repairXid inContext:managedObjectContext];
-            
-            task.ts = [NSDate date];
-
-        }
-        
-    }
+    }];
     
     [document saveDocument:^(BOOL success) {
         
     }];
     
-//    if (managedObjectContext.hasChanges) {
-//        NSError* error;
-//        [managedObjectContext save:&error];
-//    }
-
 }
 
 @end
