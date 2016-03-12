@@ -91,11 +91,14 @@
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     
     if ([change valueForKey:NSKeyValueChangeNewKey] != [change valueForKey:NSKeyValueChangeOldKey]) {
+        
         if ([keyPath isEqualToString:@"commentText"]) {
+            
             [self saveDocument];
-            [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[self.tableView indexPathForCell:self.commentsCell]] withRowAnimation:UITableViewRowAnimationAutomatic];
-
+            [self reloadCell:self.commentsCell];
+            
         }
+        
     }
     
 }
@@ -641,15 +644,7 @@
     } else {
         
         [self addTaskLocation];
-        
-        NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
-        
-        if (indexPath) {
-
-            [self.tableView reloadRowsAtIndexPaths:@[indexPath]
-                                  withRowAnimation:UITableViewRowAnimationAutomatic];
-
-        }
+        [self reloadCell:cell];
 
     }
 
@@ -982,14 +977,7 @@
         self.location = [[STTTLocationController sharedLC] currentLocation];
         self.waitingLocation = NO;
         
-        NSIndexPath *buttonCellIndexPath = [self.tableView indexPathForCell:self.buttonsCell];
-        
-        if (buttonCellIndexPath) {
-            
-            [self.tableView reloadRowsAtIndexPaths:@[buttonCellIndexPath]
-                                  withRowAnimation:UITableViewRowAnimationAutomatic];
-
-        }
+        [self reloadCell:self.buttonsCell];
         
     }
     
