@@ -933,11 +933,11 @@
     
     self.task.terminalBarcode = barcode;
 
-    NSString *logMessage = [NSString stringWithFormat:@"add barcode %@ to task", barcode];
-    [[(STSession *)[STSessionManager sharedManager].currentSession logger] saveLogMessageWithText:logMessage type:@""];
-
-    logMessage = [NSString stringWithFormat:@"task barcode now is %@", self.task.terminalBarcode];
-    [[(STSession *)[STSessionManager sharedManager].currentSession logger] saveLogMessageWithText:logMessage type:@""];
+//    NSString *logMessage = [NSString stringWithFormat:@"add barcode %@ to task", barcode];
+//    [[(STSession *)[STSessionManager sharedManager].currentSession logger] saveLogMessageWithText:logMessage type:@""];
+//
+//    logMessage = [NSString stringWithFormat:@"task barcode now is %@", self.task.terminalBarcode];
+//    [[(STSession *)[STSessionManager sharedManager].currentSession logger] saveLogMessageWithText:logMessage type:@""];
 
     [self terminalBarcodeValueChanged];
     [self stopCameraScanner];

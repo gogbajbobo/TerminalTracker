@@ -158,7 +158,9 @@
             NSString *logMessage = [NSString stringWithFormat:@"unsynced tasks count %d", nonsyncedTasks.count];
             [[(STSession *)self.session logger] saveLogMessageWithText:logMessage type:@""];
             
-            NSArray *nonsyncedObjects = [nonsyncedTasks arrayByAddingObjectsFromArray:[self nonsyncedLogMessages]];
+//            NSArray *nonsyncedObjects = [nonsyncedTasks arrayByAddingObjectsFromArray:[self nonsyncedLogMessages]];
+            
+            NSArray *nonsyncedObjects = nonsyncedTasks;
             
             if (nonsyncedObjects.count > 0) {
                 [self sendData:[self JSONFrom:nonsyncedObjects] toServer:self.sendDataServerURI withParameters:nil];
