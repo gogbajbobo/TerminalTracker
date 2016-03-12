@@ -153,21 +153,21 @@
         
         NSArray *nonsyncedTasks = [self nonsyncedTasks];
         
-        NSString *logMessage = [NSString stringWithFormat:@"unsynced tasks count %d", nonsyncedTasks.count];
-        [[(STSession *)self.session logger] saveLogMessageWithText:logMessage type:@""];
-        
-        NSArray *nonsyncedObjects = [nonsyncedTasks arrayByAddingObjectsFromArray:[self nonsyncedLogMessages]];
-
-        if (nonsyncedObjects.count == 0) {
+        if (nonsyncedTasks.count > 0) {
             
-//                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(30 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            NSString *logMessage = [NSString stringWithFormat:@"unsynced tasks count %d", nonsyncedTasks.count];
+            [[(STSession *)self.session logger] saveLogMessageWithText:logMessage type:@""];
+            
+            NSArray *nonsyncedObjects = [nonsyncedTasks arrayByAddingObjectsFromArray:[self nonsyncedLogMessages]];
+            
+            if (nonsyncedObjects.count > 0) {
+                [self sendData:[self JSONFrom:nonsyncedObjects] toServer:self.sendDataServerURI withParameters:nil];
+            } else {
                 [self sendData:nil toServer:self.recieveDataServerURI withParameters:self.requestParameters];
-//                });
-        
+            }
+            
         } else {
-            
-            [self sendData:[self JSONFrom:nonsyncedObjects] toServer:self.sendDataServerURI withParameters:nil];
-            
+            [self sendData:nil toServer:self.recieveDataServerURI withParameters:self.requestParameters];
         }
 
     }
