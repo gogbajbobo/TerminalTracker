@@ -148,8 +148,6 @@
 
     STTTAgentTaskComponent *taskComponent = component.taskComponent;
     
-<<<<<<< HEAD
-=======
     if (!taskComponent) {
         
         taskComponent = (STTTAgentTaskComponent *)[NSEntityDescription insertNewObjectForEntityForName:taskComponentEntityName
@@ -172,7 +170,6 @@
     STManagedDocument *document = [[STSessionManager sharedManager] currentSession].document;
     NSManagedObjectContext *context = document.managedObjectContext;
     
->>>>>>> components
     [context performBlockAndWait:^{
        
         for (NSDictionary *componentData in componentsList) {

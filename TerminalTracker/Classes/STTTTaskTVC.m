@@ -29,17 +29,11 @@
 #import "STAgentTaskDefectCodeService.h"
 #import "STAgentTaskComponentService.h"
 
-<<<<<<< HEAD
-#import "STMBarCodeScanner.h"
-#import "STTTMainNC.h"
-
-=======
 #import "STTTComponentGroupTVC.h"
 
 #import "STMBarCodeScanner.h"
 #import "STTTMainNC.h"
 
->>>>>>> components
 #import <AVFoundation/AVFoundation.h>
 
 
@@ -1025,8 +1019,6 @@
         NSLog(@"No task location");
     }
     
-<<<<<<< HEAD
-=======
 }
 
 - (void)showComponentGroups {
@@ -1036,7 +1028,6 @@
     
     [self.navigationController pushViewController:groupsTVC animated:YES];
     
->>>>>>> components
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {

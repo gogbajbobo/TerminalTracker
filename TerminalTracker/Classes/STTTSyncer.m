@@ -155,17 +155,10 @@
         NSArray *nonsyncedTasks = [self nonsyncedTasks];
         
         if (nonsyncedTasks.count > 0) {
-<<<<<<< HEAD
             
             NSString *logMessage = [NSString stringWithFormat:@"unsynced tasks count %d", nonsyncedTasks.count];
             [[(STSession *)self.session logger] saveLogMessageWithText:logMessage type:@""];
             
-=======
-            
-            NSString *logMessage = [NSString stringWithFormat:@"unsynced tasks count %d", nonsyncedTasks.count];
-            [[(STSession *)self.session logger] saveLogMessageWithText:logMessage type:@""];
-            
->>>>>>> components
 //            NSArray *nonsyncedObjects = [nonsyncedTasks arrayByAddingObjectsFromArray:[self nonsyncedLogMessages]];
             
             NSArray *nonsyncedObjects = nonsyncedTasks;
@@ -605,13 +598,10 @@
         
         [self newTaskComponentWithXid:xidData andProperties:properties];
 
-<<<<<<< HEAD
-=======
     } else if ([name isEqualToString:@"megaport.iAgentComponentGroup"]) {
         
         [self newComponentGroupWithXid:xidData andProperties:properties];
 
->>>>>>> components
     } else if ([name isEqualToString:@"megaport.iAgentBarcodeType"]) {
         
         [self newBarcodeTypeWithXid:xidData andProperties:properties];
@@ -1025,10 +1015,7 @@
                              NSStringFromClass([STTTAgentRepairCode class]),
                              NSStringFromClass([STTTAgentDefectCode class]),
                              NSStringFromClass([STTTAgentComponent class]),
-<<<<<<< HEAD
-=======
                              NSStringFromClass([STTTAgentComponentGroup class]),
->>>>>>> components
                              NSStringFromClass([STTTAgentBarcodeType class])];
 
     for (NSString *entityName in entityNames) {
