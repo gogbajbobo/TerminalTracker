@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="UeD-It-wGo">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9532" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="UeD-It-wGo">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
     </dependencies>
     <scenes>
         <!--TaskTVC-->
@@ -114,6 +114,116 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mLH-ak-8UK" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2245" y="-443"/>
+        </scene>
+        <!--Components MovingVC-->
+        <scene sceneID="ARD-7k-Bde">
+            <objects>
+                <viewController storyboardIdentifier="componentsMovingVC" id="wEl-LS-uzF" customClass="STTTComponentsMovingVC" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="49k-0y-OEQ"/>
+                        <viewControllerLayoutGuide type="bottom" id="HFt-jh-wIv"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="KDB-5w-wJW">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="N9j-U2-tAA">
+                                <rect key="frame" x="20" y="28" width="280" height="44"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Было установлено:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="89K-9v-v4O">
+                                <rect key="frame" x="20" y="80" width="280" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="99" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bVq-AB-u7n">
+                                <rect key="frame" x="268" y="109" width="32" height="32"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="99" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QbY-NA-9mz">
+                                <rect key="frame" x="20" y="109" width="32" height="32"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="W0t-IM-WU2">
+                                <rect key="frame" x="164" y="109" width="96" height="32"/>
+                                <state key="normal" title="&lt; Снять"/>
+                                <connections>
+                                    <action selector="removeButtonPressed:" destination="wEl-LS-uzF" eventType="touchUpInside" id="qpp-7r-FeE"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="В наличии:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lip-FU-rpw">
+                                <rect key="frame" x="20" y="161" width="280" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="99" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0bM-qp-IBX">
+                                <rect key="frame" x="20" y="190" width="32" height="32"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="99" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hk7-g4-sap">
+                                <rect key="frame" x="268" y="190" width="32" height="32"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gU5-zX-J3s">
+                                <rect key="frame" x="60" y="190" width="96" height="32"/>
+                                <state key="normal" title="Установить &gt;"/>
+                                <connections>
+                                    <action selector="useButtonPressed:" destination="wEl-LS-uzF" eventType="touchUpInside" id="gdg-LO-Djm"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AvK-WP-b5c">
+                                <rect key="frame" x="164" y="190" width="96" height="32"/>
+                                <state key="normal" title="&lt; Вернуть"/>
+                                <connections>
+                                    <action selector="backUsedComponentButtonPressed:" destination="wEl-LS-uzF" eventType="touchUpInside" id="rvP-mZ-KxC"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9qw-ie-tnC">
+                                <rect key="frame" x="20" y="306" width="280" height="30"/>
+                                <state key="normal" title="Готово"/>
+                                <connections>
+                                    <action selector="doneButtonPressed:" destination="wEl-LS-uzF" eventType="touchUpInside" id="dZm-93-wAs"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="93g-5f-tI8">
+                                <rect key="frame" x="60" y="109" width="96" height="32"/>
+                                <state key="normal" title="Вернуть &gt;"/>
+                                <connections>
+                                    <action selector="backRemovedComponentButtonPressed:" destination="wEl-LS-uzF" eventType="touchUpInside" id="jti-VK-We4"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <extendedEdge key="edgesForExtendedLayout"/>
+                    <connections>
+                        <outlet property="backRemovedComponentButton" destination="93g-5f-tI8" id="MBO-Tf-6og"/>
+                        <outlet property="backUsedComponentButton" destination="AvK-WP-b5c" id="w8E-gw-RCa"/>
+                        <outlet property="componentName" destination="N9j-U2-tAA" id="IGc-Ow-oOC"/>
+                        <outlet property="doneButton" destination="9qw-ie-tnC" id="JkX-w0-Yn3"/>
+                        <outlet property="numberOfInstalledComponents" destination="bVq-AB-u7n" id="lou-db-9f5"/>
+                        <outlet property="numberOfRemainedComponents" destination="0bM-qp-IBX" id="Qng-2b-VbR"/>
+                        <outlet property="numberOfRemovedComponents" destination="QbY-NA-9mz" id="Yj4-zv-uvv"/>
+                        <outlet property="numberOfUsedComponents" destination="Hk7-g4-sap" id="sBT-3K-4j5"/>
+                        <outlet property="removeComponentButton" destination="W0t-IM-WU2" id="CDS-ob-E1f"/>
+                        <outlet property="useComponentButton" destination="gU5-zX-J3s" id="vJQ-3q-lWd"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="cTh-92-1Tn" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2694" y="-443"/>
         </scene>
         <!--Комментарий-->
         <scene sceneID="B6U-gb-03u">

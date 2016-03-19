@@ -29,9 +29,17 @@
 #import "STAgentTaskDefectCodeService.h"
 #import "STAgentTaskComponentService.h"
 
+<<<<<<< HEAD
 #import "STMBarCodeScanner.h"
 #import "STTTMainNC.h"
 
+=======
+#import "STTTComponentGroupTVC.h"
+
+#import "STMBarCodeScanner.h"
+#import "STTTMainNC.h"
+
+>>>>>>> components
 #import <AVFoundation/AVFoundation.h>
 
 
@@ -549,7 +557,8 @@
                     
                 case 2:
                     if ([self isDataCompleted]) {
-                        [self performSegueWithIdentifier:@"editComponents" sender:self.task];
+                        [self showComponentGroups];
+//                        [self performSegueWithIdentifier:@"editComponents" sender:self.task];
                     }
                     break;
                     
@@ -1016,6 +1025,18 @@
         NSLog(@"No task location");
     }
     
+<<<<<<< HEAD
+=======
+}
+
+- (void)showComponentGroups {
+    
+    STTTComponentGroupTVC *groupsTVC = [[STTTComponentGroupTVC alloc] initWithStyle:UITableViewStylePlain];
+    groupsTVC.task = self.task;
+    
+    [self.navigationController pushViewController:groupsTVC animated:YES];
+    
+>>>>>>> components
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {

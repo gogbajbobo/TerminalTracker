@@ -18,6 +18,7 @@
 #import "STTTAgentTaskRepair.h"
 #import "STTTAgentDefectCode.h"
 #import "STTTAgentTaskDefect.h"
+#import "STTTAgentComponentGroup.h"
 #import "STTTAgentComponent.h"
 #import "STTTAgentTaskComponent.h"
 #import "STTTAgentBarcodeType.h"
@@ -694,6 +695,7 @@
     [self removeObjectWithName:NSStringFromClass([STTTAgentDefectCode class])];
     [self removeObjectWithName:NSStringFromClass([STTTAgentTaskDefect class])];
 
+    [self removeObjectWithName:NSStringFromClass([STTTAgentComponentGroup class])];
     [self removeObjectWithName:NSStringFromClass([STTTAgentComponent class])];
     [self removeObjectWithName:NSStringFromClass([STTTAgentTaskComponent class])];
 

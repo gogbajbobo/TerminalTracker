@@ -7,10 +7,13 @@
 //
 
 #import "STAgentTaskComponentService.h"
+
 #import "STSessionManager.h"
 #import "STSession.h"
+
 #import "STTTAgentTaskComponent.h"
 #import "STTTAgentComponent.h"
+
 #import "STTTComponentsController.h"
 
 
@@ -25,64 +28,151 @@
 
 }
 
-+ (NSArray *)getListOfComponentsForTask:(STTTAgentTask *)task {
++ (NSArray *)getListOfComponentsForTask:(STTTAgentTask *)task inGroup:(STTTAgentComponentGroup *)group {
     
-    NSMutableArray* resultArray = [NSMutableArray array];
+//    NSMutableArray* resultArray = [NSMutableArray array];
     
     NSManagedObjectContext* managedObjectContext = [[STSessionManager sharedManager] currentSession].document.managedObjectContext;
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:NSStringFromClass([STTTAgentComponent class])];
     
     NSSortDescriptor *nameDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"shortName" ascending:YES];
+    NSSortDescriptor *serialDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"serial" ascending:YES];
     NSSortDescriptor *idDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"id" ascending:YES];
-    request.sortDescriptors = @[nameDescriptor, idDescriptor];
+    request.sortDescriptors = @[nameDescriptor, serialDescriptor, idDescriptor];
     
     NSDate *expiredDate = [STTTComponentsController expiredDate];
-    request.predicate = [NSPredicate predicateWithFormat:@"(cts > %@) OR (taskComponent.task == %@)", expiredDate, task];
+    
+    if (group) {
+        request.predicate = [NSPredicate predicateWithFormat:@"componentGroup == %@ AND ((cts > %@ && taskComponent.terminal == nil) OR (taskComponent.terminal == %@))", group, expiredDate, task.terminal];
+    } else {
+        request.predicate = [NSPredicate predicateWithFormat:@"(cts > %@ && taskComponent.terminal == nil) OR (taskComponent.terminal == %@)", expiredDate, task.terminal];
+    }
     
     NSError *error;
     NSArray *fetchResult = [managedObjectContext executeFetchRequest:request error:&error];
     
-    if (!error) {
+    return fetchResult;
+    
+//    if (!error) {
+//        
+//        for (STTTAgentComponent *component in fetchResult) {
+//            
+//            NSMutableDictionary *componentData = [NSMutableDictionary dictionary];
+//            componentData[@"shortName"] = (component.shortName == nil) ? @"????" : component.shortName;
+//            componentData[@"serial"] = (component.serial == nil) ? @"????" : component.serial;
+//            componentData[@"componentXid"] = component.xid;
+//            componentData[@"component"] = component;
+//            
+//            componentData[@"isUsed"] = (!component.taskComponent.isdeleted.boolValue &&
+//                                        component.taskComponent.task &&
+//                                        component.taskComponent.task != task) ? @YES : @NO;
+//            
+//            NSNumber *isChecked = @NO;
+//            
+//            for(STTTAgentTaskComponent *taskComponent in task.components) {
+//                
+//                if(taskComponent.component == component && ![taskComponent.isdeleted boolValue]) {
+//                    isChecked = @YES;
+//                    break;
+//                }
+//                
+//            }
+//            
+//            componentData[@"isChecked"] = isChecked;
+//            
+//            [resultArray addObject:[componentData copy]];
+//            
+//        }
+//        
+//    }
+//    
+//    return [resultArray copy];
+
+}
+
++ (NSArray *)getListOfComponentsForTask:(STTTAgentTask *)task {
+    return [self getListOfComponentsForTask:task inGroup:nil];
+}
+
++ (void)updateComponentsForTask:(STTTAgentTask *)task
+        withInstalledComponents:(NSArray *)installedComponents
+              removedComponents:(NSArray *)removedComponents
+             remainedComponents:(NSArray *)remainedComponents
+                 usedComponents:(NSArray *)usedComponents {
+
+    for (STTTAgentComponent *component in installedComponents) {
         
-        for(STTTAgentComponent *component in fetchResult) {
+        STTTAgentTaskComponent *taskComponent = component.taskComponent;
+        
+        if (taskComponent) {
             
-            NSMutableDictionary *componentData = [NSMutableDictionary dictionary];
-            componentData[@"shortName"] = (component.shortName == nil) ? @"????" : component.shortName;
-            componentData[@"serial"] = (component.serial == nil) ? @"????" : component.serial;
-            componentData[@"componentXid"] = component.xid;
-            
-            componentData[@"isUsed"] = (!component.taskComponent.isdeleted.boolValue &&
-                                        component.taskComponent.task &&
-                                        component.taskComponent.task != task) ? @YES : @NO;
-            
-            NSNumber *isChecked = @NO;
-            
-            for(STTTAgentTaskComponent *taskComponent in task.components) {
-                
-                if(taskComponent.component == component && ![taskComponent.isdeleted boolValue]) {
-                    isChecked = @YES;
-                    break;
-                }
-                
-            }
-            
-            componentData[@"isChecked"] = isChecked;
-            
-            [resultArray addObject:[componentData copy]];
-            
+            taskComponent.isBroken = @(NO);
+            taskComponent.isdeleted = @(YES);
+            taskComponent.task = nil;
+
         }
         
     }
+
+    for (STTTAgentComponent *component in removedComponents) {
+        
+        STTTAgentTaskComponent *taskComponent = [self taskComponentForTask:task andComponent:component];
+        taskComponent.isBroken = @(YES);
+
+    }
     
-    return [resultArray copy];
+    for (STTTAgentComponent *component in remainedComponents) {
+        
+        STTTAgentTaskComponent *taskComponent = component.taskComponent;
+        
+        if (taskComponent) {
+            taskComponent.isdeleted = @(YES);
+        }
+        
+    }
+
+    
+    for (STTTAgentComponent *component in usedComponents) {
+        [self taskComponentForTask:task andComponent:component];
+    }
+    
+    task.ts = [NSDate date];
 
 }
+
++ (STTTAgentTaskComponent *)taskComponentForTask:(STTTAgentTask *)task andComponent:(STTTAgentComponent *)component {
+    
+    STManagedDocument *document = [[STSessionManager sharedManager] currentSession].document;
+    NSManagedObjectContext *context = document.managedObjectContext;
+    NSString *taskComponentEntityName = NSStringFromClass([STTTAgentTaskComponent class]);
+
+    STTTAgentTaskComponent *taskComponent = component.taskComponent;
+    
+<<<<<<< HEAD
+=======
+    if (!taskComponent) {
+        
+        taskComponent = (STTTAgentTaskComponent *)[NSEntityDescription insertNewObjectForEntityForName:taskComponentEntityName
+                                                                                inManagedObjectContext:context];
+        taskComponent.component = component;
+        
+    }
+    
+    taskComponent.task = task;
+    taskComponent.terminal = task.terminal;
+    taskComponent.isdeleted = @(NO);
+
+    return taskComponent;
+    
+}
+
 
 + (void)updateComponentsForTask:(STTTAgentTask *)task fromList:(NSArray *)componentsList {
     
     STManagedDocument *document = [[STSessionManager sharedManager] currentSession].document;
     NSManagedObjectContext *context = document.managedObjectContext;
     
+>>>>>>> components
     [context performBlockAndWait:^{
        
         for (NSDictionary *componentData in componentsList) {

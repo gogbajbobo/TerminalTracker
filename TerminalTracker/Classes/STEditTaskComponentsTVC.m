@@ -7,12 +7,17 @@
 //
 
 #import "STEditTaskComponentsTVC.h"
+
 #import "STAgentTaskComponentService.h"
+#import "STTTSubtitleTableViewCell.h"
+#import "STTTComponentsMovingVC.h"
 
 
 @interface STEditTaskComponentsTVC ()
 
-@property (strong, nonatomic) NSMutableArray* componentsList;
+@property (strong, nonatomic) NSMutableArray *componentsList;
+@property (nonatomic, strong) NSMutableArray *tableData;
+@property (nonatomic, strong) NSString *cellIdentifier;
 
 
 @end
@@ -20,56 +25,102 @@
 
 @implementation STEditTaskComponentsTVC
 
-- (NSMutableArray *)componentsList {
+- (NSString *)cellIdentifier {
     
-    if(!_componentsList) {
+    if (!_cellIdentifier) {
+        _cellIdentifier = @"componentCell";
+    }
+    return _cellIdentifier;
+    
+}
+
+- (NSMutableArray <NSDictionary *> *)componentsList {
+    
+    if (!_componentsList) {
         
-        _componentsList = [[NSMutableArray alloc] init];
+        _componentsList = [STAgentTaskComponentService getListOfComponentsForTask:self.task inGroup:self.componentGroup].mutableCopy;
         
-        for (NSDictionary *component in [STAgentTaskComponentService getListOfComponentsForTask:self.task]) {
-            [_componentsList addObject:[component mutableCopy]];
-        }
+//        _componentsList = [[NSMutableArray alloc] init];
+//        
+//        for (NSDictionary *component in [STAgentTaskComponentService getListOfComponentsForTask:self.task inGroup:self.componentGroup]) {
+//            [_componentsList addObject:[component mutableCopy]];
+//        }
         
     }
     return _componentsList;
     
 }
 
+- (NSMutableArray *)tableData {
+    
+    if (!_tableData) {
+        
+        _tableData = @[].mutableCopy;
+        
+        [self.componentsList enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            
+            NSDictionary *dataDic = @{@"shortName": [obj valueForKey:@"shortName"], @"serial": [obj valueForKey:@"serial"]};
+            if (![_tableData containsObject:dataDic]) [_tableData addObject:dataDic];
+            
+        }];
+        
+    }
+    return _tableData;
+    
+}
+
+- (NSPredicate *)usedComponentsPredicate {
+    return [NSPredicate predicateWithFormat:@"taskComponent.terminal == %@ && taskComponent.isBroken != YES && taskComponent.isdeleted != YES", self.task.terminal];
+}
+
+- (NSPredicate *)remainedComponentsPredicate {
+    return [NSPredicate predicateWithFormat:@"taskComponent.terminal == nil || taskComponent.isdeleted == YES"];
+}
 
 #pragma mark - Table view data source
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.componentsList.count;
+    return self.tableData.count;
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return 77;
+}
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"componentCell" forIndexPath:indexPath];
-    cell.textLabel.text = [self.componentsList[indexPath.row] objectForKey:@"shortName"];
-    cell.detailTextLabel.text = [self.componentsList[indexPath.row] objectForKey:@"serial"];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:self.cellIdentifier forIndexPath:indexPath];
     
-    BOOL isUsed = [[self.componentsList[indexPath.row] objectForKey:@"isUsed"] boolValue];
+    cell.textLabel.numberOfLines = 0;
+    cell.detailTextLabel.numberOfLines = 0;
     
-    if (isUsed) {
+    NSDictionary *tableDatum = self.tableData[indexPath.row];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"shortName == %@ AND serial == %@", tableDatum[@"shortName"], tableDatum[@"serial"]];
+    NSArray *components = [self.componentsList filteredArrayUsingPredicate:predicate];
+    
+    predicate = [self usedComponentsPredicate];
+    NSArray *usedComponents = [components filteredArrayUsingPredicate:predicate];
+
+    predicate = [self remainedComponentsPredicate];
+    NSArray *remainedComponents = [components filteredArrayUsingPredicate:predicate];
+    
+//    cell.textLabel.text = [[tableDatum[@"shortName"] stringByAppendingString:@" -/- "] stringByAppendingString:@(components.count).stringValue];
+    cell.textLabel.text = tableDatum[@"shortName"];
+    cell.detailTextLabel.text = [NSString stringWithFormat:@"%@\nОстаток: %@", tableDatum[@"serial"], @(remainedComponents.count)];
+
+    if (usedComponents.count > 0) {
         
-        UIColor *isUsedColor = [UIColor lightGrayColor];
+        UILabel *infoLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 40, 21)];
+        infoLabel.text = [NSString stringWithFormat:@"%@", @(usedComponents.count)];
+        infoLabel.textAlignment = NSTextAlignmentRight;
+        infoLabel.adjustsFontSizeToFitWidth = YES;
         
-        cell.textLabel.textColor = isUsedColor;
-        cell.detailTextLabel.textColor = isUsedColor;
-        
-        cell.accessoryType = UITableViewCellAccessoryNone;
+        cell.accessoryView = infoLabel;
         
     } else {
-
-        UIColor *notUsedColor = [UIColor blackColor];
         
-        cell.textLabel.textColor = notUsedColor;
-        cell.detailTextLabel.textColor = notUsedColor;
-
-        BOOL isChecked = [[self.componentsList[indexPath.row] objectForKey:@"isChecked"] boolValue];
-        cell.accessoryType = isChecked ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
-
+        cell.accessoryView = nil;
+        
     }
     
     return cell;
@@ -78,32 +129,48 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    BOOL isUsed = [[self.componentsList[indexPath.row] objectForKey:@"isUsed"] boolValue];
+    NSDictionary *tableDatum = self.tableData[indexPath.row];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"shortName == %@ AND serial == %@", tableDatum[@"shortName"], tableDatum[@"serial"]];
+    NSArray *components = [self.componentsList filteredArrayUsingPredicate:predicate];
+
+    STTTComponentsMovingVC *componentsMovingVC = [[UIStoryboard storyboardWithName:@"STTTMainStoryboard_iPhone" bundle:nil] instantiateViewControllerWithIdentifier:@"componentsMovingVC"];;
+    componentsMovingVC.components = components;
+    componentsMovingVC.parentVC = self;
     
-    if (!isUsed) {
-        
-        BOOL isChecked = [self.componentsList[indexPath.row][@"isChecked"] boolValue];
-        self.componentsList[indexPath.row][@"isChecked"] = @(!isChecked);
-        
-        UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-        cell.accessoryType = (!isChecked) ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
-        
-    }
-    
+    [self.navigationController pushViewController:componentsMovingVC animated:YES];
+
 }
 
 
 #pragma mark - view lifecycle
 
-- (void)viewWillDisappear:(BOOL)animated {
+- (void)customInit {
     
-    [STAgentTaskComponentService updateComponentsForTask:self.task fromList:self.componentsList];
-    [super viewWillDisappear:animated];
+    [self.tableView registerClass:[STTTSubtitleTableViewCell class] forCellReuseIdentifier:self.cellIdentifier];
+    
+    if (self.componentGroup) self.navigationItem.title = self.componentGroup.name;
     
 }
 
 - (void)viewDidLoad {
+    
     [super viewDidLoad];
+    [self customInit];
+    
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    
+    [super viewWillAppear:animated];
+    
+    if (![self isMovingToParentViewController]) {
+        [self.tableView reloadData];
+    }
+    
 }
 
 - (void)didReceiveMemoryWarning {

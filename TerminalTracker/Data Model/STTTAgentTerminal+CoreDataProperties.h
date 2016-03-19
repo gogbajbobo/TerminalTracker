@@ -23,9 +23,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, nonatomic, retain) NSString *mobileop;
 @property (nullable, nonatomic, retain) NSString *srcSystemName;
 @property (nullable, nonatomic, retain) NSDate *lastPaymentTime;
+<<<<<<< HEAD
 @property (nullable, nonatomic, retain) NSSet<STTTAgentTaskComponent *> *components;
+=======
+>>>>>>> components
 @property (nullable, nonatomic, retain) STTTTerminalLocation *location;
 @property (nullable, nonatomic, retain) NSSet<STTTAgentTask *> *tasks;
+@property (nullable, nonatomic, retain) NSSet<STTTAgentTaskComponent *> *components;
 
 @end
 
@@ -40,6 +44,11 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)removeTasksObject:(STTTAgentTask *)value;
 - (void)addTasks:(NSSet<STTTAgentTask *> *)values;
 - (void)removeTasks:(NSSet<STTTAgentTask *> *)values;
+
+- (void)addComponentsObject:(STTTAgentTaskComponent *)value;
+- (void)removeComponentsObject:(STTTAgentTaskComponent *)value;
+- (void)addComponents:(NSSet<STTTAgentTaskComponent *> *)values;
+- (void)removeComponents:(NSSet<STTTAgentTaskComponent *> *)values;
 
 @end
 

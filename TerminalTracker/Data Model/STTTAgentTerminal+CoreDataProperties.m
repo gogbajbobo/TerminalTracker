@@ -21,8 +21,12 @@
 @dynamic mobileop;
 @dynamic srcSystemName;
 @dynamic lastPaymentTime;
+<<<<<<< HEAD
 @dynamic components;
+=======
+>>>>>>> components
 @dynamic location;
 @dynamic tasks;
+@dynamic components;
 
 @end

@@ -7,12 +7,18 @@
 //
 
 #import <UIKit/UIKit.h>
+
 #import "STTTAgentTask.h"
+#import "STTTAgentComponentGroup.h"
 
 
 @interface STEditTaskComponentsTVC : UITableViewController
 
-@property (strong, nonatomic) STTTAgentTask* task;
+@property (strong, nonatomic) STTTAgentTask *task;
+@property (nonatomic, strong) STTTAgentComponentGroup *componentGroup;
+
+- (NSPredicate *)usedComponentsPredicate;
+- (NSPredicate *)remainedComponentsPredicate;
 
 
 @end

@@ -24,6 +24,7 @@
 #import "STTTAgentDefectCode.h"
 #import "STTTAgentTaskDefect.h"
 
+#import "STTTAgentComponentGroup.h"
 #import "STTTAgentComponent.h"
 #import "STTTAgentTaskComponent.h"
 
@@ -154,10 +155,17 @@
         NSArray *nonsyncedTasks = [self nonsyncedTasks];
         
         if (nonsyncedTasks.count > 0) {
+<<<<<<< HEAD
             
             NSString *logMessage = [NSString stringWithFormat:@"unsynced tasks count %d", nonsyncedTasks.count];
             [[(STSession *)self.session logger] saveLogMessageWithText:logMessage type:@""];
             
+=======
+            
+            NSString *logMessage = [NSString stringWithFormat:@"unsynced tasks count %d", nonsyncedTasks.count];
+            [[(STSession *)self.session logger] saveLogMessageWithText:logMessage type:@""];
+            
+>>>>>>> components
 //            NSArray *nonsyncedObjects = [nonsyncedTasks arrayByAddingObjectsFromArray:[self nonsyncedLogMessages]];
             
             NSArray *nonsyncedObjects = nonsyncedTasks;
@@ -597,6 +605,13 @@
         
         [self newTaskComponentWithXid:xidData andProperties:properties];
 
+<<<<<<< HEAD
+=======
+    } else if ([name isEqualToString:@"megaport.iAgentComponentGroup"]) {
+        
+        [self newComponentGroupWithXid:xidData andProperties:properties];
+
+>>>>>>> components
     } else if ([name isEqualToString:@"megaport.iAgentBarcodeType"]) {
         
         [self newBarcodeTypeWithXid:xidData andProperties:properties];
@@ -708,13 +723,30 @@
     }
 }
 
+- (void)newComponentGroupWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties {
+    
+    STTTAgentComponentGroup *group = (STTTAgentComponentGroup *)[self entityByClass:[STTTAgentComponentGroup class] andXid:xidData];
+    group.isManualReplacement = @([[properties valueForKey:@"isManualReplacement"] boolValue]);
+    group.name = [properties valueForKey:@"name"];
+    group.lts = [NSDate date];
+    
+    NSLog(@"get componentGroup.xid %@", group.xid);
+    
+}
+
 - (void)newComponentWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties {
     
     STTTAgentComponent *component = (STTTAgentComponent *)[self entityByClass:[STTTAgentComponent class] andXid:xidData];
     component.shortName = [properties valueForKey:@"short_name"];
     component.serial = [properties valueForKey:@"serial"];
-    component.lts = [NSDate date];
     
+    NSString *groupXid = [properties valueForKey:@"componentgroupxid"];
+    NSString *groupXidString = [groupXid stringByReplacingOccurrencesOfString:@"-" withString:@""];
+    NSData *groupXidData = [self dataFromString:groupXidString];
+    component.componentGroup = (STTTAgentComponentGroup *)[self entityByClass:[STTTAgentComponentGroup class] andXid:groupXidData];
+    
+    component.lts = [NSDate date];
+
     NSLog(@"get component.xid %@", component.xid);
 
 }
@@ -993,6 +1025,10 @@
                              NSStringFromClass([STTTAgentRepairCode class]),
                              NSStringFromClass([STTTAgentDefectCode class]),
                              NSStringFromClass([STTTAgentComponent class]),
+<<<<<<< HEAD
+=======
+                             NSStringFromClass([STTTAgentComponentGroup class]),
+>>>>>>> components
                              NSStringFromClass([STTTAgentBarcodeType class])];
 
     for (NSString *entityName in entityNames) {
