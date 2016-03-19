@@ -170,6 +170,7 @@
 		2CC47BE61AE767EB008F5250 /* STEditTaskDefectCodesTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STEditTaskDefectCodesTVC.m; sourceTree = "<group>"; };
 		2CC47BE81AE76872008F5250 /* STAgentTaskDefectCodeService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STAgentTaskDefectCodeService.h; sourceTree = "<group>"; };
 		2CC47BE91AE76872008F5250 /* STAgentTaskDefectCodeService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STAgentTaskDefectCodeService.m; sourceTree = "<group>"; };
+		2CD75AA21C92F6D100789235 /* STTTDataModel 13.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "STTTDataModel 13.xcdatamodel"; sourceTree = "<group>"; };
 		2CE32657176F29E800BAA1D4 /* TerminalTracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TerminalTracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CE3265A176F29E800BAA1D4 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		2CE3265C176F29E800BAA1D4 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -879,6 +880,7 @@
 		2C5617AF1C64C65300EA463C /* STTTDataModel2.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				2CD75AA21C92F6D100789235 /* STTTDataModel 13.xcdatamodel */,
 				2C8226401C6B55C600D11D94 /* STTTDataModel 12.xcdatamodel */,
 				2C5617CF1C64C90F00EA463C /* STTTDataModel 11.xcdatamodel */,
 				2C5617B01C64C65300EA463C /* STTTDataModel 10.xcdatamodel */,
@@ -892,7 +894,7 @@
 				2C5617B81C64C65300EA463C /* STTTDataModel 9.xcdatamodel */,
 				2C5617B91C64C65300EA463C /* STTTDataModel.xcdatamodel */,
 			);
-			currentVersion = 2C8226401C6B55C600D11D94 /* STTTDataModel 12.xcdatamodel */;
+			currentVersion = 2CD75AA21C92F6D100789235 /* STTTDataModel 13.xcdatamodel */;
 			path = STTTDataModel2.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

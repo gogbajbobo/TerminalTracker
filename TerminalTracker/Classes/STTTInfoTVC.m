@@ -48,8 +48,11 @@
 
 #pragma mark - Table view delegate
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    if (!self.navigationController) {
+        return;
+    }
     
     if ([self.tableView.dataSource isKindOfClass:[STTTTaskController class]]) {
         
@@ -70,13 +73,23 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     
     if ([segue.identifier isEqualToString:@"showTask"]) {
-        if ([segue.destinationViewController isKindOfClass:[STTTTaskTVC class]] && [sender isKindOfClass:[STTTAgentTask class]]) {
+        
+        if ([segue.destinationViewController isKindOfClass:[STTTTaskTVC class]] &&
+            [sender isKindOfClass:[STTTAgentTask class]]) {
+            
             [(STTTTaskTVC *)segue.destinationViewController setTask:(STTTAgentTask *)sender];
+            
         }
+        
     } else if ([segue.identifier isEqualToString:@"showTerminal"]) {
-        if ([segue.destinationViewController isKindOfClass:[STTTTerminalTVC class]] && [sender isKindOfClass:[STTTAgentTerminal class]]) {
+        
+        if ([segue.destinationViewController isKindOfClass:[STTTTerminalTVC class]] &&
+            [sender isKindOfClass:[STTTAgentTerminal class]]) {
+            
             [(STTTTerminalTVC *)segue.destinationViewController setTerminal:(STTTAgentTerminal *)sender];
+            
         }
+        
     }
     
 }

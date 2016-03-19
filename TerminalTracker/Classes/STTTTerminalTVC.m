@@ -28,49 +28,53 @@
 @implementation STTTTerminalTVC
 
 - (NSArray *)sortedTasks {
+    
     if (!_sortedTasks) {
-        NSSortDescriptor *descriptor = [NSSortDescriptor sortDescriptorWithKey:@"doBefore" ascending:NO selector:@selector(compare:)];
+        
+        NSSortDescriptor *descriptor = [NSSortDescriptor sortDescriptorWithKey:@"doBefore"
+                                                                     ascending:NO
+                                                                      selector:@selector(compare:)];
+        
         _sortedTasks = [self.terminal.tasks sortedArrayUsingDescriptors:[NSArray arrayWithObject:descriptor]];
+        
     }
     return _sortedTasks;
+    
 }
 
-- (id)initWithStyle:(UITableViewStyle)style
-{
+- (id)initWithStyle:(UITableViewStyle)style {
+    
     self = [super initWithStyle:style];
     if (self) {
         // Custom initialization
     }
     return self;
+    
 }
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
+    
     [super viewDidLoad];
     self.title = self.terminal.code;
+    
 }
 
-- (void)didReceiveMemoryWarning
-{
+- (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
 }
 
 
 #pragma mark - Table view data source
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
-    
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 2;
-    
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     
     switch (section) {
         case 0:
-            return 5;
+            return 6;
             break;
         case 1:
             return self.terminal.tasks.count;
@@ -103,8 +107,8 @@
 }
 
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
     static NSString *cellIdentifier = @"terminalCell";
     UITableViewCell *cell = [UITableViewCell alloc];
     
@@ -120,18 +124,22 @@
                     [self addLastActivityTimeToCell:cell];
                     break;
                 case 2:
-                    cell = [cell initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-                    [self addMapToCell:cell];
+                    cell = [cell initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:cellIdentifier];
+                    [self addLastPaymentTimeToCell:cell];
                     break;
                 case 3:
                     cell = [cell initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-                    [self addAddressToCell:cell];
+                    [self addMapToCell:cell];
                     break;
                 case 4:
                     cell = [cell initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+                    [self addAddressToCell:cell];
+                    break;
+                case 5:
+                    cell = [cell initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
                     [self addErrorTextToCell:cell];
                     break;
-                    
+
                 default:
                     break;
             }
@@ -157,13 +165,28 @@
 }
 
 - (void)addLastActivityTimeToCell:(UITableViewCell *)cell {
+    
     cell.textLabel.text = @"Сигнал:";
-    cell.detailTextLabel.text = [STUtilities stringWithRelativeDateFromDate:self.terminal.lastActivityTime];
+    
+    NSString *lastActivityTime = (self.terminal.lastActivityTime) ? [STUtilities stringWithRelativeDateFromDate:self.terminal.lastActivityTime] : @"Н/Д";
+    cell.detailTextLabel.text = lastActivityTime;
+    
+}
+
+- (void)addLastPaymentTimeToCell:(UITableViewCell *)cell {
+    
+    cell.textLabel.text = @"Платёж:";
+    
+    NSString *lastPaymentTime = (self.terminal.lastPaymentTime) ? [STUtilities stringWithRelativeDateFromDate:self.terminal.lastPaymentTime] : @"Н/Д";
+    cell.detailTextLabel.text = lastPaymentTime;
+    
 }
 
 - (void)addSrcSystemNameToCell:(UITableViewCell *)cell {
+    
     cell.textLabel.text = @"Система:";
-    cell.detailTextLabel.text = self.terminal.srcSystemName;
+    cell.detailTextLabel.text = (self.terminal.srcSystemName) ? self.terminal.srcSystemName : @"Н/Д";
+    
 }
 
 - (void)addTask:(STTTAgentTask *)task toCell:(UITableViewCell *)cell {
@@ -191,7 +214,6 @@
     cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
     
 }
-
 
 - (void)addMapToCell:(UITableViewCell *)cell {
     
@@ -224,7 +246,7 @@
                     return 44;
                     break;
                     
-                case 2:
+                case 3:
                     return 160;
                     break;
                     

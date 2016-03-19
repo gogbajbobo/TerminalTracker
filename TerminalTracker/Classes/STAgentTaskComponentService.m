@@ -83,53 +83,55 @@
     STManagedDocument *document = [[STSessionManager sharedManager] currentSession].document;
     NSManagedObjectContext *context = document.managedObjectContext;
     
-    for (NSDictionary *componentData in componentsList) {
-        
-        BOOL addNew = YES;
-        
-        BOOL isChecked = [componentData[@"isChecked"] boolValue];
-        NSData *componentXid = componentData[@"componentXid"];
-        
-        for (STTTAgentTaskComponent *taskComponent in task.components) {
+    [context performBlockAndWait:^{
+       
+        for (NSDictionary *componentData in componentsList) {
             
-            if(![taskComponent.component.xid isEqualToData:componentXid]) {
-                continue;
+            BOOL addNew = YES;
+            
+            BOOL isChecked = [componentData[@"isChecked"] boolValue];
+            NSData *componentXid = componentData[@"componentXid"];
+            
+            for (STTTAgentTaskComponent *taskComponent in task.components) {
+                
+                if(![taskComponent.component.xid isEqualToData:componentXid]) {
+                    continue;
+                }
+                
+                BOOL isdeleted = taskComponent.isdeleted.boolValue;
+                
+                addNew = addNew && isdeleted && isChecked;
+                
+                if (!(isChecked || isdeleted)) {
+                    
+                    taskComponent.isdeleted = @(YES);
+                    task.ts = [NSDate date];
+                    
+                }
+                
             }
             
-            BOOL isdeleted = taskComponent.isdeleted.boolValue;
-            
-            addNew = addNew && isdeleted && isChecked;
-            
-            if (!(isChecked || isdeleted)) {
+            if (addNew && isChecked) {
                 
-                taskComponent.isdeleted = @(YES);
+                NSString *taskComponentEntityName = NSStringFromClass([STTTAgentTaskComponent class]);
+                
+                STTTAgentTaskComponent *taskComponent = (STTTAgentTaskComponent *)[NSEntityDescription insertNewObjectForEntityForName:taskComponentEntityName
+                                                                                                                inManagedObjectContext:context];
+                taskComponent.task = task;
+                taskComponent.component = [STAgentTaskComponentService findComponentByXid:componentXid inContext:context];
+                
                 task.ts = [NSDate date];
                 
             }
             
         }
         
-        if (addNew && isChecked) {
-            
-            STTTAgentTaskComponent *taskComponent = (STTTAgentTaskComponent *)[NSEntityDescription insertNewObjectForEntityForName:NSStringFromClass([STTTAgentTaskComponent class]) inManagedObjectContext:context];
-            taskComponent.task = task;
-            taskComponent.component = [STAgentTaskComponentService findComponentByXid:componentXid inContext:context];
-            
-            task.ts = [NSDate date];
-
-        }
-        
-    }
+    }];
     
     [document saveDocument:^(BOOL success) {
         
     }];
     
-//    if (context.hasChanges) {
-//        NSError* error;
-//        [context save:&error];
-//    }
-
 }
 
 + (STTTAgentComponent *)findComponentByXid:(NSData *)xid inContext:(NSManagedObjectContext *)context {

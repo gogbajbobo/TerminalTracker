@@ -153,21 +153,23 @@
         
         NSArray *nonsyncedTasks = [self nonsyncedTasks];
         
-        NSString *logMessage = [NSString stringWithFormat:@"unsynced tasks count %d", nonsyncedTasks.count];
-        [[(STSession *)self.session logger] saveLogMessageWithText:logMessage type:@""];
-        
-        NSArray *nonsyncedObjects = [nonsyncedTasks arrayByAddingObjectsFromArray:[self nonsyncedLogMessages]];
-
-        if (nonsyncedObjects.count == 0) {
+        if (nonsyncedTasks.count > 0) {
             
-//                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(30 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            NSString *logMessage = [NSString stringWithFormat:@"unsynced tasks count %d", nonsyncedTasks.count];
+            [[(STSession *)self.session logger] saveLogMessageWithText:logMessage type:@""];
+            
+//            NSArray *nonsyncedObjects = [nonsyncedTasks arrayByAddingObjectsFromArray:[self nonsyncedLogMessages]];
+            
+            NSArray *nonsyncedObjects = nonsyncedTasks;
+            
+            if (nonsyncedObjects.count > 0) {
+                [self sendData:[self JSONFrom:nonsyncedObjects] toServer:self.sendDataServerURI withParameters:nil];
+            } else {
                 [self sendData:nil toServer:self.recieveDataServerURI withParameters:self.requestParameters];
-//                });
-        
+            }
+            
         } else {
-            
-            [self sendData:[self JSONFrom:nonsyncedObjects] toServer:self.sendDataServerURI withParameters:nil];
-            
+            [self sendData:nil toServer:self.recieveDataServerURI withParameters:self.requestParameters];
         }
 
     }
@@ -765,8 +767,13 @@
     STTTAgentTerminal *terminal = (STTTAgentTerminal*)[self entityByClass:[STTTAgentTerminal class] andXid:xidData];
     
     if (!terminal.location) {
-        STTTTerminalLocation *location = (STTTTerminalLocation *)[NSEntityDescription insertNewObjectForEntityForName:NSStringFromClass([STTTTerminalLocation class]) inManagedObjectContext:self.session.document.managedObjectContext];
+        
+        NSString *locationEntityName = NSStringFromClass([STTTTerminalLocation class]);
+        
+        STTTTerminalLocation *location = (STTTTerminalLocation *)[NSEntityDescription insertNewObjectForEntityForName:locationEntityName
+                                                                                               inManagedObjectContext:self.session.document.managedObjectContext];
         terminal.location = location;
+        
     }
     
     terminal.code = properties[@"code"];
@@ -775,18 +782,24 @@
     terminal.mobileop = properties[@"mobileop"];
     
     NSDate *lastActivityTime = [self extractDateFrom:properties forKey:@"lastactivitytime"];
-    
     terminal.lastActivityTime = lastActivityTime;
-    terminal.address = [NSString stringWithUTF8String:[[properties valueForKey:@"address"] UTF8String]];
+    
+    NSDate *lastPaymentTime = [self extractDateFrom:properties forKey:@"lastpaymenttime"];
+    terminal.lastPaymentTime = lastPaymentTime;
+
+    if (properties[@"address"]) {
+        terminal.address = [NSString stringWithUTF8String:[properties[@"address"] UTF8String]];
+    }
     
     terminal.lts = [NSDate date];
 
-    id latitude = [properties valueForKey:@"latitude"];
-    id longitude = [properties valueForKey:@"longitude"];
-    terminal.location.latitude = [latitude isKindOfClass:[NSNumber class]] ? latitude : [NSNumber numberWithDouble:[latitude doubleValue]];
-    terminal.location.longitude = [longitude isKindOfClass:[NSNumber class]] ? longitude : [NSNumber numberWithDouble:[longitude doubleValue]];;
+    id latitude = properties[@"latitude"];
+    id longitude = properties[@"longitude"];
+    terminal.location.latitude = [latitude isKindOfClass:[NSNumber class]] ? latitude : @([latitude doubleValue]);
+    terminal.location.longitude = [longitude isKindOfClass:[NSNumber class]] ? longitude : @([longitude doubleValue]);
     
     if (!terminal.location.latitude || !terminal.location.longitude) {
+        
         CLGeocoder *geoCoder = [[CLGeocoder alloc] init];
         [geoCoder geocodeAddressString:terminal.address completionHandler:^(NSArray *placemarks, NSError *error) {
 
