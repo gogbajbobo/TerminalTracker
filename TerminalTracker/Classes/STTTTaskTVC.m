@@ -448,7 +448,8 @@
     NSString *lastActivity = [STUtilities stringWithRelativeDateFromDate:self.task.terminal.lastActivityTime];
 
     UIFont *font = [UIFont systemFontOfSize:16];
-    CGSize size = [lastActivity sizeWithFont:font];
+    NSDictionary *attributes = @{NSFontAttributeName:font};
+    CGSize size = [lastActivity sizeWithAttributes:attributes];
     
     CGFloat paddingX = 0;
     CGFloat paddingY = 0;

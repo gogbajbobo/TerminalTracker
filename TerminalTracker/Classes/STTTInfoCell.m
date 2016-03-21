@@ -21,39 +21,44 @@
     CGFloat paddingX = 0;
     CGFloat paddingY = 0;
     CGFloat marginX = 10;
-    CGSize size = [self.infoLabel.text sizeWithFont:self.infoLabel.font];
+
+    NSDictionary *attributes = @{NSFontAttributeName:self.infoLabel.font};
+    CGSize size = [self.infoLabel.text sizeWithAttributes:attributes];
+    
     CGFloat x = self.contentView.frame.size.width - size.width - 2 * paddingX - marginX;
     CGFloat y = (self.contentView.frame.size.height - size.height - 2 * paddingY) / 2;
+    
     CGRect frame = CGRectMake(x, y, size.width + 2 * paddingX, size.height + 2 * paddingY);
     self.infoLabel.frame = frame;
     
     x = self.detailTextLabel.frame.origin.x;
     y = self.detailTextLabel.frame.origin.y;
+    
     CGFloat height = self.detailTextLabel.frame.size.height;
     CGFloat width = self.infoLabel.frame.origin.x - x;
+    
     frame = CGRectMake(x, y, width, height);
     self.detailTextLabel.frame = frame;
     
 }
 
-- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
-{
+- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+    
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+
     if (self) {
 
         self.infoLabel = [[UILabel alloc] init];
         [self.contentView addSubview:self.infoLabel];
     
     }
-    
     return self;
+    
 }
 
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated
-{
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
-
-    // Configure the view for the selected state
 }
+
 
 @end

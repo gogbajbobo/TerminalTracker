@@ -604,9 +604,8 @@
 
 - (void)addInfoLabelWithText:(NSString *)text andAttributes:(NSDictionary *)attributes toCell:(UITableViewCell *)cell {
     
-    UIFont *font = [attributes objectForKey:NSFontAttributeName];
-    
-    CGSize size = [text sizeWithFont:font];
+    CGSize size = [text sizeWithAttributes:attributes];
+
     //    NSLog(@"size w %f h %f", size.width, size.height);
     
     CGFloat paddingX = 0;

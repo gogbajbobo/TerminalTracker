@@ -152,8 +152,8 @@
     
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
     static NSString *cellIdentifier = @"terminalCell";
     
     UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
@@ -177,7 +177,9 @@
     
     NSString *infoText = [STUtilities stringWithRelativeDateFromDate:terminal.lastActivityTime];
     UIFont *font = [UIFont systemFontOfSize:16];
-    CGSize size = [infoText sizeWithFont:font];
+    
+    NSDictionary *attributes = @{NSFontAttributeName:font};
+    CGSize size = [infoText sizeWithAttributes:attributes];
     
     CGFloat paddingX = 0;
     CGFloat paddingY = 0;

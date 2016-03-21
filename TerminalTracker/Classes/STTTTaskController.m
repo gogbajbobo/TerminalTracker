@@ -295,9 +295,11 @@
     cell.detailTextLabel.textColor = [task getTextColorForDisplaying];
 
     NSString *infoText = [STUtilities stringWithRelativeDateFromDate:task.doBefore];
-    UIFont *font = [UIFont systemFontOfSize:16];
-    CGSize size = [infoText sizeWithFont:font];
     
+    UIFont *font = [UIFont systemFontOfSize:16];
+    NSDictionary *attributes = @{NSFontAttributeName:font};
+    CGSize size = [infoText sizeWithAttributes:attributes];
+
     CGFloat paddingX = 0;
     CGFloat paddingY = 0;
     CGFloat marginX = 10;
