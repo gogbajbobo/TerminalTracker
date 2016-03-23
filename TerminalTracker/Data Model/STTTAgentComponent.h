@@ -2,14 +2,14 @@
 //  STTTAgentComponent.h
 //  TerminalTracker
 //
-//  Created by Maxim Grigoriev on 20/01/16.
+//  Created by Maxim Grigoriev on 22/03/16.
 //  Copyright © 2016 Maxim Grigoriev. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 #import "STComment.h"
 
-@class STTTAgentComponentGroup, STTTAgentTaskComponent;
+@class STTTAgentComponentGroup, STTTAgentTerminalComponent;
 
 NS_ASSUME_NONNULL_BEGIN
 

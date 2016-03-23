@@ -2,16 +2,14 @@
 //  STTTAgentTerminal.m
 //  TerminalTracker
 //
-//  Created by Maxim Grigoriev on 16/01/16.
+//  Created by Maxim Grigoriev on 22/03/16.
 //  Copyright © 2016 Maxim Grigoriev. All rights reserved.
 //
 
 #import "STTTAgentTerminal.h"
 #import "STTTAgentTask.h"
+#import "STTTAgentTerminalComponent.h"
 #import "STTTTerminalLocation.h"
-
-//#import "STTTLocationController.h"
-
 
 @implementation STTTAgentTerminal
 

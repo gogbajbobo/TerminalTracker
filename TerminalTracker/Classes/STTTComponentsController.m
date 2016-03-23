@@ -36,27 +36,31 @@
 }
 
 + (NSArray *)expiredComponentsForSession:(id<STSession>)session {
- 
-    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:NSStringFromClass([STTTAgentComponent class])];
-    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"id" ascending:YES];
-    request.sortDescriptors = @[sortDescriptor];
+
+#warning !!!!
     
-    NSDate *expiredDate = [self expiredDate];
-    request.predicate = [NSPredicate predicateWithFormat:@"taskComponent == %@ && cts <= %@", nil, expiredDate];
-    
-    NSError *error;
-    NSArray *result = [[session document].managedObjectContext executeFetchRequest:request error:&error];
-    
-    if (error) {
-        
-        NSLog(@"expiredComponents fetch request error: %@", error.localizedDescription);
-        return nil;
-        
-    } else {
-                
-        return result;
-        
-    }
+//    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:NSStringFromClass([STTTAgentComponent class])];
+//    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"id" ascending:YES];
+//    request.sortDescriptors = @[sortDescriptor];
+//    
+//    NSDate *expiredDate = [self expiredDate];
+//    request.predicate = [NSPredicate predicateWithFormat:@"taskComponent == %@ && cts <= %@", nil, expiredDate];
+//    
+//    NSError *error;
+//    NSArray *result = [[session document].managedObjectContext executeFetchRequest:request error:&error];
+//    
+//    if (error) {
+//        
+//        NSLog(@"expiredComponents fetch request error: %@", error.localizedDescription);
+//        return nil;
+//        
+//    } else {
+//                
+//        return result;
+//        
+//    }
+
+    return @[];
     
 }
 

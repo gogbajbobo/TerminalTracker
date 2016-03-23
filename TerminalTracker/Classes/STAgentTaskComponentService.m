@@ -100,69 +100,71 @@
              remainedComponents:(NSArray *)remainedComponents
                  usedComponents:(NSArray *)usedComponents {
 
-    for (STTTAgentComponent *component in installedComponents) {
-        
-        STTTAgentTaskComponent *taskComponent = component.taskComponent;
-        
-        if (taskComponent) {
-            
-            taskComponent.isBroken = @(NO);
-            taskComponent.isdeleted = @(YES);
-            taskComponent.task = nil;
-
-        }
-        
-    }
-
-    for (STTTAgentComponent *component in removedComponents) {
-        
-        STTTAgentTaskComponent *taskComponent = [self taskComponentForTask:task andComponent:component];
-        taskComponent.isBroken = @(YES);
-
-    }
+    NSLog(@"updateComponentsForTask");
     
-    for (STTTAgentComponent *component in remainedComponents) {
-        
-        STTTAgentTaskComponent *taskComponent = component.taskComponent;
-        
-        if (taskComponent) {
-            taskComponent.isdeleted = @(YES);
-        }
-        
-    }
-
-    
-    for (STTTAgentComponent *component in usedComponents) {
-        [self taskComponentForTask:task andComponent:component];
-    }
-    
-    task.ts = [NSDate date];
+//    for (STTTAgentComponent *component in installedComponents) {
+//        
+//        STTTAgentTaskComponent *taskComponent = component.taskComponent;
+//        
+//        if (taskComponent) {
+//            
+//            taskComponent.isBroken = @(NO);
+//            taskComponent.isdeleted = @(YES);
+//            taskComponent.task = nil;
+//
+//        }
+//        
+//    }
+//
+//    for (STTTAgentComponent *component in removedComponents) {
+//        
+//        STTTAgentTaskComponent *taskComponent = [self taskComponentForTask:task andComponent:component];
+//        taskComponent.isBroken = @(YES);
+//
+//    }
+//    
+//    for (STTTAgentComponent *component in remainedComponents) {
+//        
+//        STTTAgentTaskComponent *taskComponent = component.taskComponent;
+//        
+//        if (taskComponent) {
+//            taskComponent.isdeleted = @(YES);
+//        }
+//        
+//    }
+//
+//    
+//    for (STTTAgentComponent *component in usedComponents) {
+//        [self taskComponentForTask:task andComponent:component];
+//    }
+//    
+//    task.ts = [NSDate date];
 
 }
 
-+ (STTTAgentTaskComponent *)taskComponentForTask:(STTTAgentTask *)task andComponent:(STTTAgentComponent *)component {
-    
-    STManagedDocument *document = [[STSessionManager sharedManager] currentSession].document;
-    NSManagedObjectContext *context = document.managedObjectContext;
-    NSString *taskComponentEntityName = NSStringFromClass([STTTAgentTaskComponent class]);
-
-    STTTAgentTaskComponent *taskComponent = component.taskComponent;
-    
-    if (!taskComponent) {
-        
-        taskComponent = (STTTAgentTaskComponent *)[NSEntityDescription insertNewObjectForEntityForName:taskComponentEntityName
-                                                                                inManagedObjectContext:context];
-        taskComponent.component = component;
-        
-    }
-    
-    taskComponent.task = task;
-    taskComponent.terminal = task.terminal;
-    taskComponent.isdeleted = @(NO);
-
-    return taskComponent;
-    
-}
+//+ (STTTAgentTaskComponent *)taskComponentForTask:(STTTAgentTask *)task andComponent:(STTTAgentComponent *)component {
+//    
+//    STManagedDocument *document = [[STSessionManager sharedManager] currentSession].document;
+//    NSManagedObjectContext *context = document.managedObjectContext;
+//    NSString *taskComponentEntityName = NSStringFromClass([STTTAgentTaskComponent class]);
+//
+//    STTTAgentTaskComponent *taskComponent = component.taskComponent;
+//    
+//    if (!taskComponent) {
+//        
+//        taskComponent = (STTTAgentTaskComponent *)[NSEntityDescription insertNewObjectForEntityForName:taskComponentEntityName
+//                                                                                inManagedObjectContext:context];
+//        taskComponent.component = component;
+//        
+//    }
+//    
+//    taskComponent.task = task;
+//    taskComponent.terminal = task.terminal;
+//    taskComponent.isdeleted = @(NO);
+//
+//    return taskComponent;
+//    
+//}
 
 
 + (void)updateComponentsForTask:(STTTAgentTask *)task fromList:(NSArray *)componentsList {

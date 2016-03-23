@@ -1,5 +1,5 @@
 //
-//  STTTAgentTaskComponent+CoreDataProperties.m
+//  STTTAgentTerminalComponent+CoreDataProperties.m
 //  TerminalTracker
 //
 //  Created by Maxim Grigoriev on 22/03/16.
@@ -9,11 +9,12 @@
 //  to delete and recreate this implementation file for your updated model.
 //
 
-#import "STTTAgentTaskComponent+CoreDataProperties.h"
+#import "STTTAgentTerminalComponent+CoreDataProperties.h"
 
-@implementation STTTAgentTaskComponent (CoreDataProperties)
+@implementation STTTAgentTerminalComponent (CoreDataProperties)
 
-@dynamic isBroken;
-@dynamic task;
+@dynamic isdeleted;
+@dynamic component;
+@dynamic terminal;
 
 @end

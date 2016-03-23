@@ -21,6 +21,7 @@
 #import "STTTAgentComponentGroup.h"
 #import "STTTAgentComponent.h"
 #import "STTTAgentTaskComponent.h"
+#import "STTTAgentTerminalComponent.h"
 #import "STTTAgentBarcodeType.h"
 
 
@@ -687,7 +688,8 @@
     [self removeObjectWithName:NSStringFromClass([STTTAgentTask class])];
     
     [self removeObjectWithName:NSStringFromClass([STTTAgentTerminal class])];
-    
+    [self removeObjectWithName:NSStringFromClass([STTTAgentTerminalComponent class])];
+
     [self removeObjectWithName:NSStringFromClass([STTTAgentRepairCode class])];
     [self removeObjectWithName:NSStringFromClass([STTTAgentTaskRepair class])];
     

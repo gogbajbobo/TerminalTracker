@@ -27,6 +27,7 @@
 #import "STTTAgentComponentGroup.h"
 #import "STTTAgentComponent.h"
 #import "STTTAgentTaskComponent.h"
+#import "STTTAgentTerminalComponent.h"
 
 #import "STTTAgentBarcodeType.h"
 
@@ -598,6 +599,10 @@
         
         [self newTaskComponentWithXid:xidData andProperties:properties];
 
+    } else if ([name isEqualToString:@"megaport.iAgentTerminalComponent"]) {
+        
+        [self newTerminalComponentWithXid:xidData andProperties:properties];
+        
     } else if ([name isEqualToString:@"megaport.iAgentComponentGroup"]) {
         
         [self newComponentGroupWithXid:xidData andProperties:properties];
@@ -626,6 +631,7 @@
 - (void)taskRelationshipInitForRelationshipObject:(NSManagedObject *)object andTask:(STTTAgentTask *)task {
     
     [self setValue:@NO forKey:@"isdeleted" forObject:object];
+    [self setValue:@NO forKey:@"isBroken" forObject:object];
     [self setValue:task forKey:@"task" forObject:object];
     [self setValue:[NSDate date] forKey:@"lts" forObject:object];
     
@@ -711,6 +717,30 @@
         }
         
     }
+
+}
+
+- (void)newTerminalComponentWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties {
+    
+//    NSDictionary *taskData = [properties valueForKey:@"taskxid"];
+    
+    STTTAgentTerminalComponent *terminalComponent = (STTTAgentTerminalComponent *)[self entityByClass:[STTTAgentTerminalComponent class] andXid:xidData];
+    
+    if ([terminalComponent.isdeleted boolValue]) {
+        
+        NSLog(@"local terminalComponent isdeleted, server's data will be ignored for terminalComponent %@", xidData);
+        
+    } else {
+        
+        terminalComponent.component = (STTTAgentComponent *)[self entityByClass:[STTTAgentComponent class] andXid:[self xidWithString:[properties valueForKey:@"componentxid"]]];
+        terminalComponent.terminal = (STTTAgentTerminal *)[self entityByClass:[STTTAgentTerminal class] andXid:[self xidWithString:[properties valueForKey:@"terminalxid"]]];
+        
+//        [self taskRelationshipInitForRelationshipObject:terminalComponent andTask:task];
+        
+        NSLog(@"get terminalComponent.xid %@", terminalComponent.xid);
+        
+    }
+    
 }
 
 - (void)newComponentGroupWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties {
