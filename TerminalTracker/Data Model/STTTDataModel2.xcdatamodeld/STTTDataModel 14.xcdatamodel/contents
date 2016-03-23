@@ -78,7 +78,6 @@
         <relationship name="visitLocation" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="STTTTaskLocation" inverseName="task" inverseEntity="STTTTaskLocation" syncable="YES"/>
     </entity>
     <entity name="STTTAgentTaskComponent" representedClassName="STTTAgentTaskComponent" parentEntity="STTTAgentTerminalComponent" syncable="YES">
-        <attribute name="isBroken" optional="YES" attributeType="Boolean" syncable="YES"/>
         <relationship name="task" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="STTTAgentTask" inverseName="components" inverseEntity="STTTAgentTask" syncable="YES"/>
     </entity>
     <entity name="STTTAgentTaskDefect" representedClassName="STTTAgentTaskDefect" parentEntity="STComment" syncable="YES">
@@ -105,6 +104,7 @@
         <relationship name="tasks" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="STTTAgentTask" inverseName="terminal" inverseEntity="STTTAgentTask" syncable="YES"/>
     </entity>
     <entity name="STTTAgentTerminalComponent" representedClassName="STTTAgentTerminalComponent" parentEntity="STComment" syncable="YES">
+        <attribute name="isBroken" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="isdeleted" optional="YES" attributeType="Boolean" syncable="YES"/>
         <relationship name="component" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="STTTAgentComponent" inverseName="terminalComponents" inverseEntity="STTTAgentComponent" syncable="YES"/>
         <relationship name="terminal" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="STTTAgentTerminal" inverseName="components" inverseEntity="STTTAgentTerminal" syncable="YES"/>
@@ -123,17 +123,17 @@
         <element name="STLogMessage" positionX="-4095" positionY="-981" width="128" height="73"/>
         <element name="STSettings" positionX="-3980" positionY="-1186" width="128" height="88"/>
         <element name="STTTAgentBarcodeType" positionX="-3584" positionY="-1251" width="128" height="103"/>
-        <element name="STTTAgentComponent" positionX="-3647" positionY="-639" width="128" height="103"/>
+        <element name="STTTAgentComponent" positionX="-3602" positionY="-639" width="128" height="103"/>
         <element name="STTTAgentComponentGroup" positionX="-3654" positionY="-799" width="128" height="88"/>
         <element name="STTTAgentDefectCode" positionX="-3872" positionY="-774" width="128" height="88"/>
         <element name="STTTAgentRepairCode" positionX="-3888" positionY="-891" width="128" height="88"/>
         <element name="STTTAgentTask" positionX="-3798" positionY="-526" width="128" height="208"/>
-        <element name="STTTAgentTaskComponent" positionX="-3422" positionY="-487" width="128" height="73"/>
+        <element name="STTTAgentTaskComponent" positionX="-3377" positionY="-487" width="128" height="58"/>
         <element name="STTTAgentTaskDefect" positionX="-4079" positionY="-754" width="128" height="88"/>
         <element name="STTTAgentTaskRepair" positionX="-4095" positionY="-873" width="128" height="88"/>
         <element name="STTTAgentTerminal" positionX="-3548" positionY="-1054" width="128" height="208"/>
         <element name="STTTTaskLocation" positionX="-3132" positionY="-418" width="128" height="58"/>
         <element name="STTTTerminalLocation" positionX="-3179" positionY="-981" width="128" height="58"/>
-        <element name="STTTAgentTerminalComponent" positionX="-3368" positionY="-682" width="128" height="88"/>
+        <element name="STTTAgentTerminalComponent" positionX="-3323" positionY="-682" width="128" height="103"/>
     </elements>
 </model>

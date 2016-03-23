@@ -11,6 +11,7 @@
 
 #import "STTTAgentTask.h"
 #import "STTTAgentComponentGroup.h"
+#import "STTTAgentComponent.h"
 
 
 @interface STTTComponentGroupTVC : UITableViewController

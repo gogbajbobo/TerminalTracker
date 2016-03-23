@@ -632,7 +632,7 @@
     
     [self setValue:@NO forKey:@"isdeleted" forObject:object];
     [self setValue:@NO forKey:@"isBroken" forObject:object];
-    [self setValue:task forKey:@"task" forObject:object];
+    if (task) [self setValue:task forKey:@"task" forObject:object];
     [self setValue:[NSDate date] forKey:@"lts" forObject:object];
     
 }
@@ -735,7 +735,7 @@
         terminalComponent.component = (STTTAgentComponent *)[self entityByClass:[STTTAgentComponent class] andXid:[self xidWithString:[properties valueForKey:@"componentxid"]]];
         terminalComponent.terminal = (STTTAgentTerminal *)[self entityByClass:[STTTAgentTerminal class] andXid:[self xidWithString:[properties valueForKey:@"terminalxid"]]];
         
-//        [self taskRelationshipInitForRelationshipObject:terminalComponent andTask:task];
+        [self taskRelationshipInitForRelationshipObject:terminalComponent andTask:nil];
         
         NSLog(@"get terminalComponent.xid %@", terminalComponent.xid);
         

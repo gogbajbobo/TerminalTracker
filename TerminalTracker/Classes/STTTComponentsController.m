@@ -37,8 +37,8 @@
 
 + (NSArray *)expiredComponentsForSession:(id<STSession>)session {
 
-#warning !!!!
-    
+//    do not needed after implementing daily database clearing
+//
 //    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:NSStringFromClass([STTTAgentComponent class])];
 //    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"id" ascending:YES];
 //    request.sortDescriptors = @[sortDescriptor];

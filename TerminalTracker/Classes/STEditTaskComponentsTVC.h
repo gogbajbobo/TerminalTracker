@@ -16,9 +16,12 @@
 
 @property (strong, nonatomic) STTTAgentTask *task;
 @property (nonatomic, strong) STTTAgentComponentGroup *componentGroup;
+@property (nonatomic, strong) NSArray *remainedComponents;
+@property (nonatomic, strong) NSArray *usedComponents;
 
-- (NSPredicate *)usedComponentsPredicate;
-- (NSPredicate *)remainedComponentsPredicate;
+
+//- (NSPredicate *)usedComponentsPredicate;
+//- (NSPredicate *)remainedComponentsPredicate;
 
 
 @end

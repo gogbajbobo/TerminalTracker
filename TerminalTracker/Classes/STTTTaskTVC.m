@@ -558,10 +558,9 @@
                     break;
                     
                 case 2:
-                    if ([self isDataCompleted]) {
+//                    if ([self isDataCompleted]) {
                         [self showComponentGroups];
-//                        [self performSegueWithIdentifier:@"editComponents" sender:self.task];
-                    }
+//                    }
                     break;
                     
                 case 3:

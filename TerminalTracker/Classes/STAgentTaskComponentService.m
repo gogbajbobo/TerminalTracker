@@ -43,9 +43,9 @@
     NSDate *expiredDate = [STTTComponentsController expiredDate];
     
     if (group) {
-        request.predicate = [NSPredicate predicateWithFormat:@"componentGroup == %@ AND ((cts > %@ && taskComponent.terminal == nil) OR (taskComponent.terminal == %@))", group, expiredDate, task.terminal];
+        request.predicate = [NSPredicate predicateWithFormat:@"componentGroup == %@ && ((cts > %@ && ANY terminalComponents.terminal == nil) || (ANY terminalComponents.terminal == %@))", group, expiredDate, task.terminal];
     } else {
-        request.predicate = [NSPredicate predicateWithFormat:@"(cts > %@ && taskComponent.terminal == nil) OR (taskComponent.terminal == %@)", expiredDate, task.terminal];
+        request.predicate = [NSPredicate predicateWithFormat:@"(cts > %@ && ANY terminalComponents.terminal == nil) || (ANY terminalComponents.terminal == %@)", expiredDate, task.terminal];
     }
     
     NSError *error;

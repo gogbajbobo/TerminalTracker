@@ -2,7 +2,7 @@
 //  STTTAgentTaskComponent+CoreDataProperties.m
 //  TerminalTracker
 //
-//  Created by Maxim Grigoriev on 22/03/16.
+//  Created by Maxim Grigoriev on 23/03/16.
 //  Copyright © 2016 Maxim Grigoriev. All rights reserved.
 //
 //  Choose "Create NSManagedObject Subclass…" from the Core Data editor menu
@@ -13,7 +13,6 @@
 
 @implementation STTTAgentTaskComponent (CoreDataProperties)
 
-@dynamic isBroken;
 @dynamic task;
 
 @end

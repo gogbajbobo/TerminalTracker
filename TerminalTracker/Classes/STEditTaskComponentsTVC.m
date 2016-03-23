@@ -38,7 +38,9 @@
     
     if (!_componentsList) {
         
-        _componentsList = [STAgentTaskComponentService getListOfComponentsForTask:self.task inGroup:self.componentGroup].mutableCopy;
+//        _componentsList = [STAgentTaskComponentService getListOfComponentsForTask:self.task inGroup:self.componentGroup].mutableCopy;
+        
+        _componentsList = [self.remainedComponents arrayByAddingObjectsFromArray:self.usedComponents].mutableCopy;
         
 //        _componentsList = [[NSMutableArray alloc] init];
 //        
@@ -69,13 +71,13 @@
     
 }
 
-- (NSPredicate *)usedComponentsPredicate {
-    return [NSPredicate predicateWithFormat:@"taskComponent.terminal == %@ && taskComponent.isBroken != YES && taskComponent.isdeleted != YES", self.task.terminal];
-}
-
-- (NSPredicate *)remainedComponentsPredicate {
-    return [NSPredicate predicateWithFormat:@"taskComponent.terminal == nil || taskComponent.isdeleted == YES"];
-}
+//- (NSPredicate *)usedComponentsPredicate {
+//    return [NSPredicate predicateWithFormat:@"ANY terminalComponents.terminal == %@ && taskComponent.isBroken != YES && taskComponent.isdeleted != YES", self.task.terminal];
+//}
+//
+//- (NSPredicate *)remainedComponentsPredicate {
+//    return [NSPredicate predicateWithFormat:@"taskComponent.terminal == nil || taskComponent.isdeleted == YES"];
+//}
 
 #pragma mark - Table view data source
 
@@ -95,14 +97,16 @@
     cell.detailTextLabel.numberOfLines = 0;
     
     NSDictionary *tableDatum = self.tableData[indexPath.row];
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"shortName == %@ AND serial == %@", tableDatum[@"shortName"], tableDatum[@"serial"]];
-    NSArray *components = [self.componentsList filteredArrayUsingPredicate:predicate];
+//    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"shortName == %@ AND serial == %@", tableDatum[@"shortName"], tableDatum[@"serial"]];
+//    NSArray *components = [self.componentsList filteredArrayUsingPredicate:predicate];
     
-    predicate = [self usedComponentsPredicate];
-    NSArray *usedComponents = [components filteredArrayUsingPredicate:predicate];
+//    predicate = [self usedComponentsPredicate];
+//    NSArray *usedComponents = [components filteredArrayUsingPredicate:predicate];
+    NSArray *usedComponents = self.usedComponents;
 
-    predicate = [self remainedComponentsPredicate];
-    NSArray *remainedComponents = [components filteredArrayUsingPredicate:predicate];
+//    predicate = [self remainedComponentsPredicate];
+//    NSArray *remainedComponents = [components filteredArrayUsingPredicate:predicate];
+    NSArray *remainedComponents = self.remainedComponents;
     
 //    cell.textLabel.text = [[tableDatum[@"shortName"] stringByAppendingString:@" -/- "] stringByAppendingString:@(components.count).stringValue];
     cell.textLabel.text = tableDatum[@"shortName"];
