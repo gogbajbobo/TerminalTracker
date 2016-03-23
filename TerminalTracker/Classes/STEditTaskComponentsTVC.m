@@ -97,16 +97,20 @@
     cell.detailTextLabel.numberOfLines = 0;
     
     NSDictionary *tableDatum = self.tableData[indexPath.row];
-//    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"shortName == %@ AND serial == %@", tableDatum[@"shortName"], tableDatum[@"serial"]];
-//    NSArray *components = [self.componentsList filteredArrayUsingPredicate:predicate];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"shortName == %@ AND serial == %@", tableDatum[@"shortName"], tableDatum[@"serial"]];
+    NSSet *components = [NSSet setWithArray:[self.componentsList filteredArrayUsingPredicate:predicate]];
     
 //    predicate = [self usedComponentsPredicate];
 //    NSArray *usedComponents = [components filteredArrayUsingPredicate:predicate];
-    NSArray *usedComponents = self.usedComponents;
+    
+    NSMutableSet *usedComponents = [NSMutableSet setWithArray:self.usedComponents];
+    [usedComponents intersectSet:components];
 
 //    predicate = [self remainedComponentsPredicate];
 //    NSArray *remainedComponents = [components filteredArrayUsingPredicate:predicate];
-    NSArray *remainedComponents = self.remainedComponents;
+
+    NSMutableSet *remainedComponents = [NSMutableSet setWithArray:self.remainedComponents];
+    [remainedComponents intersectSet:components];
     
 //    cell.textLabel.text = [[tableDatum[@"shortName"] stringByAppendingString:@" -/- "] stringByAppendingString:@(components.count).stringValue];
     cell.textLabel.text = tableDatum[@"shortName"];

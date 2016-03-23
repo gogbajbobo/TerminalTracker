@@ -263,7 +263,6 @@
         
     }
     
-    
 //    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"taskComponent.task == nil && taskComponent.terminal == %@ && taskComponent.isBroken != YES", self.parentVC.task.terminal];
 //    self.installedComponents = [self.components filteredArrayUsingPredicate:predicate].mutableCopy;
 //
