@@ -90,27 +90,34 @@
     self.taskCompleted = [self.task.servstatus boolValue] && ![self recentlyChangedServstatus];
 }
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-    
-    if ([change valueForKey:NSKeyValueChangeNewKey] != [change valueForKey:NSKeyValueChangeOldKey]) {
-        
-        if ([keyPath isEqualToString:@"commentText"]) {
-            
-            [self saveDocument];
-            [self reloadCell:self.commentsCell];
-            
-        }
-        
-    }
-    
+- (void)taskCommentWasUpdated {
+
+    [self saveDocument];
+    [self reloadCell:self.commentsCell];
+
 }
+
+//- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+//    
+//    if ([change valueForKey:NSKeyValueChangeNewKey] != [change valueForKey:NSKeyValueChangeOldKey]) {
+//        
+//        if ([keyPath isEqualToString:@"commentText"]) {
+//            
+//            [self saveDocument];
+//            [self reloadCell:self.commentsCell];
+//            
+//        }
+//        
+//    }
+//    
+//}
 
 - (void)addObservers {
     
-    [self.task addObserver:self
-                forKeyPath:@"commentText"
-                   options:(NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld)
-                   context:nil];
+//    [self.task addObserver:self
+//                forKeyPath:@"commentText"
+//                   options:(NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld)
+//                   context:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(currentLocationUpdated:)
@@ -126,9 +133,9 @@
 
 - (void)removeObservers {
     
-    [self.task removeObserver:self
-                   forKeyPath:@"commentText"
-                      context:nil];
+//    [self.task removeObserver:self
+//                   forKeyPath:@"commentText"
+//                      context:nil];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:@"currentLocationUpdated"
@@ -1040,7 +1047,12 @@
         if ([segue.identifier isEqualToString:@"showComment"]) {
             
             if ([segue.destinationViewController isKindOfClass:[STTTCommentVC class]]) {
-                [(STTTCommentVC *)segue.destinationViewController setTask:task];
+                
+                STTTCommentVC *commentVC = (STTTCommentVC *)segue.destinationViewController;
+                
+                commentVC.task = task;
+                commentVC.taskTVC = self;
+                
             }
             
         } else  if ([segue.identifier isEqualToString:@"editBreakCode"]) {

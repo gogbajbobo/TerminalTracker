@@ -9,9 +9,14 @@
 #import <UIKit/UIKit.h>
 #import "STTTAgentTask.h"
 
+
 @interface STTTTaskTVC : UITableViewController
 
 @property (nonatomic, strong) STTTAgentTask *task;
+
+- (void)taskCommentWasUpdated;
+
+
 
 @end
 
