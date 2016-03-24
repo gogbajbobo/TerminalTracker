@@ -13,6 +13,7 @@
 
 #import "STTTAgentTaskComponent.h"
 #import "STTTAgentComponent.h"
+#import "STTTAgentTerminal.h"
 
 #import "STTTComponentsController.h"
 
@@ -100,45 +101,79 @@
              remainedComponents:(NSArray *)remainedComponents
                  usedComponents:(NSArray *)usedComponents {
 
-    NSLog(@"updateComponentsForTask");
+/*
+ 
+    installed   — was installed on terminal
+    removed     — was removed from terminal by technician during task
+    remained    — remained with technician
+    used        — was used and installed on terminal by technician during task
+ 
+*/
     
-//    for (STTTAgentComponent *component in installedComponents) {
-//        
-//        STTTAgentTaskComponent *taskComponent = component.taskComponent;
-//        
-//        if (taskComponent) {
-//            
-//            taskComponent.isBroken = @(NO);
-//            taskComponent.isdeleted = @(YES);
-//            taskComponent.task = nil;
-//
-//        }
-//        
-//    }
-//
-//    for (STTTAgentComponent *component in removedComponents) {
-//        
-//        STTTAgentTaskComponent *taskComponent = [self taskComponentForTask:task andComponent:component];
-//        taskComponent.isBroken = @(YES);
-//
-//    }
-//    
-//    for (STTTAgentComponent *component in remainedComponents) {
-//        
-//        STTTAgentTaskComponent *taskComponent = component.taskComponent;
-//        
-//        if (taskComponent) {
-//            taskComponent.isdeleted = @(YES);
-//        }
-//        
-//    }
-//
-//    
-//    for (STTTAgentComponent *component in usedComponents) {
-//        [self taskComponentForTask:task andComponent:component];
-//    }
-//    
-//    task.ts = [NSDate date];
+    NSArray *allComponents = [@[installedComponents, removedComponents, remainedComponents, usedComponents] valueForKeyPath:@"@unionOfArrays.self"];
+    
+    for (STTTAgentComponent *component in allComponents) {
+
+        STTTAgentTerminalComponent *terminalComponent = [self actualTerminalComponentForComponent:component];
+        if (terminalComponent) terminalComponent.isdeleted = @(YES);
+
+    }
+    
+    for (STTTAgentComponent *component in installedComponents) {
+        [self terminalComponentForTerminal:task.terminal andComponent:component];
+    }
+
+    for (STTTAgentComponent *component in removedComponents) {
+        
+        STTTAgentTaskComponent *taskComponent = [self taskComponentForTask:task terminal:task.terminal andComponent:component];
+        taskComponent.isBroken = @(YES);
+        
+    }
+    
+    for (STTTAgentComponent *component in remainedComponents) {
+        [self taskComponentForTask:task terminal:nil andComponent:component];
+    }
+    
+    for (STTTAgentComponent *component in usedComponents) {
+        [self taskComponentForTask:task terminal:task.terminal andComponent:component];
+    }
+    
+    task.ts = [NSDate date];
+
+}
+
++ (STTTAgentTerminalComponent *)terminalComponentForTerminal:(STTTAgentTerminal *)terminal andComponent:(STTTAgentComponent *)component {
+    
+    STManagedDocument *document = [[STSessionManager sharedManager] currentSession].document;
+    NSManagedObjectContext *context = document.managedObjectContext;
+    NSString *taskComponentEntityName = NSStringFromClass([STTTAgentTerminalComponent class]);
+
+    STTTAgentTerminalComponent *terminalComponent = (STTTAgentTerminalComponent *)[NSEntityDescription insertNewObjectForEntityForName:taskComponentEntityName inManagedObjectContext:context];
+
+    terminalComponent.terminal = terminal;
+    terminalComponent.component = component;
+    terminalComponent.isBroken = @(NO);
+    terminalComponent.isdeleted = @(NO);
+    
+    return terminalComponent;
+    
+}
+
++ (STTTAgentTaskComponent *)taskComponentForTask:(STTTAgentTask *)task terminal:(STTTAgentTerminal *)terminal andComponent:(STTTAgentComponent *)component {
+
+    STManagedDocument *document = [[STSessionManager sharedManager] currentSession].document;
+    NSManagedObjectContext *context = document.managedObjectContext;
+    NSString *taskComponentEntityName = NSStringFromClass([STTTAgentTaskComponent class]);
+    
+    STTTAgentTaskComponent *taskComponent = (STTTAgentTaskComponent *)[NSEntityDescription insertNewObjectForEntityForName:taskComponentEntityName inManagedObjectContext:context];
+    
+    taskComponent.task = task;
+    taskComponent.terminal = terminal;
+    taskComponent.component = component;
+    taskComponent.isBroken = @(NO);
+    taskComponent.isdeleted = @(NO);
+    
+    return taskComponent;
 
 }
 
@@ -233,6 +268,15 @@
     NSArray *fetchResult = [context executeFetchRequest:request error:&error];
     
     return (error) ? nil : [fetchResult lastObject];
+    
+}
+
++ (STTTAgentTerminalComponent *)actualTerminalComponentForComponent:(STTTAgentComponent *)component {
+    
+    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"cts" ascending:YES selector:@selector(compare:)];
+    STTTAgentTerminalComponent *terminalComponent = [component.terminalComponents sortedArrayUsingDescriptors:@[sortDescriptor]].lastObject;
+
+    return terminalComponent;
     
 }
 

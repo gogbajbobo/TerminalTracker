@@ -558,6 +558,7 @@
                     break;
                     
                 case 2:
+#warning don't forget to uncomment if () {}
 //                    if ([self isDataCompleted]) {
                         [self showComponentGroups];
 //                    }

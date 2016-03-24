@@ -234,9 +234,9 @@
 
         if ([object isKindOfClass:[STTTAgentTask class]]) {
             
-            [syncDataArray addObjectsFromArray:[self arrayWithTaskRepaisToSync:(STTTAgentTask*)object]];
-            [syncDataArray addObjectsFromArray:[self arrayWithTaskDefectsToSync:(STTTAgentTask*)object]];
-            [syncDataArray addObjectsFromArray:[self arrayWithTaskComponentsToSync:(STTTAgentTask*)object]];
+            [syncDataArray addObjectsFromArray:[self arrayWithTaskRepaisToSync:(STTTAgentTask *)object]];
+            [syncDataArray addObjectsFromArray:[self arrayWithTaskDefectsToSync:(STTTAgentTask *)object]];
+            [syncDataArray addObjectsFromArray:[self arrayWithTaskComponentsToSync:(STTTAgentTask *)object]];
             
         }
         
@@ -312,7 +312,7 @@
     
     NSMutableArray *results = [NSMutableArray array];
     
-    for(STTTAgentTaskComponent *taskComponent in task.components) {
+    for (STTTAgentTaskComponent *taskComponent in task.components) {
         
         NSMutableDictionary *objectDictionary = [@{@"name"  : @"megaport.iAgentTaskComponent",
                                                    @"xid"   : [self stringWithXid:taskComponent.xid]} mutableCopy];
@@ -320,11 +320,16 @@
         NSMutableDictionary *properties = [NSMutableDictionary dictionary];
         
         [properties addEntriesFromDictionary:@{@"isdeleted" : (taskComponent.isdeleted) ? taskComponent.isdeleted : @(NO),
+                                               @"isBroken"  : (taskComponent.isBroken) ? taskComponent.isBroken : @(NO),
                                                @"taskxid"   : [self stringWithXid:task.xid],
                                                @"ts"        : [NSString stringWithFormat:@"%@", taskComponent.ts]}];
         
         if (taskComponent.component) {
             [properties addEntriesFromDictionary:@{@"componentxid" : [self stringWithXid:taskComponent.component.xid]}];
+        }
+
+        if (taskComponent.terminal) {
+            [properties addEntriesFromDictionary:@{@"terminalxid" : [self stringWithXid:taskComponent.terminal.xid]}];
         }
         
         objectDictionary[@"properties"] = properties;

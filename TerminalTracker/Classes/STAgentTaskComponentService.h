@@ -10,6 +10,7 @@
 
 #import "STTTAgentTask.h"
 #import "STTTAgentComponentGroup.h"
+#import "STTTAgentTerminalComponent.h"
 
 
 @interface STAgentTaskComponentService : NSObject
@@ -26,5 +27,8 @@
               removedComponents:(NSArray *)removedComponents
              remainedComponents:(NSArray *)remainedComponents
                  usedComponents:(NSArray *)usedComponents;
+
++ (STTTAgentTerminalComponent *)actualTerminalComponentForComponent:(STTTAgentComponent *)component;
+
 
 @end

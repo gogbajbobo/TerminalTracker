@@ -232,8 +232,7 @@
 
     for (STTTAgentComponent *component in self.components) {
         
-        NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"cts" ascending:YES selector:@selector(compare:)];
-        STTTAgentTerminalComponent *terminalComponent = [component.terminalComponents sortedArrayUsingDescriptors:@[sortDescriptor]].lastObject;
+        STTTAgentTerminalComponent *terminalComponent = [STAgentTaskComponentService actualTerminalComponentForComponent:component];
         
         if (!terminalComponent.terminal) {
             
