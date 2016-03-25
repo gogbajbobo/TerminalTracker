@@ -15,7 +15,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface STTTAgentComponent : STComment
 
-// Insert code here to declare functionality of your managed object subclass
+- (STTTAgentTerminalComponent *)actualTerminalComponent;
+
+- (BOOL)isBroken;
+- (BOOL)isInstalled;
+
 
 @end
 

@@ -12,6 +12,31 @@
 
 @implementation STTTAgentComponent
 
-// Insert code here to add functionality to your managed object subclass
+- (STTTAgentTerminalComponent *)actualTerminalComponent {
+    
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"isdeleted == NO"];
+    NSSet *terminalComponents = [self.terminalComponents filteredSetUsingPredicate:predicate];
+    
+    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"cts" ascending:YES selector:@selector(compare:)];
+    STTTAgentTerminalComponent *terminalComponent = [terminalComponents sortedArrayUsingDescriptors:@[sortDescriptor]].lastObject;
+    
+    return terminalComponent;
+    
+}
+
+- (BOOL)isBroken {
+    return [self actualTerminalComponent].isBroken.boolValue;
+}
+
+- (BOOL)isInstalled {
+
+    if (self.wasInitiallyInstalled) {
+        return ![self isBroken];
+    } else {
+        return ([self actualTerminalComponent] != nil);
+    }
+
+}
+
 
 @end
