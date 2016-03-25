@@ -518,7 +518,6 @@
     
 }
 
-
 - (void)syncObject:(NSDictionary *)object {
     
     NSString *result = [(NSDictionary *)object valueForKey:@"result"];
@@ -727,8 +726,6 @@
 
 - (void)newTerminalComponentWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties {
     
-//    NSDictionary *taskData = [properties valueForKey:@"taskxid"];
-    
     STTTAgentTerminalComponent *terminalComponent = (STTTAgentTerminalComponent *)[self entityByClass:[STTTAgentTerminalComponent class] andXid:xidData];
     
     if ([terminalComponent.isdeleted boolValue]) {
@@ -737,7 +734,12 @@
         
     } else {
         
-        terminalComponent.component = (STTTAgentComponent *)[self entityByClass:[STTTAgentComponent class] andXid:[self xidWithString:[properties valueForKey:@"componentxid"]]];
+        STTTAgentComponent *component = (STTTAgentComponent *)[self entityByClass:[STTTAgentComponent class] andXid:[self xidWithString:[properties valueForKey:@"componentxid"]]];
+        
+        component.wasInitiallyInstalled = @(YES);
+        
+        terminalComponent.component = component;
+        
         terminalComponent.terminal = (STTTAgentTerminal *)[self entityByClass:[STTTAgentTerminal class] andXid:[self xidWithString:[properties valueForKey:@"terminalxid"]]];
         
         [self taskRelationshipInitForRelationshipObject:terminalComponent andTask:nil];
