@@ -25,7 +25,7 @@
 }
 
 - (BOOL)isBroken {
-    return [self actualTerminalComponent].isBroken.boolValue;
+    return ([self actualTerminalComponent]) ? [self actualTerminalComponent].isBroken.boolValue : NO;
 }
 
 - (BOOL)isInstalled {

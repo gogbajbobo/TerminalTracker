@@ -48,16 +48,16 @@
 - (NSArray *)tableData {
     
     if (!_tableData) {
-        
-//        NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:NSStringFromClass([STTTAgentComponentGroup class])];
-//        request.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES selector:@selector(caseInsensitiveCompare:)]];
-//        request.predicate = [NSPredicate predicateWithFormat:@"name != nil && components.@count > 0 && (ANY components.taskComponent.terminal == %@ || ANY components.taskComponent.terminal == nil)", self.task.terminal];
 
         NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:NSStringFromClass([STTTAgentComponent class])];
-
-        request.predicate = [NSPredicate predicateWithFormat:@"componentGroup.name != nil && (terminalComponents.@count == 0 || ANY terminalComponents.terminal == %@)", self.task.terminal];
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"componentGroup.name != nil"];
+        request.predicate = predicate;
 
         NSArray *components = [self.document.managedObjectContext executeFetchRequest:request error:nil];
+        
+        predicate = [NSPredicate predicateWithFormat:@"(actualTerminalComponent == nil || actualTerminalComponent.terminal == %@)", self.task.terminal];
+        
+        components = [components filteredArrayUsingPredicate:predicate];
         
         NSArray *groups = [components valueForKeyPath:@"@distinctUnionOfObjects.componentGroup"];
         groups = [groups sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"name"
@@ -71,15 +71,14 @@
             NSMutableDictionary *groupDic = @{}.mutableCopy;
             groupDic[@"group"] = group;
             
-            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"componentGroup == %@", group];
+            predicate = [NSPredicate predicateWithFormat:@"componentGroup == %@", group];
             NSArray *currentComponents = [components filteredArrayUsingPredicate:predicate];
             
-            predicate = [NSPredicate predicateWithFormat:@"ANY terminalComponents.terminal == %@ && ANY terminalComponents.isBroken != YES && ANY terminalComponents.isdeleted != YES", self.task.terminal];
+            predicate = [NSPredicate predicateWithFormat:@"actualTerminalComponent.terminal == %@ && isBroken == NO", self.task.terminal];
             NSArray *filteredComponents = [currentComponents filteredArrayUsingPredicate:predicate];
             groupDic[@"usedComponents"] = filteredComponents;
             
-//            predicate = [NSPredicate predicateWithFormat:@"taskComponent.terminal == %@ || taskComponent.isdeleted == YES", nil];
-            predicate = [NSPredicate predicateWithFormat:@"NONE terminalComponents.isdeleted == NO", nil];
+            predicate = [NSPredicate predicateWithFormat:@"isBroken == NO && isInstalled == NO", nil];
             filteredComponents = [currentComponents filteredArrayUsingPredicate:predicate];
             groupDic[@"remainedComponents"] = filteredComponents;
             
