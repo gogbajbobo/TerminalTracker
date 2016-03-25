@@ -103,9 +103,9 @@
 
 /*
  
-    installed   — was installed on terminal
+    remained    — remained unused with technician
+    installed   — was initially installed on terminal
     removed     — was removed from terminal by technician during task
-    remained    — remained with technician
     used        — was used and installed on terminal by technician during task
  
 */
@@ -114,24 +114,21 @@
     
     for (STTTAgentComponent *component in allComponents) {
 
-        STTTAgentTerminalComponent *terminalComponent = [self actualTerminalComponentForComponent:component];
+        STTTAgentTerminalComponent *terminalComponent = [component actualTerminalComponent];
         if (terminalComponent) terminalComponent.isdeleted = @(YES);
 
     }
     
+//    for (STTTAgentComponent *component in remainedComponents) {
+//        do not create taskComponent to comply STTTAgentComponent.m:31 (BOOL)isInstalled method
+//    }
+
     for (STTTAgentComponent *component in installedComponents) {
-        [self terminalComponentForTerminal:task.terminal andComponent:component];
+        [self taskComponentForTask:task terminal:task.terminal andComponent:component];
     }
 
     for (STTTAgentComponent *component in removedComponents) {
-        
-        STTTAgentTaskComponent *taskComponent = [self taskComponentForTask:task terminal:task.terminal andComponent:component];
-        taskComponent.isBroken = @(YES);
-        
-    }
-    
-    for (STTTAgentComponent *component in remainedComponents) {
-        [self taskComponentForTask:task terminal:nil andComponent:component];
+        [self taskComponentForTask:task terminal:task.terminal andComponent:component].isBroken = @(YES);
     }
     
     for (STTTAgentComponent *component in usedComponents) {
@@ -268,15 +265,6 @@
     NSArray *fetchResult = [context executeFetchRequest:request error:&error];
     
     return (error) ? nil : [fetchResult lastObject];
-    
-}
-
-+ (STTTAgentTerminalComponent *)actualTerminalComponentForComponent:(STTTAgentComponent *)component {
-    
-    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"cts" ascending:YES selector:@selector(compare:)];
-    STTTAgentTerminalComponent *terminalComponent = [component.terminalComponents sortedArrayUsingDescriptors:@[sortDescriptor]].lastObject;
-
-    return terminalComponent;
     
 }
 

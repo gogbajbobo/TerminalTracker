@@ -28,7 +28,5 @@
              remainedComponents:(NSArray *)remainedComponents
                  usedComponents:(NSArray *)usedComponents;
 
-+ (STTTAgentTerminalComponent *)actualTerminalComponentForComponent:(STTTAgentComponent *)component;
-
 
 @end
