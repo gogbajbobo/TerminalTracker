@@ -12,10 +12,11 @@
 #import "STTTSubtitleTableViewCell.h"
 #import "STTTComponentsMovingVC.h"
 
+#import "STTTAgentComponent.h"
+
 
 @interface STEditTaskComponentsTVC ()
 
-@property (strong, nonatomic) NSMutableArray *componentsList;
 @property (nonatomic, strong) NSMutableArray *tableData;
 @property (nonatomic, strong) NSString *cellIdentifier;
 
@@ -34,32 +35,13 @@
     
 }
 
-- (NSMutableArray <NSDictionary *> *)componentsList {
-    
-    if (!_componentsList) {
-        
-//        _componentsList = [STAgentTaskComponentService getListOfComponentsForTask:self.task inGroup:self.componentGroup].mutableCopy;
-        
-        _componentsList = [self.remainedComponents arrayByAddingObjectsFromArray:self.usedComponents].mutableCopy;
-        
-//        _componentsList = [[NSMutableArray alloc] init];
-//        
-//        for (NSDictionary *component in [STAgentTaskComponentService getListOfComponentsForTask:self.task inGroup:self.componentGroup]) {
-//            [_componentsList addObject:[component mutableCopy]];
-//        }
-        
-    }
-    return _componentsList;
-    
-}
-
 - (NSMutableArray *)tableData {
     
     if (!_tableData) {
         
         _tableData = @[].mutableCopy;
         
-        [self.componentsList enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [self.components enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             
             NSDictionary *dataDic = @{@"shortName": [obj valueForKey:@"shortName"], @"serial": [obj valueForKey:@"serial"]};
             if (![_tableData containsObject:dataDic]) [_tableData addObject:dataDic];
@@ -71,13 +53,6 @@
     
 }
 
-//- (NSPredicate *)usedComponentsPredicate {
-//    return [NSPredicate predicateWithFormat:@"ANY terminalComponents.terminal == %@ && taskComponent.isBroken != YES && taskComponent.isdeleted != YES", self.task.terminal];
-//}
-//
-//- (NSPredicate *)remainedComponentsPredicate {
-//    return [NSPredicate predicateWithFormat:@"taskComponent.terminal == nil || taskComponent.isdeleted == YES"];
-//}
 
 #pragma mark - Table view data source
 
@@ -97,24 +72,24 @@
     cell.detailTextLabel.numberOfLines = 0;
     
     NSDictionary *tableDatum = self.tableData[indexPath.row];
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"shortName == %@ AND serial == %@", tableDatum[@"shortName"], tableDatum[@"serial"]];
-    NSSet *components = [NSSet setWithArray:[self.componentsList filteredArrayUsingPredicate:predicate]];
     
-//    predicate = [self usedComponentsPredicate];
-//    NSArray *usedComponents = [components filteredArrayUsingPredicate:predicate];
+    NSString *shortName = tableDatum[@"shortName"];
+    NSString *serial = tableDatum[@"serial"];
     
-    NSMutableSet *usedComponents = [NSMutableSet setWithArray:self.usedComponents];
-    [usedComponents intersectSet:components];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"shortName == %@ AND serial == %@", shortName, serial];
+    NSArray *components = [self.components filteredArrayUsingPredicate:predicate];
+    
+    predicate = [NSPredicate predicateWithFormat:@"isInstalled == YES"];
+    NSArray *usedComponents = [components filteredArrayUsingPredicate:predicate];
 
-//    predicate = [self remainedComponentsPredicate];
-//    NSArray *remainedComponents = [components filteredArrayUsingPredicate:predicate];
+    predicate = [NSPredicate predicateWithFormat:@"isBroken == NO && isInstalled == NO"];
+    NSArray *remainedComponents = [components filteredArrayUsingPredicate:predicate];
 
-    NSMutableSet *remainedComponents = [NSMutableSet setWithArray:self.remainedComponents];
-    [remainedComponents intersectSet:components];
-    
-//    cell.textLabel.text = [[tableDatum[@"shortName"] stringByAppendingString:@" -/- "] stringByAppendingString:@(components.count).stringValue];
-    cell.textLabel.text = tableDatum[@"shortName"];
-    cell.detailTextLabel.text = [NSString stringWithFormat:@"%@\nОстаток: %@", tableDatum[@"serial"], @(remainedComponents.count)];
+    predicate = [NSPredicate predicateWithFormat:@"isBroken == YES"];
+    NSArray *brokenComponents = [components filteredArrayUsingPredicate:predicate];
+
+    cell.textLabel.text = shortName;
+    cell.detailTextLabel.text = [NSString stringWithFormat:@"%@\nОстаток: %@, Поломато: %@", serial, @(remainedComponents.count), @(brokenComponents.count)];
 
     if (usedComponents.count > 0) {
         
@@ -137,15 +112,15 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    NSDictionary *tableDatum = self.tableData[indexPath.row];
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"shortName == %@ AND serial == %@", tableDatum[@"shortName"], tableDatum[@"serial"]];
-    NSArray *components = [self.componentsList filteredArrayUsingPredicate:predicate];
-
-    STTTComponentsMovingVC *componentsMovingVC = [[UIStoryboard storyboardWithName:@"STTTMainStoryboard_iPhone" bundle:nil] instantiateViewControllerWithIdentifier:@"componentsMovingVC"];;
-    componentsMovingVC.components = components;
-    componentsMovingVC.parentVC = self;
-    
-    [self.navigationController pushViewController:componentsMovingVC animated:YES];
+//    NSDictionary *tableDatum = self.tableData[indexPath.row];
+//    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"shortName == %@ AND serial == %@", tableDatum[@"shortName"], tableDatum[@"serial"]];
+//    NSArray *components = [self.componentsList filteredArrayUsingPredicate:predicate];
+//
+//    STTTComponentsMovingVC *componentsMovingVC = [[UIStoryboard storyboardWithName:@"STTTMainStoryboard_iPhone" bundle:nil] instantiateViewControllerWithIdentifier:@"componentsMovingVC"];;
+//    componentsMovingVC.components = components;
+//    componentsMovingVC.parentVC = self;
+//    
+//    [self.navigationController pushViewController:componentsMovingVC animated:YES];
 
 }
 

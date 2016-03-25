@@ -73,15 +73,20 @@
             
             predicate = [NSPredicate predicateWithFormat:@"componentGroup == %@", group];
             NSArray *currentComponents = [components filteredArrayUsingPredicate:predicate];
-            
-            predicate = [NSPredicate predicateWithFormat:@"actualTerminalComponent.terminal == %@ && isBroken == NO", self.task.terminal];
+            groupDic[@"currentComponents"] = currentComponents;
+
+            predicate = [NSPredicate predicateWithFormat:@"isInstalled == YES"];
             NSArray *filteredComponents = [currentComponents filteredArrayUsingPredicate:predicate];
             groupDic[@"usedComponents"] = filteredComponents;
             
-            predicate = [NSPredicate predicateWithFormat:@"isBroken == NO && isInstalled == NO", nil];
+            predicate = [NSPredicate predicateWithFormat:@"isBroken == NO && isInstalled == NO"];
             filteredComponents = [currentComponents filteredArrayUsingPredicate:predicate];
             groupDic[@"remainedComponents"] = filteredComponents;
-            
+
+            predicate = [NSPredicate predicateWithFormat:@"isBroken == YES"];
+            filteredComponents = [currentComponents filteredArrayUsingPredicate:predicate];
+            groupDic[@"brokenComponents"] = filteredComponents;
+
             [tableData addObject:groupDic];
             
         }
@@ -146,14 +151,15 @@
     NSDictionary *tableDatum = self.tableData[indexPath.row];
     STTTAgentComponentGroup *group = tableDatum[@"group"];
 
-    NSArray *remainedComponents = tableDatum[@"remainedComponents"];
-    NSArray *usedComponents = tableDatum[@"usedComponents"];
+    NSArray *currentComponents = tableDatum[@"currentComponents"];
+//    NSArray *usedComponents = tableDatum[@"usedComponents"];
 
     STEditTaskComponentsTVC *componentsTVC = [[STEditTaskComponentsTVC alloc] initWithStyle:UITableViewStylePlain];
     componentsTVC.task = self.task;
     componentsTVC.componentGroup = group;
-    componentsTVC.remainedComponents = remainedComponents;
-    componentsTVC.usedComponents = usedComponents;
+//    componentsTVC.remainedComponents = remainedComponents;
+//    componentsTVC.usedComponents = usedComponents;
+    componentsTVC.components = currentComponents;
     
     [self.navigationController pushViewController:componentsTVC animated:YES];
     
