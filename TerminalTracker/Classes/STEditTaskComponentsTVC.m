@@ -112,15 +112,15 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
-//    NSDictionary *tableDatum = self.tableData[indexPath.row];
-//    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"shortName == %@ AND serial == %@", tableDatum[@"shortName"], tableDatum[@"serial"]];
-//    NSArray *components = [self.componentsList filteredArrayUsingPredicate:predicate];
-//
-//    STTTComponentsMovingVC *componentsMovingVC = [[UIStoryboard storyboardWithName:@"STTTMainStoryboard_iPhone" bundle:nil] instantiateViewControllerWithIdentifier:@"componentsMovingVC"];;
-//    componentsMovingVC.components = components;
-//    componentsMovingVC.parentVC = self;
-//    
-//    [self.navigationController pushViewController:componentsMovingVC animated:YES];
+    NSDictionary *tableDatum = self.tableData[indexPath.row];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"shortName == %@ AND serial == %@", tableDatum[@"shortName"], tableDatum[@"serial"]];
+    NSArray *components = [self.components filteredArrayUsingPredicate:predicate];
+
+    STTTComponentsMovingVC *componentsMovingVC = [[UIStoryboard storyboardWithName:@"STTTMainStoryboard_iPhone" bundle:nil] instantiateViewControllerWithIdentifier:@"componentsMovingVC"];;
+    componentsMovingVC.components = components;
+    componentsMovingVC.parentVC = self;
+    
+    [self.navigationController pushViewController:componentsMovingVC animated:YES];
 
 }
 

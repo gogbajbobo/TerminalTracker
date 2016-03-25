@@ -30,7 +30,7 @@
 
 - (BOOL)isInstalled {
 
-    if (self.wasInitiallyInstalled) {
+    if (self.wasInitiallyInstalled.boolValue) {
         return ![self isBroken];
     } else {
         return ([self actualTerminalComponent] != nil);

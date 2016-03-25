@@ -232,47 +232,25 @@
 
     for (STTTAgentComponent *component in self.components) {
         
-        STTTAgentTerminalComponent *terminalComponent = [STAgentTaskComponentService actualTerminalComponentForComponent:component];
-        
-        if (!terminalComponent.terminal) {
+        if ([component isBroken]) {
             
+            [self.removedComponents addObject:component];
+            
+        } else if (![component isInstalled]) {
+                
             [self.remainedComponents addObject:component];
-            
+                
+        } else if (component.wasInitiallyInstalled.boolValue) {
+                    
+            [self.installedComponents addObject:component];
+                    
         } else {
-            
-            if (terminalComponent.isBroken.boolValue) {
-                
-                [self.removedComponents addObject:component];
-                
-            } else {
-                
-                if ([terminalComponent isKindOfClass:[STTTAgentTaskComponent class]]) {
                     
-                    [self.usedComponents addObject:component];
-                    
-                } else {
-                    
-                    [self.installedComponents addObject:component];
-                    
-                }
-                
-            }
+            [self.usedComponents addObject:component];
             
         }
-        
+
     }
-    
-//    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"taskComponent.task == nil && taskComponent.terminal == %@ && taskComponent.isBroken != YES", self.parentVC.task.terminal];
-//    self.installedComponents = [self.components filteredArrayUsingPredicate:predicate].mutableCopy;
-//
-//    predicate = [NSPredicate predicateWithFormat:@"taskComponent.task == %@ && taskComponent.terminal == %@ && taskComponent.isBroken == YES && taskComponent.isdeleted != YES", self.parentVC.task, self.parentVC.task.terminal];
-//    self.removedComponents = [self.components filteredArrayUsingPredicate:predicate].mutableCopy;
-//
-//    predicate = [NSPredicate predicateWithFormat:@"taskComponent.terminal == nil || taskComponent.isdeleted == YES"];
-//    self.remainedComponents = [self.components filteredArrayUsingPredicate:predicate].mutableCopy;
-//
-//    predicate = [NSPredicate predicateWithFormat:@"taskComponent.terminal == %@ && taskComponent.task == %@ && taskComponent.isdeleted != YES", self.parentVC.task.terminal, self.parentVC.task];
-//    self.usedComponents = [self.components filteredArrayUsingPredicate:predicate].mutableCopy;
     
 }
 
