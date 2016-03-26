@@ -123,17 +123,37 @@
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"shortName == %@ AND serial == %@", shortName, serial];
     NSArray *components = [self.components filteredArrayUsingPredicate:predicate];
     
-    predicate = [NSPredicate predicateWithFormat:@"isInstalled == YES"];
-    NSArray *usedComponents = [components filteredArrayUsingPredicate:predicate];
-
     predicate = [NSPredicate predicateWithFormat:@"isBroken == NO && isInstalled == NO"];
     NSArray *remainedComponents = [components filteredArrayUsingPredicate:predicate];
 
     predicate = [NSPredicate predicateWithFormat:@"isBroken == YES"];
     NSArray *brokenComponents = [components filteredArrayUsingPredicate:predicate];
 
+    predicate = [NSPredicate predicateWithFormat:@"isInstalled == YES"];
+    NSArray *usedComponents = [components filteredArrayUsingPredicate:predicate];
+
     cell.textLabel.text = shortName;
-    cell.detailTextLabel.text = [NSString stringWithFormat:@"%@\nОстаток: %@, Поломато: %@", serial, @(remainedComponents.count), @(brokenComponents.count)];
+    
+    switch (indexPath.section) {
+        case 0:
+
+            cell.detailTextLabel.text = [NSString stringWithFormat:@"%@\nПоломато: %@", serial, @(brokenComponents.count)];
+            predicate = [NSPredicate predicateWithFormat:@"wasInitiallyInstalled == YES"];
+            
+            break;
+
+        case 1:
+            
+            cell.detailTextLabel.text = [NSString stringWithFormat:@"%@\nОстаток: %@", serial, @(remainedComponents.count)];
+            predicate = [NSPredicate predicateWithFormat:@"wasInitiallyInstalled == NO"];
+
+            break;
+
+        default:
+            break;
+    }
+    
+    usedComponents = [usedComponents filteredArrayUsingPredicate:predicate];
 
     if (usedComponents.count > 0) {
         
