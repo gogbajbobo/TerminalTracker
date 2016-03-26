@@ -39,14 +39,36 @@
     
     if (!_tableData) {
         
-        _tableData = @[].mutableCopy;
+//        _tableData = @[].mutableCopy;
+        
+        NSMutableArray *initiallyInstalledComponents = @[].mutableCopy;
+        NSMutableArray *otherComponents = @[].mutableCopy;
         
         [self.components enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             
-            NSDictionary *dataDic = @{@"shortName": [obj valueForKey:@"shortName"], @"serial": [obj valueForKey:@"serial"]};
-            if (![_tableData containsObject:dataDic]) [_tableData addObject:dataDic];
+            if ([obj isKindOfClass:[STTTAgentComponent class]]) {
+                
+                STTTAgentComponent *component = (STTTAgentComponent *)obj;
+
+                NSDictionary *dataDic = @{@"shortName": component.shortName, @"serial": component.serial};
+
+                if (component.wasInitiallyInstalled.boolValue) {
+                    
+                    if (![initiallyInstalledComponents containsObject:dataDic]) [initiallyInstalledComponents addObject:dataDic];
+                    
+                } else {
+                    
+                    if (![otherComponents containsObject:dataDic]) [otherComponents addObject:dataDic];
+                    
+                }
+                
+//                if (![_tableData containsObject:dataDic]) [_tableData addObject:dataDic];
+                
+            }
             
         }];
+        
+        _tableData = @[initiallyInstalledComponents, otherComponents].mutableCopy;
         
     }
     return _tableData;
@@ -56,8 +78,30 @@
 
 #pragma mark - Table view data source
 
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 2;
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    
+    switch (section) {
+        case 0:
+            return @"Изначально установлены";
+            break;
+
+        case 1:
+            return @"В наличии";
+            break;
+
+        default:
+            return nil;
+            break;
+    }
+    
+}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.tableData.count;
+    return [self.tableData[section] count];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -71,7 +115,7 @@
     cell.textLabel.numberOfLines = 0;
     cell.detailTextLabel.numberOfLines = 0;
     
-    NSDictionary *tableDatum = self.tableData[indexPath.row];
+    NSDictionary *tableDatum = self.tableData[indexPath.section][indexPath.row];
     
     NSString *shortName = tableDatum[@"shortName"];
     NSString *serial = tableDatum[@"serial"];
