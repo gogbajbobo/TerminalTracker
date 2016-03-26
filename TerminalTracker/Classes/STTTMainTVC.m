@@ -509,7 +509,7 @@
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.servstatus == %@", [NSNumber numberWithInt:0]];
     NSArray *unsolvedTasks = [tasks filteredArrayUsingPredicate:predicate];
     NSUInteger numberOfUnsolvedTasks = unsolvedTasks.count;
-    cell.textLabel.text = [NSString stringWithFormat:@"Невыполненных: %d", numberOfUnsolvedTasks];
+    cell.textLabel.text = [NSString stringWithFormat:@"Невыполненных: %@", @(numberOfUnsolvedTasks)];
     
     //
     //    NSString *subtitle = @"Всего: ";
@@ -595,7 +595,7 @@
         cell.textLabel.text = @"Ближайший:";
         cell.detailTextLabel.text = [(STTTAgentTerminal *)[self.terminalController.resultsController.fetchedObjects objectAtIndex:0] address];
         
-        cell.infoLabel.text = [NSString stringWithFormat:@"%d", terminals.count];
+        cell.infoLabel.text = [NSString stringWithFormat:@"%@", @(terminals.count)];
         
     } else {
         cell.textLabel.text = @"Нет данных";

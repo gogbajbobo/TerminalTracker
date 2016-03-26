@@ -19,7 +19,7 @@
     
     if (expiredComponents.count > 0) {
         
-        NSLog(@"%d expiredComponents will be deleted", expiredComponents.count);
+        NSLog(@"%@ expiredComponents will be deleted", @(expiredComponents.count));
         
         for (STTTAgentComponent *component in expiredComponents) {
             

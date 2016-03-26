@@ -157,7 +157,7 @@
         
         if (nonsyncedTasks.count > 0) {
             
-            NSString *logMessage = [NSString stringWithFormat:@"unsynced tasks count %d", nonsyncedTasks.count];
+            NSString *logMessage = [NSString stringWithFormat:@"unsynced tasks count %@", @(nonsyncedTasks.count)];
             [[(STSession *)self.session logger] saveLogMessageWithText:logMessage type:@""];
             
 //            NSArray *nonsyncedObjects = [nonsyncedTasks arrayByAddingObjectsFromArray:[self nonsyncedLogMessages]];
@@ -432,7 +432,7 @@
                 
                 NSLog(@"originalRequest.URL %@", connection.originalRequest.URL.absoluteString);
                 
-                NSString *logMessage = [NSString stringWithFormat:@"recieve %d objects", objectsCount];
+                NSString *logMessage = [NSString stringWithFormat:@"recieve %@ objects", @(objectsCount)];
                 [[(STSession *)self.session logger] saveLogMessageWithText:logMessage type:@""];
                 
                 for (id object in (NSArray *)objectsArray) {
@@ -950,7 +950,7 @@
     if (self.newTasksCount == 1) {
         localNotif.alertBody = @"Добавлено новое задание";
     } else {
-        localNotif.alertBody = [NSString stringWithFormat:@"Добавлено новых заданий: %i", self.newTasksCount];
+        localNotif.alertBody = [NSString stringWithFormat:@"Добавлено новых заданий: %@", @(self.newTasksCount)];
     }
     
     localNotif.alertAction = @"Посмотреть";
@@ -1063,7 +1063,7 @@
         
         NSUInteger resultCount = [[(STSession *)self.session document].managedObjectContext countForFetchRequest:request error:nil];
         
-        NSLog(@"%@ — %d", entityName, resultCount);
+        NSLog(@"%@ — %@", entityName, @(resultCount));
         
     }
     

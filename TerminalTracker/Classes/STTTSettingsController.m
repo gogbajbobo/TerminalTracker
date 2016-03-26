@@ -41,8 +41,8 @@
     
     
     NSMutableDictionary *mapSettings = [NSMutableDictionary dictionary];
-    [mapSettings setValue:[NSString stringWithFormat:@"%d", MKUserTrackingModeNone] forKey:@"mapHeading"];
-    [mapSettings setValue:[NSString stringWithFormat:@"%d", MKMapTypeStandard] forKey:@"mapType"];
+    [mapSettings setValue:[NSString stringWithFormat:@"%lu", (long)MKUserTrackingModeNone] forKey:@"mapHeading"];
+    [mapSettings setValue:[NSString stringWithFormat:@"%lu", (unsigned long)MKMapTypeStandard] forKey:@"mapType"];
     [mapSettings setValue:@"1.5" forKey:@"trackScale"];
     [mapSettings setValue:[NSString stringWithFormat:@"%d", NO] forKey:@"showLocationInsteadOfMap"];
     

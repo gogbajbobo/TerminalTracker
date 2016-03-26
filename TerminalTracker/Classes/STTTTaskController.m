@@ -72,7 +72,7 @@
     
     if (self.noAddressTerminals.count > 0) {
         
-        NSString *logMessage = [NSString stringWithFormat:@"No terminal data tasks count %d", self.noAddressTerminals.count];
+        NSString *logMessage = [NSString stringWithFormat:@"No terminal data tasks count %@", @(self.noAddressTerminals.count)];
         [[(STSession *)self.session logger] saveLogMessageWithText:logMessage type:@""];
 
         [self getAddressForNoAddressTasks];

@@ -370,7 +370,7 @@
     NSString *baseLabel = @"Добавить неисправность";
     
     cell.textLabel.textAlignment = NSTextAlignmentCenter;
-    cell.textLabel.text = (self.defectsCount == 0) ? baseLabel : [NSString stringWithFormat:@"%@ (%i)", baseLabel, self.defectsCount];
+    cell.textLabel.text = (self.defectsCount == 0) ? baseLabel : [NSString stringWithFormat:@"%@ (%@)", baseLabel, @(self.defectsCount)];
     
     self.defectsCell = cell;
     
@@ -384,7 +384,7 @@
     
     cell.textLabel.textColor = textColor;
     cell.textLabel.textAlignment = NSTextAlignmentCenter;
-    cell.textLabel.text = (self.repairsCount == 0) ? baseLabel : [NSString stringWithFormat:@"%@ (%i)", baseLabel, self.repairsCount];
+    cell.textLabel.text = (self.repairsCount == 0) ? baseLabel : [NSString stringWithFormat:@"%@ (%@)", baseLabel, @(self.repairsCount)];
     
     self.repairsCell = cell;
     
@@ -398,7 +398,7 @@
     
     cell.textLabel.textColor = textColor;
     cell.textLabel.textAlignment = NSTextAlignmentCenter;
-    cell.textLabel.text = (self.componentsCount == 0) ? baseLabel : [NSString stringWithFormat:@"%@ (%i)", baseLabel, self.componentsCount];
+    cell.textLabel.text = (self.componentsCount == 0) ? baseLabel : [NSString stringWithFormat:@"%@ (%@)", baseLabel, @(self.componentsCount)];
     
     self.componentsCell = cell;
     
