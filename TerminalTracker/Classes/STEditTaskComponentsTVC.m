@@ -15,7 +15,7 @@
 #import "STTTAgentComponent.h"
 
 
-@interface STEditTaskComponentsTVC ()
+@interface STEditTaskComponentsTVC () <UIAlertViewDelegate>
 
 @property (nonatomic, strong) NSMutableArray *tableData;
 @property (nonatomic, strong) NSString *cellIdentifier;
@@ -176,16 +176,95 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    NSDictionary *tableDatum = self.tableData[indexPath.row];
+    NSDictionary *tableDatum = self.tableData[indexPath.section][indexPath.row];
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"shortName == %@ AND serial == %@", tableDatum[@"shortName"], tableDatum[@"serial"]];
     NSArray *components = [self.components filteredArrayUsingPredicate:predicate];
 
-    STTTComponentsMovingVC *componentsMovingVC = [[UIStoryboard storyboardWithName:@"STTTMainStoryboard_iPhone" bundle:nil] instantiateViewControllerWithIdentifier:@"componentsMovingVC"];;
-    componentsMovingVC.components = components;
-    componentsMovingVC.parentVC = self;
-    
-    [self.navigationController pushViewController:componentsMovingVC animated:YES];
+    if (self.componentGroup.isManualReplacement.boolValue) {
+        
+        STTTComponentsMovingVC *componentsMovingVC = [[UIStoryboard storyboardWithName:@"STTTMainStoryboard_iPhone" bundle:nil] instantiateViewControllerWithIdentifier:@"componentsMovingVC"];;
+        componentsMovingVC.components = components;
+        componentsMovingVC.parentVC = self;
+        
+        [self.navigationController pushViewController:componentsMovingVC animated:YES];
 
+    } else {
+        
+        if (indexPath.section == 1) {
+
+            predicate = [NSPredicate predicateWithFormat:@"isInstalled == YES"];
+            NSArray *installedComponents = [components filteredArrayUsingPredicate:predicate];
+            
+            NSString *alertMessage = (installedComponents.count > 0) ? @"Снимаем?" : @"Ставим?";
+            
+            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"!!!"
+                                                                message:alertMessage
+                                                               delegate:self
+                                                      cancelButtonTitle:@"Отмена"
+                                                      otherButtonTitles:@"Ok", nil];
+                
+                alert.tag = (installedComponents.count > 0) ? 202 : 201;
+                
+                [alert show];
+                
+            }];
+
+        }
+        
+    }
+    
+}
+
+
+#pragma mark - UIAlertViewDelegate
+
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
+    
+    switch (alertView.tag) {
+        case 201:
+            [self autoReplacement];
+            break;
+
+        case 202:
+            [self backAutoReplacement];
+            break;
+
+        default:
+            break;
+    }
+    
+}
+
+- (void)autoReplacement {
+    
+//    [self.removedComponents addObjectsFromArray:self.installedComponents];
+//    [self.installedComponents removeObjectsInArray:self.installedComponents];
+//    
+//    STTTAgentComponent *component = self.remainedComponents.firstObject;
+//    
+//    if (component) {
+//        
+//        [self.usedComponents addObject:component];
+//        [self.remainedComponents removeObject:component];
+//        
+//    }
+//    
+//    [self updateDataAndViews];
+    
+}
+
+- (void)backAutoReplacement {
+    
+//    [self.installedComponents addObjectsFromArray:self.removedComponents];
+//    [self.removedComponents removeObjectsInArray:self.removedComponents];
+//    
+//    [self.remainedComponents addObjectsFromArray:self.usedComponents];
+//    [self.usedComponents removeObjectsInArray:self.usedComponents];
+//    
+//    [self updateDataAndViews];
+    
 }
 
 
