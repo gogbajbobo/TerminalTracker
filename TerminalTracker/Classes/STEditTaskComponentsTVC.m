@@ -68,6 +68,10 @@
             
         }];
         
+        NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"serial" ascending:YES selector:@selector(caseInsensitiveCompare:)];
+        [initiallyInstalledComponents sortUsingDescriptors:@[sortDescriptor]];
+        [otherComponents sortUsingDescriptors:@[sortDescriptor]];
+        
         _tableData = @[initiallyInstalledComponents, otherComponents].mutableCopy;
         
     }
@@ -192,7 +196,7 @@
         
         if (indexPath.section == 1) {
 
-            predicate = [NSPredicate predicateWithFormat:@"isInstalled == YES"];
+            predicate = [NSPredicate predicateWithFormat:@"isInstalled == YES && wasInitiallyInstalled == NO"];
             NSArray *installedComponents = [components filteredArrayUsingPredicate:predicate];
             
             NSString *alertMessage = (installedComponents.count > 0) ? @"Снимаем?" : @"Ставим?";
@@ -239,32 +243,119 @@
 
 - (void)autoReplacement {
     
-//    [self.removedComponents addObjectsFromArray:self.installedComponents];
-//    [self.installedComponents removeObjectsInArray:self.installedComponents];
-//    
-//    STTTAgentComponent *component = self.remainedComponents.firstObject;
-//    
-//    if (component) {
-//        
-//        [self.usedComponents addObject:component];
-//        [self.remainedComponents removeObject:component];
-//        
-//    }
-//    
-//    [self updateDataAndViews];
+    NSMutableArray *removedComponents = @[].mutableCopy;
+    NSMutableArray *remainedComponents = @[].mutableCopy;
+    NSMutableArray *installedComponents = @[].mutableCopy;
+    NSMutableArray *usedComponents = @[].mutableCopy;
+    
+    for (STTTAgentComponent *component in self.components) {
+        
+        if ([component isBroken]) {
+            
+            [removedComponents addObject:component];
+            
+        } else if (![component isInstalled]) {
+            
+            [remainedComponents addObject:component];
+            
+        } else if (component.wasInitiallyInstalled.boolValue) {
+            
+            [installedComponents addObject:component];
+            
+        } else {
+            
+            [usedComponents addObject:component];
+            
+        }
+        
+    }
+
+    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"ts" ascending:YES selector:@selector(compare:)];
+    
+    installedComponents = [installedComponents sortedArrayUsingDescriptors:@[sortDescriptor]].mutableCopy;
+    removedComponents = [removedComponents sortedArrayUsingDescriptors:@[sortDescriptor]].mutableCopy;
+    remainedComponents = [remainedComponents sortedArrayUsingDescriptors:@[sortDescriptor]].mutableCopy;
+    usedComponents = [usedComponents sortedArrayUsingDescriptors:@[sortDescriptor]].mutableCopy;
+
+    [removedComponents addObjectsFromArray:installedComponents];
+    [installedComponents removeObjectsInArray:installedComponents];
+    
+    [remainedComponents addObjectsFromArray:usedComponents];
+    [usedComponents removeObjectsInArray:usedComponents];
+
+    NSIndexPath *selectedIndexPath = self.tableView.indexPathForSelectedRow;
+    NSDictionary *tableDatum = self.tableData[selectedIndexPath.section][selectedIndexPath.row];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"shortName == %@ AND serial == %@", tableDatum[@"shortName"], tableDatum[@"serial"]];
+
+    STTTAgentComponent *component = [remainedComponents filteredArrayUsingPredicate:predicate].firstObject;
+
+    if (component) {
+        
+        [usedComponents addObject:component];
+        [remainedComponents removeObject:component];
+        
+    }
+    
+    [STAgentTaskComponentService updateComponentsForTask:self.task
+                                 withInstalledComponents:installedComponents
+                                       removedComponents:removedComponents
+                                      remainedComponents:remainedComponents
+                                          usedComponents:usedComponents];
+    
+    [self.tableView reloadData];
     
 }
 
 - (void)backAutoReplacement {
     
-//    [self.installedComponents addObjectsFromArray:self.removedComponents];
-//    [self.removedComponents removeObjectsInArray:self.removedComponents];
-//    
-//    [self.remainedComponents addObjectsFromArray:self.usedComponents];
-//    [self.usedComponents removeObjectsInArray:self.usedComponents];
-//    
-//    [self updateDataAndViews];
+    NSMutableArray *removedComponents = @[].mutableCopy;
+    NSMutableArray *remainedComponents = @[].mutableCopy;
+    NSMutableArray *installedComponents = @[].mutableCopy;
+    NSMutableArray *usedComponents = @[].mutableCopy;
     
+    for (STTTAgentComponent *component in self.components) {
+        
+        if ([component isBroken]) {
+            
+            [removedComponents addObject:component];
+            
+        } else if (![component isInstalled]) {
+            
+            [remainedComponents addObject:component];
+            
+        } else if (component.wasInitiallyInstalled.boolValue) {
+            
+            [installedComponents addObject:component];
+            
+        } else {
+            
+            [usedComponents addObject:component];
+            
+        }
+        
+    }
+    
+    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"ts" ascending:YES selector:@selector(compare:)];
+    
+    installedComponents = [installedComponents sortedArrayUsingDescriptors:@[sortDescriptor]].mutableCopy;
+    removedComponents = [removedComponents sortedArrayUsingDescriptors:@[sortDescriptor]].mutableCopy;
+    remainedComponents = [remainedComponents sortedArrayUsingDescriptors:@[sortDescriptor]].mutableCopy;
+    usedComponents = [usedComponents sortedArrayUsingDescriptors:@[sortDescriptor]].mutableCopy;
+    
+    [installedComponents addObjectsFromArray:removedComponents];
+    [removedComponents removeObjectsInArray:removedComponents];
+    
+    [remainedComponents addObjectsFromArray:usedComponents];
+    [usedComponents removeObjectsInArray:usedComponents];
+    
+    [STAgentTaskComponentService updateComponentsForTask:self.task
+                                 withInstalledComponents:installedComponents
+                                       removedComponents:removedComponents
+                                      remainedComponents:remainedComponents
+                                          usedComponents:usedComponents];
+    
+    [self.tableView reloadData];
+
 }
 
 
