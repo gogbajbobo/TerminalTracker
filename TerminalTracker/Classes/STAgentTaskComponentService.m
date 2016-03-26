@@ -22,7 +22,7 @@
 
 + (NSInteger)getNumberOfSelectedComponentsForTask:(STTTAgentTask *)task {
     
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"isdeleted != YES && component != %@", nil];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"isdeleted == NO && component != nil && component.wasInitiallyInstalled == NO && component.isInstalled == YES"];
     NSSet *components = [task.components filteredSetUsingPredicate:predicate];
     
     return components.count;
