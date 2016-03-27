@@ -96,37 +96,31 @@
     
     
     if ([[self.session status] isEqualToString:@"running"]) {
-    
         
         if (type == NSFetchedResultsChangeDelete) {
-            
-            
         } else if (type == NSFetchedResultsChangeInsert) {
-            
-            
         } else if (type == NSFetchedResultsChangeUpdate) {
-            
-
         }
         
     }
+    
 }
 
 #pragma mark - Table view data source
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return [[self.resultsController sections] count];
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    
     id <NSFetchedResultsSectionInfo> sectionInfo = [[self.resultsController sections] objectAtIndex:section];
     return [sectionInfo numberOfObjects];
+    
 }
 
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
-{
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    
     id <NSFetchedResultsSectionInfo> sectionInfo = [[self.resultsController sections] objectAtIndex:section];
     
     NSUInteger sectionName = [[sectionInfo name] integerValue];
@@ -161,12 +155,12 @@
     id <NSFetchedResultsSectionInfo> sectionInfo = [[self.resultsController sections] objectAtIndex:indexPath.section];
     STTTAgentTerminal *terminal = (STTTAgentTerminal *)[[sectionInfo objects] objectAtIndex:indexPath.row];
 
-    NSSortDescriptor *descriptor = [NSSortDescriptor sortDescriptorWithKey:@"doBefore" ascending:YES selector:@selector(compare:)];
-    NSArray *sortedTasks = [terminal.tasks sortedArrayUsingDescriptors:[NSArray arrayWithObject:descriptor]];
-    STTTAgentTask *lastTask;
-    if (sortedTasks.count > 0) {
-         lastTask = (STTTAgentTask *)[sortedTasks objectAtIndex:0];
-    }
+//    NSSortDescriptor *descriptor = [NSSortDescriptor sortDescriptorWithKey:@"doBefore" ascending:YES selector:@selector(compare:)];
+//    NSArray *sortedTasks = [terminal.tasks sortedArrayUsingDescriptors:[NSArray arrayWithObject:descriptor]];
+//    STTTAgentTask *lastTask;
+//    if (sortedTasks.count > 0) {
+//         lastTask = (STTTAgentTask *)[sortedTasks objectAtIndex:0];
+//    }
     
     NSString *code = terminal.code ? terminal.code : @"Н/Д";
 
@@ -199,13 +193,10 @@
     
     [[cell.contentView viewWithTag:666] removeFromSuperview];
     [cell.contentView addSubview:infoLabel];
-
     
-//    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     return cell;
+    
 }
-
-
 
 
 @end
