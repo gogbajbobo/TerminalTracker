@@ -346,10 +346,14 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+
+    [super viewWillAppear:animated];
+    
     NSLog(@"viewWillAppear");
     if ([self.session.status isEqualToString:@"running"]) {
         [[STTTLocationController sharedLC] getLocation];
     }
+    
 }
 
 - (void)viewDidLoad
