@@ -189,7 +189,22 @@
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"shortName == %@ AND serial == %@", tableDatum[@"shortName"], tableDatum[@"serial"]];
     NSArray *components = [self.components filteredArrayUsingPredicate:predicate];
 
-    if (self.componentGroup.isManualReplacement.boolValue) {
+    switch (indexPath.section) {
+        case 0:
+            predicate = [NSPredicate predicateWithFormat:@"wasInitiallyInstalled == YES"];
+            break;
+            
+        case 1:
+            predicate = [NSPredicate predicateWithFormat:@"wasInitiallyInstalled == NO"];
+            break;
+            
+        default:
+            break;
+    }
+
+    NSArray *affectedComponents = [components filteredArrayUsingPredicate:predicate];
+    
+    if (self.componentGroup.isManualReplacement.boolValue && affectedComponents.count > 1) {
         
         STTTComponentsMovingVC *componentsMovingVC = [[UIStoryboard storyboardWithName:@"STTTMainStoryboard_iPhone" bundle:nil] instantiateViewControllerWithIdentifier:@"componentsMovingVC"];;
         componentsMovingVC.components = components;
@@ -199,20 +214,8 @@
 
     } else {
         
-        switch (indexPath.section) {
-            case 0:
-                predicate = [NSPredicate predicateWithFormat:@"isInstalled == YES && wasInitiallyInstalled == YES"];
-                break;
-
-            case 1:
-                predicate = [NSPredicate predicateWithFormat:@"isInstalled == YES && wasInitiallyInstalled == NO"];
-                break;
-
-            default:
-                break;
-        }
-        
-        NSArray *installedComponents = [components filteredArrayUsingPredicate:predicate];
+        predicate = [NSPredicate predicateWithFormat:@"isInstalled == YES"];
+        NSArray *installedComponents = [affectedComponents filteredArrayUsingPredicate:predicate];
         
         NSString *alertMessage;
         NSInteger tag;
@@ -291,29 +294,50 @@
 
 - (void)autoReplacement {
 
-    [self removeInstalledComponents];
-    
-    [self.remainedComponents addObjectsFromArray:self.usedComponents];
-    [self.usedComponents removeObjectsInArray:self.usedComponents];
+    if (!self.componentGroup.isManualReplacement.boolValue) {
 
+        [self removeInstalledComponents];
+        [self putBackUsedComponents];
+        
+    }
+    
     NSIndexPath *selectedIndexPath = self.tableView.indexPathForSelectedRow;
     NSDictionary *tableDatum = self.tableData[selectedIndexPath.section][selectedIndexPath.row];
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"shortName == %@ AND serial == %@", tableDatum[@"shortName"], tableDatum[@"serial"]];
-
+    
     STTTAgentComponent *component = [self.remainedComponents filteredArrayUsingPredicate:predicate].firstObject;
-
+    
     if (component) {
         
         [self.usedComponents addObject:component];
         [self.remainedComponents removeObject:component];
         
     }
-
+    
 }
 
 - (void)backAutoReplacement {
 
-    [self putBackRemovedComponents];
+    if (self.componentGroup.isManualReplacement.boolValue) {
+        
+        NSIndexPath *selectedIndexPath = self.tableView.indexPathForSelectedRow;
+        NSDictionary *tableDatum = self.tableData[selectedIndexPath.section][selectedIndexPath.row];
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"shortName == %@ AND serial == %@", tableDatum[@"shortName"], tableDatum[@"serial"]];
+        
+        STTTAgentComponent *component = [self.usedComponents filteredArrayUsingPredicate:predicate].firstObject;
+        
+        if (component) {
+            
+            [self.remainedComponents addObject:component];
+            [self.usedComponents removeObject:component];
+            
+        }
+
+    } else {
+        
+        [self putBackRemovedComponents];
+
+    }
 
 }
 
@@ -329,6 +353,16 @@
     
     [self.installedComponents addObjectsFromArray:self.removedComponents];
     [self.removedComponents removeObjectsInArray:self.removedComponents];
+
+    if (!self.componentGroup.isManualReplacement.boolValue) {
+
+        [self putBackUsedComponents];
+
+    }
+    
+}
+
+- (void)putBackUsedComponents {
     
     [self.remainedComponents addObjectsFromArray:self.usedComponents];
     [self.usedComponents removeObjectsInArray:self.usedComponents];
