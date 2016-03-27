@@ -100,14 +100,22 @@
             if (terminal.xid) {
             
                 self.session.syncer.syncing = YES;
-                NSString *terminalXid = [NSString stringWithFormat:@"%@", CFUUIDCreateString(nil, CFUUIDCreateFromUUIDBytes(nil, *(CFUUIDBytes *)[terminal.xid bytes]))];
+                
+                CFUUIDRef xid = CFUUIDCreateFromUUIDBytes(nil, *(CFUUIDBytes *)[terminal.xid bytes]);
+                CFStringRef xidString = CFUUIDCreateString(nil, xid);
+                
+                NSString *terminalXid = [NSString stringWithFormat:@"%@", (__bridge NSString *)xidString];
+                
+                CFRelease(xidString);
+                CFRelease(xid);
+                
                 NSString *serverURL = [NSString stringWithFormat:@"%@/megaport.iAgentTerminal/%@", [(STTTSyncer *)self.session.syncer restServerURI], terminalXid];
                 
                 NSString *logMessage = [NSString stringWithFormat:@"Get data for terminal %@", terminalXid];
                 [[(STSession *)self.session logger] saveLogMessageWithText:logMessage type:@""];
                 
                 [self.session.syncer sendData:nil toServer:serverURL withParameters:nil];
-
+                
             }
             
         }
