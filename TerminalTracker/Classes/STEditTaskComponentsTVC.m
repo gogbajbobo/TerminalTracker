@@ -20,6 +20,11 @@
 @property (nonatomic, strong) NSMutableArray *tableData;
 @property (nonatomic, strong) NSString *cellIdentifier;
 
+@property (nonatomic, strong) NSMutableArray *removedComponents;
+@property (nonatomic, strong) NSMutableArray *remainedComponents;
+@property (nonatomic, strong) NSMutableArray *installedComponents;
+@property (nonatomic, strong) NSMutableArray *usedComponents;
+
 
 @end
 
@@ -194,28 +199,51 @@
 
     } else {
         
-        if (indexPath.section == 1) {
+        switch (indexPath.section) {
+            case 0:
+                predicate = [NSPredicate predicateWithFormat:@"isInstalled == YES && wasInitiallyInstalled == YES"];
+                break;
 
-            predicate = [NSPredicate predicateWithFormat:@"isInstalled == YES && wasInitiallyInstalled == NO"];
-            NSArray *installedComponents = [components filteredArrayUsingPredicate:predicate];
-            
-            NSString *alertMessage = (installedComponents.count > 0) ? @"Снимаем?" : @"Ставим?";
-            
-            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"!!!"
-                                                                message:alertMessage
-                                                               delegate:self
-                                                      cancelButtonTitle:@"Отмена"
-                                                      otherButtonTitles:@"Ok", nil];
-                
-                alert.tag = (installedComponents.count > 0) ? 202 : 201;
-                
-                [alert show];
-                
-            }];
+            case 1:
+                predicate = [NSPredicate predicateWithFormat:@"isInstalled == YES && wasInitiallyInstalled == NO"];
+                break;
 
+            default:
+                break;
         }
+        
+        NSArray *installedComponents = [components filteredArrayUsingPredicate:predicate];
+        
+        NSString *alertMessage;
+        NSInteger tag;
+        
+        if (installedComponents.count > 0) {
+            
+            alertMessage = @"Снимаем?";
+            
+            tag = (indexPath.section == 0) ? 200 : 201;
+            
+        } else {
+            
+            alertMessage = (indexPath.section == 0) ? @"Возвращаем?" : @"Ставим?";
+            
+            tag = (indexPath.section == 0) ? 202 : 203;
+            
+        }
+        
+        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+            
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"!!!"
+                                                            message:alertMessage
+                                                           delegate:self
+                                                  cancelButtonTitle:@"Отмена"
+                                                  otherButtonTitles:@"Ok", nil];
+            
+            alert.tag = tag;
+            
+            [alert show];
+            
+        }];
         
     }
     
@@ -226,133 +254,132 @@
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
     
-    switch (alertView.tag) {
-        case 201:
-            [self autoReplacement];
-            break;
+    if (buttonIndex == 1) {
+    
+        [self prepareComponents];
+        
+        switch (alertView.tag) {
+            case 200:
+                [self removeInstalledComponents];
+                break;
+                
+            case 201:
+                [self backAutoReplacement];
+                break;
+                
+            case 202:
+                [self putBackRemovedComponents];
+                break;
+                
+            case 203:
+                [self autoReplacement];
+                break;
+                
+            default:
+                break;
+        }
+        
+        [self finishReplacementProcedure];
 
-        case 202:
-            [self backAutoReplacement];
-            break;
-
-        default:
-            break;
+    } else {
+        
+        [self.tableView deselectRowAtIndexPath:self.tableView.indexPathForSelectedRow animated:YES];
+        
     }
     
 }
 
 - (void)autoReplacement {
-    
-    NSMutableArray *removedComponents = @[].mutableCopy;
-    NSMutableArray *remainedComponents = @[].mutableCopy;
-    NSMutableArray *installedComponents = @[].mutableCopy;
-    NSMutableArray *usedComponents = @[].mutableCopy;
-    
-    for (STTTAgentComponent *component in self.components) {
-        
-        if ([component isBroken]) {
-            
-            [removedComponents addObject:component];
-            
-        } else if (![component isInstalled]) {
-            
-            [remainedComponents addObject:component];
-            
-        } else if (component.wasInitiallyInstalled.boolValue) {
-            
-            [installedComponents addObject:component];
-            
-        } else {
-            
-            [usedComponents addObject:component];
-            
-        }
-        
-    }
 
-    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"ts" ascending:YES selector:@selector(compare:)];
+    [self removeInstalledComponents];
     
-    installedComponents = [installedComponents sortedArrayUsingDescriptors:@[sortDescriptor]].mutableCopy;
-    removedComponents = [removedComponents sortedArrayUsingDescriptors:@[sortDescriptor]].mutableCopy;
-    remainedComponents = [remainedComponents sortedArrayUsingDescriptors:@[sortDescriptor]].mutableCopy;
-    usedComponents = [usedComponents sortedArrayUsingDescriptors:@[sortDescriptor]].mutableCopy;
-
-    [removedComponents addObjectsFromArray:installedComponents];
-    [installedComponents removeObjectsInArray:installedComponents];
-    
-    [remainedComponents addObjectsFromArray:usedComponents];
-    [usedComponents removeObjectsInArray:usedComponents];
+    [self.remainedComponents addObjectsFromArray:self.usedComponents];
+    [self.usedComponents removeObjectsInArray:self.usedComponents];
 
     NSIndexPath *selectedIndexPath = self.tableView.indexPathForSelectedRow;
     NSDictionary *tableDatum = self.tableData[selectedIndexPath.section][selectedIndexPath.row];
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"shortName == %@ AND serial == %@", tableDatum[@"shortName"], tableDatum[@"serial"]];
 
-    STTTAgentComponent *component = [remainedComponents filteredArrayUsingPredicate:predicate].firstObject;
+    STTTAgentComponent *component = [self.remainedComponents filteredArrayUsingPredicate:predicate].firstObject;
 
     if (component) {
         
-        [usedComponents addObject:component];
-        [remainedComponents removeObject:component];
+        [self.usedComponents addObject:component];
+        [self.remainedComponents removeObject:component];
         
     }
-    
-    [STAgentTaskComponentService updateComponentsForTask:self.task
-                                 withInstalledComponents:installedComponents
-                                       removedComponents:removedComponents
-                                      remainedComponents:remainedComponents
-                                          usedComponents:usedComponents];
-    
-    [self.tableView reloadData];
-    
+
 }
 
 - (void)backAutoReplacement {
+
+    [self putBackRemovedComponents];
+
+}
+
+- (void)removeInstalledComponents {
     
-    NSMutableArray *removedComponents = @[].mutableCopy;
-    NSMutableArray *remainedComponents = @[].mutableCopy;
-    NSMutableArray *installedComponents = @[].mutableCopy;
-    NSMutableArray *usedComponents = @[].mutableCopy;
+    [self.removedComponents addObjectsFromArray:self.installedComponents];
+    [self.installedComponents removeObjectsInArray:self.installedComponents];
+
+
+}
+
+- (void)putBackRemovedComponents {
+    
+    [self.installedComponents addObjectsFromArray:self.removedComponents];
+    [self.removedComponents removeObjectsInArray:self.removedComponents];
+    
+    [self.remainedComponents addObjectsFromArray:self.usedComponents];
+    [self.usedComponents removeObjectsInArray:self.usedComponents];
+
+}
+
+- (void)prepareComponents {
+    
+    self.removedComponents = @[].mutableCopy;
+    self.remainedComponents = @[].mutableCopy;
+    self.installedComponents = @[].mutableCopy;
+    self.usedComponents = @[].mutableCopy;
     
     for (STTTAgentComponent *component in self.components) {
         
         if ([component isBroken]) {
             
-            [removedComponents addObject:component];
+            [self.removedComponents addObject:component];
             
         } else if (![component isInstalled]) {
             
-            [remainedComponents addObject:component];
+            [self.remainedComponents addObject:component];
             
         } else if (component.wasInitiallyInstalled.boolValue) {
             
-            [installedComponents addObject:component];
+            [self.installedComponents addObject:component];
             
         } else {
             
-            [usedComponents addObject:component];
+            [self.usedComponents addObject:component];
             
         }
         
     }
-    
+
     NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"ts" ascending:YES selector:@selector(compare:)];
     
-    installedComponents = [installedComponents sortedArrayUsingDescriptors:@[sortDescriptor]].mutableCopy;
-    removedComponents = [removedComponents sortedArrayUsingDescriptors:@[sortDescriptor]].mutableCopy;
-    remainedComponents = [remainedComponents sortedArrayUsingDescriptors:@[sortDescriptor]].mutableCopy;
-    usedComponents = [usedComponents sortedArrayUsingDescriptors:@[sortDescriptor]].mutableCopy;
-    
-    [installedComponents addObjectsFromArray:removedComponents];
-    [removedComponents removeObjectsInArray:removedComponents];
-    
-    [remainedComponents addObjectsFromArray:usedComponents];
-    [usedComponents removeObjectsInArray:usedComponents];
+    self.installedComponents = [self.installedComponents sortedArrayUsingDescriptors:@[sortDescriptor]].mutableCopy;
+    self.removedComponents = [self.removedComponents sortedArrayUsingDescriptors:@[sortDescriptor]].mutableCopy;
+    self.remainedComponents = [self.remainedComponents sortedArrayUsingDescriptors:@[sortDescriptor]].mutableCopy;
+    self.usedComponents = [self.usedComponents sortedArrayUsingDescriptors:@[sortDescriptor]].mutableCopy;
+
+}
+
+- (void)finishReplacementProcedure {
     
     [STAgentTaskComponentService updateComponentsForTask:self.task
-                                 withInstalledComponents:installedComponents
-                                       removedComponents:removedComponents
-                                      remainedComponents:remainedComponents
-                                          usedComponents:usedComponents];
+                                 withInstalledComponents:self.installedComponents
+                                       removedComponents:self.removedComponents
+                                      remainedComponents:self.remainedComponents
+                                          usedComponents:self.usedComponents];
     
     [self.tableView reloadData];
 
