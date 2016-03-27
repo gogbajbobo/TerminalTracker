@@ -121,11 +121,21 @@
     STTTAgentComponentGroup *group = tableDatum[@"group"];
     
     NSInteger remainedComponents = [tableDatum[@"remainedComponents"] count];
+    NSInteger brokenComponents = [tableDatum[@"brokenComponents"] count];
     NSInteger usedComponents = [tableDatum[@"usedComponents"] count];
     
     cell.textLabel.numberOfLines = 0;
     cell.textLabel.text = [NSString stringWithFormat:@"%@ / %@ / %@", group.name, @(group.components.count), group.isManualReplacement];
-    cell.detailTextLabel.text = [NSString stringWithFormat:@"Остаток: %@, Установлено: %@", @(remainedComponents), @(usedComponents)];
+    
+    NSMutableArray *detailTextStrings = @[].mutableCopy;
+    
+    [detailTextStrings addObject:[NSString stringWithFormat:@"Остаток: %@", @(remainedComponents)]];
+    
+    if (brokenComponents > 0) {
+        [detailTextStrings addObject:[NSString stringWithFormat:@"Поломато: %@", @(brokenComponents)]];
+    }
+    
+    cell.detailTextLabel.text = [detailTextStrings componentsJoinedByString:@", "];
     
     if (usedComponents > 0) {
         
@@ -152,13 +162,10 @@
     STTTAgentComponentGroup *group = tableDatum[@"group"];
 
     NSArray *currentComponents = tableDatum[@"currentComponents"];
-//    NSArray *usedComponents = tableDatum[@"usedComponents"];
 
     STEditTaskComponentsTVC *componentsTVC = [[STEditTaskComponentsTVC alloc] initWithStyle:UITableViewStylePlain];
     componentsTVC.task = self.task;
     componentsTVC.componentGroup = group;
-//    componentsTVC.remainedComponents = remainedComponents;
-//    componentsTVC.usedComponents = usedComponents;
     componentsTVC.components = currentComponents;
     
     [self.navigationController pushViewController:componentsTVC animated:YES];
