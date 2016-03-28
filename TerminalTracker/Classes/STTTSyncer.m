@@ -531,29 +531,39 @@
         [[(STSession *)self.session logger] saveLogMessageWithText:[NSString stringWithFormat:@"Sync result not ok xid: %@", xid] type:@"error"];
         
     } else {
+
+        NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:NSStringFromClass([STDatum class])];
+        request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"ts" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
+        request.predicate = [NSPredicate predicateWithFormat:@"SELF.xid == %@", xidData];
         
-//        if ([name isEqualToString:@"megaport.iAgentTask"]) {
-        
-            NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:NSStringFromClass([STDatum class])];
-            request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"ts" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
-            request.predicate = [NSPredicate predicateWithFormat:@"SELF.xid == %@", xidData];
+        NSError *error;
+        NSArray *fetchResult = [self.session.document.managedObjectContext executeFetchRequest:request error:&error];
+    
+        STDatum *object = fetchResult.lastObject;
+    
+        if (object) {
             
-            NSError *error;
-            NSArray *fetchResult = [self.session.document.managedObjectContext executeFetchRequest:request error:&error];
-            
-            if ([fetchResult lastObject]) {
+            object.lts = object.sts;
+            NSLog(@"sync %@ xid %@", name, xid);
+
+            if ([object isKindOfClass:[STTTAgentTerminalComponent class]]) {
                 
-                STDatum *datum = [fetchResult lastObject];
-                datum.lts = datum.sts;
-                NSLog(@"sync %@ xid %@", name, xid);
+                STTTAgentTerminalComponent *terminalComponent = (STTTAgentTerminalComponent *)object;
                 
-            } else {
-                
-                [[(STSession *)self.session logger] saveLogMessageWithText:[NSString stringWithFormat:@"Sync: no object with xid: %@", xid] type:@"error"];
+                if (terminalComponent.isdeleted.boolValue) {
+                    
+                    NSLog(@"delete %@ xid %@", name, xid);
+                    [[self.session document].managedObjectContext deleteObject:terminalComponent];
+                    
+                }
                 
             }
-
-//        }
+            
+        } else {
+            
+            [[(STSession *)self.session logger] saveLogMessageWithText:[NSString stringWithFormat:@"Sync: no object with xid: %@", xid] type:@"error"];
+            
+        }
     
     }
 
