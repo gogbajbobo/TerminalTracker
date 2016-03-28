@@ -270,14 +270,14 @@
     
     for(STTTAgentTaskRepair *repair in task.repairs) {
         
-        NSDictionary *propertiesDic = @{@"isdeleted": repair.isdeleted,
-                                        @"taskxid": [self stringWithXid:task.xid],
-                                        @"repairxid": [self stringWithXid:repair.repairCode.xid],
-                                        @"repairName": repair.repairCode.repairName,
-                                        @"ts":[NSString stringWithFormat:@"%@", repair.ts]};
+        NSDictionary *propertiesDic = @{@"isdeleted"    : (repair.isdeleted) ? repair.isdeleted : @(NO),
+                                        @"taskxid"      : (task.xid) ? [self stringWithXid:task.xid] : @"",
+                                        @"repairxid"    : (repair.repairCode.xid) ? [self stringWithXid:repair.repairCode.xid] : @"",
+                                        @"repairName"   : (repair.repairCode.repairName) ? repair.repairCode.repairName : @"",
+                                        @"ts"           : (repair.ts) ? [NSString stringWithFormat:@"%@", repair.ts] : @""};
 
-        NSDictionary *objectDictionary = @{@"name": @"megaport.iAgentTaskRepair",
-                                           @"xid": [self stringWithXid:repair.xid],
+        NSDictionary *objectDictionary = @{@"name"      : @"megaport.iAgentTaskRepair",
+                                           @"xid"       : (repair.xid) ? [self stringWithXid:repair.xid] : @"",
                                            @"properties": propertiesDic};
         
         [results addObject:objectDictionary];
@@ -294,12 +294,12 @@
     for(STTTAgentTaskDefect *defect in task.defects) {
         
         NSMutableDictionary *objectDictionary = [@{@"name"  : @"megaport.iAgentTaskDefect",
-                                                   @"xid"   : [self stringWithXid:defect.xid]} mutableCopy];
+                                                   @"xid"   : (defect.xid) ? [self stringWithXid:defect.xid] : @""} mutableCopy];
         
         objectDictionary[@"properties"] = @{@"isdeleted": (defect.isdeleted) ? defect.isdeleted : @(NO),
-                                            @"taskxid"  : [self stringWithXid:task.xid],
-                                            @"defectxid": [self stringWithXid:defect.defectCode.xid],
-                                            @"ts"       : [NSString stringWithFormat:@"%@", defect.ts]};
+                                            @"taskxid"  : (task.xid) ? [self stringWithXid:task.xid] : @"",
+                                            @"defectxid": (defect.defectCode.xid) ? [self stringWithXid:defect.defectCode.xid] : @"",
+                                            @"ts"       : (defect.ts) ? [NSString stringWithFormat:@"%@", defect.ts] : @""};
         
         [results addObject:objectDictionary];
         
@@ -315,14 +315,14 @@
     for (STTTAgentTaskComponent *taskComponent in task.components) {
         
         NSMutableDictionary *objectDictionary = [@{@"name"  : @"megaport.iAgentTaskComponent",
-                                                   @"xid"   : [self stringWithXid:taskComponent.xid]} mutableCopy];
+                                                   @"xid"   : (taskComponent.xid) ? [self stringWithXid:taskComponent.xid] : @""} mutableCopy];
         
         NSMutableDictionary *properties = [NSMutableDictionary dictionary];
         
         [properties addEntriesFromDictionary:@{@"isdeleted" : (taskComponent.isdeleted) ? taskComponent.isdeleted : @(NO),
                                                @"isBroken"  : (taskComponent.isBroken) ? taskComponent.isBroken : @(NO),
-                                               @"taskxid"   : [self stringWithXid:task.xid],
-                                               @"ts"        : [NSString stringWithFormat:@"%@", taskComponent.ts]}];
+                                               @"taskxid"   : (task.xid) ? [self stringWithXid:task.xid] : @"",
+                                               @"ts"        : (taskComponent.ts) ? [NSString stringWithFormat:@"%@", taskComponent.ts] : @""}];
         
         if (taskComponent.component) {
             [properties addEntriesFromDictionary:@{@"componentxid" : [self stringWithXid:taskComponent.component.xid]}];
@@ -371,12 +371,12 @@
         
         NSMutableDictionary *propertiesDictionary = [NSMutableDictionary dictionary];
         
-        propertiesDictionary[@"ts"] = [NSString stringWithFormat:@"%@", task.ts];
-        propertiesDictionary[@"servstatus"] = task.servstatus;
-        propertiesDictionary[@"commentText"] = task.commentText;
+        propertiesDictionary[@"ts"] = (task.ts) ? [NSString stringWithFormat:@"%@", task.ts] : @"";
+        propertiesDictionary[@"servstatus"] = (task.servstatus) ? task.servstatus : @"";
+        propertiesDictionary[@"commentText"] = (task.commentText) ? task.commentText : @"";
         propertiesDictionary[@"latitude"] = [NSNumber numberWithDouble:latitude];
         propertiesDictionary[@"longitude"] = [NSNumber numberWithDouble:longitude];
-        propertiesDictionary[@"terminalBarcode"] = task.terminalBarcode;
+        propertiesDictionary[@"terminalBarcode"] = (task.terminalBarcode) ? task.terminalBarcode : @"";
         
         return propertiesDictionary;
 
@@ -386,9 +386,9 @@
 
         NSMutableDictionary *propertiesDictionary = [NSMutableDictionary dictionary];
         
-        propertiesDictionary[@"ts"] = [NSString stringWithFormat:@"%@", logMessage.ts];
-        propertiesDictionary[@"text"] = logMessage.text;
-        propertiesDictionary[@"type"] = logMessage.type;
+        propertiesDictionary[@"ts"] = (logMessage.ts) ? [NSString stringWithFormat:@"%@", logMessage.ts] : @"";
+        propertiesDictionary[@"text"] = (logMessage.text) ? logMessage.text : @"";
+        propertiesDictionary[@"type"] = (logMessage.type) ? logMessage.type : @"";
         
         return propertiesDictionary;
 
