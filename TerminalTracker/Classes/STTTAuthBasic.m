@@ -11,9 +11,9 @@
 #import <UDPushAuth/UDPushAuthCodeRetriever.h>
 #import <UDPushAuth/UDPushAuthRequestBasic.h>
 
-#define PUSHAUTH_SERVICE_URI @"https://uoauth.unact.ru/a/UPushAuth/"
-#define AUTH_SERVICE_URI @"https://uoauth.unact.ru/a/uoauth/"
-#define REACHABILITY_SERVER  @"uoauth.unact.ru"
+#define PUSHAUTH_SERVICE_URI @"https://uoauth.sistemium.com/a/UPushAuth/"
+#define AUTH_SERVICE_URI @"https://uoauth.sistemium.com/a/uoauth/"
+#define REACHABILITY_SERVER  @"uoauth.sistemium.com"
 #define AUTH_SERVICE_PARAMETERS @"app_id=terminal-tracker-dev"
 
 @implementation STTTAuthBasic
