@@ -125,7 +125,8 @@
     NSInteger usedComponents = [tableDatum[@"usedComponents"] count];
     
     cell.textLabel.numberOfLines = 0;
-    cell.textLabel.text = [NSString stringWithFormat:@"%@ / %@ / %@", group.name, @(group.components.count), group.isManualReplacement];
+    cell.textLabel.text = group.name;
+//    cell.textLabel.text = [NSString stringWithFormat:@"%@ / %@ / %@", group.name, @(group.components.count), group.isManualReplacement];
     
     NSMutableArray *detailTextStrings = @[].mutableCopy;
     
