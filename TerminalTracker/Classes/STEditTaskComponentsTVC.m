@@ -146,7 +146,7 @@
     switch (indexPath.section) {
         case 0:
 
-            cell.detailTextLabel.text = [NSString stringWithFormat:@"%@\nПоломато: %@", serial, @(brokenComponents.count)];
+            cell.detailTextLabel.text = (brokenComponents.count > 0) ? [NSString stringWithFormat:@"%@\nПоломато: %@", serial, @(brokenComponents.count)] : serial;
             predicate = [NSPredicate predicateWithFormat:@"wasInitiallyInstalled == YES"];
             
             break;
