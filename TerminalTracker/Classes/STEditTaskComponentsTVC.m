@@ -146,7 +146,7 @@
     switch (indexPath.section) {
         case 0:
 
-            cell.detailTextLabel.text = (brokenComponents.count > 0) ? [NSString stringWithFormat:@"%@\nПоломато: %@", serial, @(brokenComponents.count)] : serial;
+            cell.detailTextLabel.text = (brokenComponents.count > 0) ? [NSString stringWithFormat:@"%@\nСнято: %@", serial, @(brokenComponents.count)] : serial;
             predicate = [NSPredicate predicateWithFormat:@"wasInitiallyInstalled == YES"];
             
             break;
@@ -186,7 +186,10 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
     NSDictionary *tableDatum = self.tableData[indexPath.section][indexPath.row];
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"shortName == %@ AND serial == %@", tableDatum[@"shortName"], tableDatum[@"serial"]];
+    NSString *shortName = tableDatum[@"shortName"];
+    NSString *serial = tableDatum[@"serial"];
+    
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"shortName == %@ AND serial == %@", shortName, serial];
     NSArray *components = [self.components filteredArrayUsingPredicate:predicate];
 
     switch (indexPath.section) {
@@ -217,26 +220,25 @@
         predicate = [NSPredicate predicateWithFormat:@"isInstalled == YES"];
         NSArray *installedComponents = [affectedComponents filteredArrayUsingPredicate:predicate];
         
-        NSString *alertMessage;
+        NSString *alertMessage = [NSString stringWithFormat:@"%@\n%@", shortName, serial];
+        NSString *title;
         NSInteger tag;
         
         if (installedComponents.count > 0) {
             
-            alertMessage = @"Снимаем?";
-            
+            title = @"Снять?";
             tag = (indexPath.section == 0) ? 200 : 201;
             
         } else {
             
-            alertMessage = (indexPath.section == 0) ? @"Возвращаем?" : @"Ставим?";
-            
+            title = (indexPath.section == 0) ? @"Вернуть?" : @"Установить?";
             tag = (indexPath.section == 0) ? 202 : 203;
             
         }
         
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
             
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"!!!"
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
                                                             message:alertMessage
                                                            delegate:self
                                                   cancelButtonTitle:@"Отмена"

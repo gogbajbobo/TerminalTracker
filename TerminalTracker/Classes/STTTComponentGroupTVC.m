@@ -133,7 +133,7 @@
     [detailTextStrings addObject:[NSString stringWithFormat:@"Остаток: %@", @(remainedComponents)]];
     
     if (brokenComponents > 0) {
-        [detailTextStrings addObject:[NSString stringWithFormat:@"Поломато: %@", @(brokenComponents)]];
+        [detailTextStrings addObject:[NSString stringWithFormat:@"Снято: %@", @(brokenComponents)]];
     }
     
     cell.detailTextLabel.text = [detailTextStrings componentsJoinedByString:@", "];
