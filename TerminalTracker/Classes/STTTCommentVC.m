@@ -30,13 +30,7 @@
     if ([self.task.servstatus boolValue]) {
         
         self.commentView.editable = NO;
-     
-#warning !!!!
-// _________for testing
-        self.commentView.editable = YES;
-        self.commentView.delegate = self;
-// ____________________
-        
+             
     } else {
         
         self.commentView.editable = YES;
