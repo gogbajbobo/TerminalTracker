@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="9525" systemVersion="15D21" minimumToolsVersion="Xcode 4.1">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10171" systemVersion="15D21" minimumToolsVersion="Xcode 4.1">
     <entity name="STBatteryStatus" representedClassName="STBatteryStatus" parentEntity="STComment" syncable="YES">
         <attribute name="batteryLevel" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="batteryState" optional="YES" attributeType="String" syncable="YES"/>
@@ -55,6 +55,7 @@
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="components" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="STTTAgentComponent" inverseName="componentGroup" inverseEntity="STTTAgentComponent" syncable="YES"/>
     </entity>
+    <entity name="STTTAgentComponentPreinstalled" representedClassName="STTTAgentComponentPreinstalled" parentEntity="STTTAgentComponent" syncable="YES"/>
     <entity name="STTTAgentDefectCode" representedClassName="STTTAgentDefectCode" parentEntity="STComment" syncable="YES">
         <attribute name="active" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
@@ -125,7 +126,7 @@
         <element name="STSettings" positionX="-3980" positionY="-1186" width="128" height="88"/>
         <element name="STTTAgentBarcodeType" positionX="-3584" positionY="-1251" width="128" height="103"/>
         <element name="STTTAgentComponent" positionX="-3602" positionY="-639" width="128" height="118"/>
-        <element name="STTTAgentComponentGroup" positionX="-3654" positionY="-799" width="128" height="88"/>
+        <element name="STTTAgentComponentGroup" positionX="-3654" positionY="-817" width="128" height="88"/>
         <element name="STTTAgentDefectCode" positionX="-3872" positionY="-774" width="128" height="88"/>
         <element name="STTTAgentRepairCode" positionX="-3888" positionY="-891" width="128" height="88"/>
         <element name="STTTAgentTask" positionX="-3798" positionY="-526" width="128" height="208"/>
@@ -136,5 +137,6 @@
         <element name="STTTAgentTerminalComponent" positionX="-3323" positionY="-682" width="128" height="103"/>
         <element name="STTTTaskLocation" positionX="-3132" positionY="-418" width="128" height="58"/>
         <element name="STTTTerminalLocation" positionX="-3179" positionY="-981" width="128" height="58"/>
+        <element name="STTTAgentComponentPreinstalled" positionX="-3573" positionY="-495" width="128" height="43"/>
     </elements>
 </model>

@@ -26,6 +26,7 @@
 
 #import "STTTAgentComponentGroup.h"
 #import "STTTAgentComponent.h"
+#import "STTTAgentComponentPreinstalled.h"
 #import "STTTAgentTaskComponent.h"
 #import "STTTAgentTerminalComponent.h"
 
@@ -609,6 +610,10 @@
         
         [self newComponentWithXid:xidData andProperties:properties];
         
+    } else if ([name isEqualToString:@"megaport.iAgentComponentPreinstalled"]) {
+        
+        [self newComponentWithXid:xidData andProperties:properties];
+        
     } else if ([name isEqualToString:@"megaport.iAgentTaskComponent"]) {
         
         [self newTaskComponentWithXid:xidData andProperties:properties];
@@ -1062,6 +1067,7 @@
                              NSStringFromClass([STTTAgentRepairCode class]),
                              NSStringFromClass([STTTAgentDefectCode class]),
                              NSStringFromClass([STTTAgentComponent class]),
+                             NSStringFromClass([STTTAgentComponentPreinstalled class]),
                              NSStringFromClass([STTTAgentComponentGroup class]),
                              NSStringFromClass([STTTAgentBarcodeType class])];
 
@@ -1070,6 +1076,7 @@
         NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:entityName];
         NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"id" ascending:YES];
         request.sortDescriptors = @[sortDescriptor];
+        request.includesSubentities = NO;
         
         NSUInteger resultCount = [[(STSession *)self.session document].managedObjectContext countForFetchRequest:request error:nil];
         

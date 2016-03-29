@@ -15,6 +15,8 @@
 		2C0AE7C11CA147A7001E6BC8 /* STTTAgentComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C0AE7B91CA147A7001E6BC8 /* STTTAgentComponent.m */; };
 		2C0AE7C21CA147A7001E6BC8 /* STTTAgentTerminalComponent+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C0AE7BB1CA147A7001E6BC8 /* STTTAgentTerminalComponent+CoreDataProperties.m */; };
 		2C0AE7C31CA147A7001E6BC8 /* STTTAgentTerminalComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C0AE7BD1CA147A7001E6BC8 /* STTTAgentTerminalComponent.m */; };
+		2C17EACB1CAA6B890087EAF6 /* STTTAgentComponentPreinstalled+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C17EAC81CAA6B890087EAF6 /* STTTAgentComponentPreinstalled+CoreDataProperties.m */; };
+		2C17EACC1CAA6B890087EAF6 /* STTTAgentComponentPreinstalled.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C17EACA1CAA6B890087EAF6 /* STTTAgentComponentPreinstalled.m */; };
 		2C5617DB1C64D6C300EA463C /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C5617DA1C64D6C300EA463C /* AVFoundation.framework */; };
 		2CA06B0F1C4A8E8C00383AC9 /* tele2.png in Resources */ = {isa = PBXBuildFile; fileRef = 2CA06B0A1C4A8E8C00383AC9 /* tele2.png */; };
 		2CA06B101C4A8E8C00383AC9 /* mts.png in Resources */ = {isa = PBXBuildFile; fileRef = 2CA06B0B1C4A8E8C00383AC9 /* mts.png */; };
@@ -111,6 +113,10 @@
 		2C0AE7BB1CA147A7001E6BC8 /* STTTAgentTerminalComponent+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "STTTAgentTerminalComponent+CoreDataProperties.m"; sourceTree = "<group>"; };
 		2C0AE7BC1CA147A7001E6BC8 /* STTTAgentTerminalComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTAgentTerminalComponent.h; sourceTree = "<group>"; };
 		2C0AE7BD1CA147A7001E6BC8 /* STTTAgentTerminalComponent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTAgentTerminalComponent.m; sourceTree = "<group>"; };
+		2C17EAC71CAA6B890087EAF6 /* STTTAgentComponentPreinstalled+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "STTTAgentComponentPreinstalled+CoreDataProperties.h"; sourceTree = "<group>"; };
+		2C17EAC81CAA6B890087EAF6 /* STTTAgentComponentPreinstalled+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "STTTAgentComponentPreinstalled+CoreDataProperties.m"; sourceTree = "<group>"; };
+		2C17EAC91CAA6B890087EAF6 /* STTTAgentComponentPreinstalled.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STTTAgentComponentPreinstalled.h; sourceTree = "<group>"; };
+		2C17EACA1CAA6B890087EAF6 /* STTTAgentComponentPreinstalled.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STTTAgentComponentPreinstalled.m; sourceTree = "<group>"; };
 		2C5617DA1C64D6C300EA463C /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		2CA06B0A1C4A8E8C00383AC9 /* tele2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tele2.png; sourceTree = "<group>"; };
 		2CA06B0B1C4A8E8C00383AC9 /* mts.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mts.png; sourceTree = "<group>"; };
@@ -448,6 +454,10 @@
 				2CDDC6071C9D61F600BFC7D2 /* STTTAgentComponentGroup.m */,
 				2CDDC6081C9D61F600BFC7D2 /* STTTAgentComponentGroup+CoreDataProperties.h */,
 				2CDDC6091C9D61F600BFC7D2 /* STTTAgentComponentGroup+CoreDataProperties.m */,
+				2C17EAC91CAA6B890087EAF6 /* STTTAgentComponentPreinstalled.h */,
+				2C17EACA1CAA6B890087EAF6 /* STTTAgentComponentPreinstalled.m */,
+				2C17EAC71CAA6B890087EAF6 /* STTTAgentComponentPreinstalled+CoreDataProperties.h */,
+				2C17EAC81CAA6B890087EAF6 /* STTTAgentComponentPreinstalled+CoreDataProperties.m */,
 				2CDDC60A1C9D61F600BFC7D2 /* STTTAgentDefectCode.h */,
 				2CDDC60B1C9D61F600BFC7D2 /* STTTAgentDefectCode.m */,
 				2CDDC60C1C9D61F600BFC7D2 /* STTTAgentRepairCode.h */,
@@ -669,11 +679,13 @@
 				2CDDC6361C9D61F600BFC7D2 /* STTTAgentDefectCode.m in Sources */,
 				2CDDC67A1C9D622400BFC7D2 /* STAgentTaskComponentService.m in Sources */,
 				2C0AE7B11CA14507001E6BC8 /* STTTAgentTerminal.m in Sources */,
+				2C17EACC1CAA6B890087EAF6 /* STTTAgentComponentPreinstalled.m in Sources */,
 				2CDDC6841C9D622400BFC7D2 /* STTTComponentGroupTVC.m in Sources */,
 				2CDDC6861C9D622400BFC7D2 /* STTTComponentsMovingVC.m in Sources */,
 				2CDDC6391C9D61F600BFC7D2 /* STTTAgentTask+CoreDataProperties.m in Sources */,
 				2CDDC63C1C9D61F600BFC7D2 /* STTTAgentTaskDefect.m in Sources */,
 				2CDDC67F1C9D622400BFC7D2 /* STEditTaskRepairCodesTVC.m in Sources */,
+				2C17EACB1CAA6B890087EAF6 /* STTTAgentComponentPreinstalled+CoreDataProperties.m in Sources */,
 				2CDDC6851C9D622400BFC7D2 /* STTTComponentsController.m in Sources */,
 				2CDDC63D1C9D61F600BFC7D2 /* STTTAgentTaskRepair.m in Sources */,
 				2CDDC68A1C9D622400BFC7D2 /* STTTMainNC.m in Sources */,
