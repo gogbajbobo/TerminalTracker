@@ -265,7 +265,7 @@
         
         switch (alertView.tag) {
             case 200:
-                [self removeInstalledComponents];
+                [self removeInstalledComponent];
                 break;
                 
             case 201:
@@ -273,7 +273,7 @@
                 break;
                 
             case 202:
-                [self putBackRemovedComponents];
+                [self putBackRemovedComponent];
                 break;
                 
             case 203:
@@ -298,7 +298,7 @@
 
     if (!self.componentGroup.isManualReplacement.boolValue) {
 
-        [self removeInstalledComponents];
+        [self removeAllInstalledComponents];
         [self putBackUsedComponents];
         
     }
@@ -337,21 +337,54 @@
 
     } else {
         
-        [self putBackRemovedComponents];
+        [self putBackAllRemovedComponents];
 
     }
 
 }
 
-- (void)removeInstalledComponents {
+- (void)removeInstalledComponent {
+    
+    NSIndexPath *selectedIndexPath = self.tableView.indexPathForSelectedRow;
+    NSDictionary *tableDatum = self.tableData[selectedIndexPath.section][selectedIndexPath.row];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"shortName == %@ AND serial == %@", tableDatum[@"shortName"], tableDatum[@"serial"]];
+    
+    STTTAgentComponent *component = [self.installedComponents filteredArrayUsingPredicate:predicate].firstObject;
+
+    if (component) {
+
+        [self.removedComponents addObject:component];
+        [self.installedComponents removeObject:component];
+        
+    }
+
+}
+
+- (void)removeAllInstalledComponents {
     
     [self.removedComponents addObjectsFromArray:self.installedComponents];
     [self.installedComponents removeObjectsInArray:self.installedComponents];
 
+}
+
+- (void)putBackRemovedComponent {
+    
+    NSIndexPath *selectedIndexPath = self.tableView.indexPathForSelectedRow;
+    NSDictionary *tableDatum = self.tableData[selectedIndexPath.section][selectedIndexPath.row];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"shortName == %@ AND serial == %@", tableDatum[@"shortName"], tableDatum[@"serial"]];
+    
+    STTTAgentComponent *component = [self.removedComponents filteredArrayUsingPredicate:predicate].firstObject;
+    
+    if (component) {
+        
+        [self.installedComponents addObject:component];
+        [self.removedComponents removeObject:component];
+        
+    }
 
 }
 
-- (void)putBackRemovedComponents {
+- (void)putBackAllRemovedComponents {
     
     [self.installedComponents addObjectsFromArray:self.removedComponents];
     [self.removedComponents removeObjectsInArray:self.removedComponents];
