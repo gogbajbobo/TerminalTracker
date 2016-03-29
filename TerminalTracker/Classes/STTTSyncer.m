@@ -26,7 +26,6 @@
 
 #import "STTTAgentComponentGroup.h"
 #import "STTTAgentComponent.h"
-#import "STTTAgentComponentPreinstalled.h"
 #import "STTTAgentTaskComponent.h"
 #import "STTTAgentTerminalComponent.h"
 
@@ -606,14 +605,10 @@
         
         [self newTaskDefectWithXid:xidData andProperties:properties];
         
-    } else if ([name isEqualToString:@"megaport.iAgentComponent"]) {
+    } else if ([@[@"megaport.iAgentComponent", @"megaport.iAgentComponentPreinstalled"] containsObject:name]) {
         
         [self newComponentWithXid:xidData andProperties:properties];
-        
-    } else if ([name isEqualToString:@"megaport.iAgentComponentPreinstalled"]) {
-        
-        [self newComponentWithXid:xidData andProperties:properties];
-        
+
     } else if ([name isEqualToString:@"megaport.iAgentTaskComponent"]) {
         
         [self newTaskComponentWithXid:xidData andProperties:properties];
@@ -1067,7 +1062,6 @@
                              NSStringFromClass([STTTAgentRepairCode class]),
                              NSStringFromClass([STTTAgentDefectCode class]),
                              NSStringFromClass([STTTAgentComponent class]),
-                             NSStringFromClass([STTTAgentComponentPreinstalled class]),
                              NSStringFromClass([STTTAgentComponentGroup class]),
                              NSStringFromClass([STTTAgentBarcodeType class])];
 

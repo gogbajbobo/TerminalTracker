@@ -55,7 +55,6 @@
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="components" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="STTTAgentComponent" inverseName="componentGroup" inverseEntity="STTTAgentComponent" syncable="YES"/>
     </entity>
-    <entity name="STTTAgentComponentPreinstalled" representedClassName="STTTAgentComponentPreinstalled" parentEntity="STTTAgentComponent" syncable="YES"/>
     <entity name="STTTAgentDefectCode" representedClassName="STTTAgentDefectCode" parentEntity="STComment" syncable="YES">
         <attribute name="active" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
@@ -137,6 +136,5 @@
         <element name="STTTAgentTerminalComponent" positionX="-3323" positionY="-682" width="128" height="103"/>
         <element name="STTTTaskLocation" positionX="-3132" positionY="-418" width="128" height="58"/>
         <element name="STTTTerminalLocation" positionX="-3179" positionY="-981" width="128" height="58"/>
-        <element name="STTTAgentComponentPreinstalled" positionX="-3573" positionY="-495" width="128" height="43"/>
     </elements>
 </model>
