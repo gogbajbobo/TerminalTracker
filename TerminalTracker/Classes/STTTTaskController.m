@@ -7,17 +7,21 @@
 //
 
 #import "STTTTaskController.h"
+
 #import "STTTTaskLocation.h"
 #import <STManagedTracker/STQueue.h>
 #import "STTTSyncer.h"
 #import "STUtilities.h"
 #import "STTTAgentTask+cellcoloring.h"
+#import "STAgentTaskRepairCodeService.h"
+#import "STAgentTaskDefectCodeService.h"
+
 
 @interface STTTTaskController() <NSFetchedResultsControllerDelegate>
 
 @property (nonatomic, strong) STQueue *noAddressTerminals;
 @property (nonatomic) BOOL checkingTasks;
-//@property (nonatomic, weak) STTTSyncer *syncer;
+
 
 @end
 
@@ -144,40 +148,52 @@
 }
 
 - (NSFetchedResultsController *)resultsController {
+    
     if (!_resultsController) {
+        
         NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:NSStringFromClass([STTTAgentTask class])];
 
-        request.sortDescriptors = [NSArray arrayWithObjects:
-                                   [NSSortDescriptor sortDescriptorWithKey:@"servstatus" ascending:YES selector:@selector(compare:)],
+        request.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"servstatus" ascending:YES selector:@selector(compare:)],
                                    [NSSortDescriptor sortDescriptorWithKey:@"routePriority" ascending:NO selector:@selector(compare:)],
-                                   [NSSortDescriptor sortDescriptorWithKey:@"doBefore" ascending:YES selector:@selector(compare:)],
-                                   nil];
+                                   [NSSortDescriptor sortDescriptorWithKey:@"doBefore" ascending:YES selector:@selector(compare:)]];
+        
         if (self.terminal) {
+            
             request.predicate = [NSPredicate predicateWithFormat:@"SELF.terminal == %@", self.terminal];
+            
         } else {
+            
             NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+            
             NSDate *nowDate = [NSDate date];
             dateFormatter.dateStyle = NSDateFormatterShortStyle;
+            
             NSDate *today = [dateFormatter dateFromString:[dateFormatter stringFromDate:nowDate]];
             request.predicate = [NSPredicate predicateWithFormat:@"SELF.doBefore >= %@", today];
+            
         }
-        _resultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request managedObjectContext:self.session.document.managedObjectContext sectionNameKeyPath:@"servstatus" cacheName:nil];
+        
+        _resultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request
+                                                                 managedObjectContext:self.session.document.managedObjectContext
+                                                                   sectionNameKeyPath:@"servstatus"
+                                                                            cacheName:nil];
         _resultsController.delegate = self;
+        
     }
     return _resultsController;
+    
 }
 
 - (void)performFetch {
+    
     self.resultsController = nil;
+    
     NSError *error;
     if (![self.resultsController performFetch:&error]) {
         NSLog(@"performFetch error %@", error);
     } else {
-        //            NSLog(@"fetchedObjects %@", self.resultsController.fetchedObjects);
-//        for (NSManagedObject *object in self.resultsController.fetchedObjects) {
-//            //                NSLog(@"distance %@", [object valueForKey:@"distance"]);
-//        }
     }
+    
 }
 
 
@@ -243,19 +259,19 @@
 
 #pragma mark - Table view data source
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return [[self.resultsController sections] count];
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    
     id <NSFetchedResultsSectionInfo> sectionInfo = [[self.resultsController sections] objectAtIndex:section];
     return [sectionInfo numberOfObjects];
+    
 }
 
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
-{
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    
     id <NSFetchedResultsSectionInfo> sectionInfo = [[self.resultsController sections] objectAtIndex:section];
     
     NSUInteger sectionName = [[sectionInfo name] integerValue];
@@ -275,17 +291,17 @@
     
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
     static NSString *cellIdentifier = @"taskCell";
     
-    UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:cellIdentifier];
+    UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
+                                                   reuseIdentifier:cellIdentifier];
     
-    id <NSFetchedResultsSectionInfo> sectionInfo = [[self.resultsController sections] objectAtIndex:indexPath.section];
-    STTTAgentTask *task = (STTTAgentTask *)[[sectionInfo objects] objectAtIndex:indexPath.row];
-    
+    STTTAgentTask *task = [self.resultsController objectAtIndexPath:indexPath];
     
     NSString *moreTasksOnThisTerminal = @"";
+    
     if (task.numberOfTasksOnSameTerminal) {
         moreTasksOnThisTerminal = [NSString stringWithFormat:@" (+%i)", task.numberOfTasksOnSameTerminal];
     }
@@ -301,6 +317,24 @@
     cell.backgroundColor = [task getBackgroundColorForDisplaying];
     cell.textLabel.textColor = [task getTextColorForDisplaying];
     cell.detailTextLabel.textColor = [task getTextColorForDisplaying];
+    
+    CGFloat labelPointSize = cell.textLabel.font.pointSize;
+    CGFloat detailLabelPointSize = cell.detailTextLabel.font.pointSize;
+    
+    NSInteger defectsCount = [STAgentTaskDefectCodeService getNumberOfSelectedDefectsForTask:task];
+    NSInteger repairsCount = [STAgentTaskRepairCodeService getNumberOfSelectedRepairsForTask:task];
+    
+    if (defectsCount && repairsCount) {
+        
+        cell.textLabel.font = [UIFont systemFontOfSize:labelPointSize];
+        cell.detailTextLabel.font = [UIFont systemFontOfSize:detailLabelPointSize];
+        
+    } else {
+
+        cell.textLabel.font = [UIFont boldSystemFontOfSize:labelPointSize];
+        cell.detailTextLabel.font = [UIFont boldSystemFontOfSize:detailLabelPointSize];
+
+    }
 
     NSString *infoText = [STUtilities stringWithRelativeDateFromDate:task.doBefore];
     
@@ -339,9 +373,8 @@
     }
     
     return cell;
+    
 }
-
-
 
 
 @end

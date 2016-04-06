@@ -10,19 +10,21 @@
 
 @implementation STUtilities
 
-+ (NSString*) stringWithRelativeDateFromDate:(NSDate*) date {
++ (NSString *)stringWithRelativeDateFromDate:(NSDate *)date {
+
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    NSString *formattedString;
-    
     dateFormatter.doesRelativeDateFormatting = YES;
     dateFormatter.dateStyle = [self isTodayDate:date] ? NSDateFormatterNoStyle : NSDateFormatterShortStyle;
     dateFormatter.timeStyle = NSDateFormatterShortStyle;
     
-    formattedString = [dateFormatter stringFromDate:date];
+    NSString *formattedString = [dateFormatter stringFromDate:date];
+    
     return formattedString;
+    
 }
 
-+ (BOOL) isTodayDate:(NSDate*)date {
++ (BOOL)isTodayDate:(NSDate *)date {
+    
     NSCalendar *cal = [NSCalendar currentCalendar];
     NSDateComponents *components = [cal components:(NSEraCalendarUnit|NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit) fromDate:[NSDate date]];
     NSDate *today = [cal dateFromComponents:components];
@@ -30,5 +32,8 @@
     NSDate *otherDate = [cal dateFromComponents:components];
     
     return [today isEqualToDate:otherDate];
+    
 }
+
+
 @end

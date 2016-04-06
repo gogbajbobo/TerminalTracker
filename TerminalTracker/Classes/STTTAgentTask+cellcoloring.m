@@ -9,12 +9,16 @@
 #import "STTTAgentTask+cellcoloring.h"
 
 @implementation STTTAgentTask (cellcoloring)
+
 - (UIColor *)getBackgroundColorForDisplaying {
-    if ([self.servstatus intValue] == 1) {
+    
+    if (self.servstatus.intValue == 1) {
         return [UIColor lightGrayColor];
     }
-    UIColor* textColor = [UIColor whiteColor];
-    switch ([self.routePriority intValue]) {
+    
+    UIColor *textColor = [UIColor whiteColor];
+    
+    switch (self.routePriority.intValue) {
         case 3:
             textColor = [UIColor redColor];
             break;
@@ -26,19 +30,25 @@
             break;
     }
     return textColor;
+    
 }
 
--(UIColor *)getTextColorForDisplaying {
-    if ([self.servstatus intValue] == 1) {
+- (UIColor *)getTextColorForDisplaying {
+    
+    if (self.servstatus.intValue == 1) {
         return [UIColor darkGrayColor];
     }
+    
     UIColor* textColor = [UIColor blackColor];
-    switch ([self.routePriority intValue]) {
+    
+    switch (self.routePriority.intValue) {
         case 3:
             textColor = [UIColor whiteColor];
             break;
     }
     return textColor;
+    
 }
+
 
 @end
