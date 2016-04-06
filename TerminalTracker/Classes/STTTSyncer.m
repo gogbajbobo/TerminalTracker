@@ -722,8 +722,12 @@
             
         } else {
             
-            taskComponent.component = (STTTAgentComponent *)[self entityByClass:[STTTAgentComponent class] andXid:[self xidWithString:[properties valueForKey:@"componentxid"]]];
+            taskComponent.component = (STTTAgentComponent *)[self entityByClass:[STTTAgentComponent class]
+                                                                         andXid:[self xidWithString:[properties valueForKey:@"componentxid"]]];
             
+            taskComponent.terminal = (STTTAgentTerminal *)[self entityByClass:[STTTAgentTerminal class]
+                                                                       andXid:[self xidWithString:[properties valueForKey:@"terminalxid"]]];
+
             [self taskRelationshipInitForRelationshipObject:taskComponent andTask:task];
             
             NSLog(@"get taskComponent.xid %@", taskComponent.xid);
@@ -744,13 +748,15 @@
         
     } else {
         
-        STTTAgentComponent *component = (STTTAgentComponent *)[self entityByClass:[STTTAgentComponent class] andXid:[self xidWithString:[properties valueForKey:@"componentxid"]]];
+        STTTAgentComponent *component = (STTTAgentComponent *)[self entityByClass:[STTTAgentComponent class]
+                                                                           andXid:[self xidWithString:[properties valueForKey:@"componentxid"]]];
         
         component.wasInitiallyInstalled = @(YES);
         
         terminalComponent.component = component;
         
-        terminalComponent.terminal = (STTTAgentTerminal *)[self entityByClass:[STTTAgentTerminal class] andXid:[self xidWithString:[properties valueForKey:@"terminalxid"]]];
+        terminalComponent.terminal = (STTTAgentTerminal *)[self entityByClass:[STTTAgentTerminal class]
+                                                                       andXid:[self xidWithString:[properties valueForKey:@"terminalxid"]]];
         
         [self taskRelationshipInitForRelationshipObject:terminalComponent andTask:nil];
         
