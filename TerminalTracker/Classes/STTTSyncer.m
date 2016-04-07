@@ -645,7 +645,6 @@
 - (void)taskRelationshipInitForRelationshipObject:(NSManagedObject *)object andTask:(STTTAgentTask *)task {
     
     [self setValue:@NO forKey:@"isdeleted" forObject:object];
-    [self setValue:@NO forKey:@"isBroken" forObject:object];
     if (task) [self setValue:task forKey:@"task" forObject:object];
     [self setValue:[NSDate date] forKey:@"lts" forObject:object];
     
@@ -663,9 +662,9 @@
 
 - (void)newTaskDefectWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties {
     
-    NSDictionary *taskData = [properties valueForKey:@"taskxid"];
+    NSDictionary *taskData = properties[@"taskxid"];
 
-    STTTAgentTask *task = [self taskForReceivingDataWithXid:[self xidWithString:[taskData valueForKey:@"id"]]];
+    STTTAgentTask *task = [self taskForReceivingDataWithXid:[self xidWithString:taskData[@"id"]]];
     
     if (!task) {
         
@@ -675,13 +674,13 @@
     
         STTTAgentTaskDefect *defect = (STTTAgentTaskDefect*)[self entityByClass:[STTTAgentTaskDefect class] andXid:xidData];
         
-        if ([defect.isdeleted boolValue]) {
+        if (defect.isdeleted.boolValue) {
             
             NSLog(@"local taskDefect isdeleted, server's data will be ignored for taskDefect %@", xidData);
             
         } else {
             
-            defect.defectCode = (STTTAgentDefectCode *)[self entityByClass:[STTTAgentDefectCode class] andXid:[self xidWithString:[properties valueForKey:@"defectxid"]]];
+            defect.defectCode = (STTTAgentDefectCode *)[self entityByClass:[STTTAgentDefectCode class] andXid:[self xidWithString:properties[@"defectxid"]]];
             
             [self taskRelationshipInitForRelationshipObject:defect andTask:task];
             
@@ -695,8 +694,8 @@
 - (void)newDefectCodeWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties {
     
     STTTAgentDefectCode *defectCode = (STTTAgentDefectCode *)[self entityByClass:[STTTAgentDefectCode class] andXid:xidData];
-    defectCode.name = [properties valueForKey:@"name"];
-    defectCode.active = [NSNumber numberWithBool:[[properties valueForKey:@"active"] boolValue]];
+    defectCode.name = properties[@"name"];
+    defectCode.active = @([properties[@"active"] boolValue]);
     defectCode.lts = [NSDate date];
     NSLog(@"get defect_code.xid %@", defectCode.xid);
 
@@ -704,9 +703,9 @@
 
 - (void)newTaskComponentWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties {
     
-    NSDictionary *taskData = [properties valueForKey:@"taskxid"];
+    NSDictionary *taskData = properties[@"taskxid"];
 
-    STTTAgentTask *task = [self taskForReceivingDataWithXid:[self xidWithString:[taskData valueForKey:@"id"]]];
+    STTTAgentTask *task = [self taskForReceivingDataWithXid:[self xidWithString:taskData[@"id"]]];
     
     if (!task) {
         
@@ -723,10 +722,12 @@
         } else {
             
             taskComponent.component = (STTTAgentComponent *)[self entityByClass:[STTTAgentComponent class]
-                                                                         andXid:[self xidWithString:[properties valueForKey:@"componentxid"]]];
+                                                                         andXid:[self xidWithString:properties[@"componentxid"]]];
             
             taskComponent.terminal = (STTTAgentTerminal *)[self entityByClass:[STTTAgentTerminal class]
-                                                                       andXid:[self xidWithString:[properties valueForKey:@"terminalxid"]]];
+                                                                       andXid:[self xidWithString:properties[@"terminalxid"]]];
+
+            taskComponent.isBroken = (properties[@"isBroken"]) ? @([properties[@"isBroken"] boolValue]) : @(NO);
 
             [self taskRelationshipInitForRelationshipObject:taskComponent andTask:task];
             
@@ -740,7 +741,8 @@
 
 - (void)newTerminalComponentWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties {
     
-    STTTAgentTerminalComponent *terminalComponent = (STTTAgentTerminalComponent *)[self entityByClass:[STTTAgentTerminalComponent class] andXid:xidData];
+    STTTAgentTerminalComponent *terminalComponent = (STTTAgentTerminalComponent *)[self entityByClass:[STTTAgentTerminalComponent class]
+                                                                                               andXid:xidData];
     
     if ([terminalComponent.isdeleted boolValue]) {
         
@@ -749,15 +751,17 @@
     } else {
         
         STTTAgentComponent *component = (STTTAgentComponent *)[self entityByClass:[STTTAgentComponent class]
-                                                                           andXid:[self xidWithString:[properties valueForKey:@"componentxid"]]];
+                                                                           andXid:[self xidWithString:properties[@"componentxid"]]];
         
         component.wasInitiallyInstalled = @(YES);
         
         terminalComponent.component = component;
         
         terminalComponent.terminal = (STTTAgentTerminal *)[self entityByClass:[STTTAgentTerminal class]
-                                                                       andXid:[self xidWithString:[properties valueForKey:@"terminalxid"]]];
+                                                                       andXid:[self xidWithString:properties[@"terminalxid"]]];
         
+        terminalComponent.isBroken = (properties[@"isBroken"]) ? @([properties[@"isBroken"] boolValue]) : @(NO);
+
         [self taskRelationshipInitForRelationshipObject:terminalComponent andTask:nil];
         
         NSLog(@"get terminalComponent.xid %@", terminalComponent.xid);
@@ -769,8 +773,8 @@
 - (void)newComponentGroupWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties {
     
     STTTAgentComponentGroup *group = (STTTAgentComponentGroup *)[self entityByClass:[STTTAgentComponentGroup class] andXid:xidData];
-    group.isManualReplacement = @([[properties valueForKey:@"isManualReplacement"] boolValue]);
-    group.name = [properties valueForKey:@"name"];
+    group.isManualReplacement = @([properties[@"isManualReplacement"] boolValue]);
+    group.name = properties[@"name"];
     group.lts = [NSDate date];
     
     NSLog(@"get componentGroup.xid %@", group.xid);
@@ -780,10 +784,10 @@
 - (void)newComponentWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties {
     
     STTTAgentComponent *component = (STTTAgentComponent *)[self entityByClass:[STTTAgentComponent class] andXid:xidData];
-    component.shortName = [properties valueForKey:@"short_name"];
-    component.serial = [properties valueForKey:@"serial"];
+    component.shortName = properties[@"short_name"];
+    component.serial = properties[@"serial"];
     
-    NSString *groupXid = [properties valueForKey:@"componentgroupxid"];
+    NSString *groupXid = properties[@"componentgroupxid"];
     NSString *groupXidString = [groupXid stringByReplacingOccurrencesOfString:@"-" withString:@""];
     NSData *groupXidData = [self dataFromString:groupXidString];
     component.componentGroup = (STTTAgentComponentGroup *)[self entityByClass:[STTTAgentComponentGroup class] andXid:groupXidData];
@@ -796,9 +800,9 @@
 
 - (void)newTaskRepairWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties {
     
-    NSDictionary *taskData = [properties valueForKey:@"taskxid"];
+    NSDictionary *taskData = properties[@"taskxid"];
     
-    STTTAgentTask *task = [self taskForReceivingDataWithXid:[self xidWithString:[taskData valueForKey:@"id"]]];
+    STTTAgentTask *task = [self taskForReceivingDataWithXid:[self xidWithString:taskData[@"id"]]];
     
     if (!task) {
         
@@ -808,13 +812,13 @@
 
         STTTAgentTaskRepair *repair = (STTTAgentTaskRepair*)[self entityByClass:[STTTAgentTaskRepair class] andXid:xidData];
         
-        if ([repair.isdeleted boolValue]) {
+        if (repair.isdeleted.boolValue) {
             
             NSLog(@"local taskRepair isdeleted, server's data will be ignored for taskRepair %@", xidData);
             
         } else {
 
-            repair.repairCode = (STTTAgentRepairCode*)[self entityByClass:[STTTAgentRepairCode class] andXid:[self xidWithString:[properties valueForKey:@"repairxid"]]];
+            repair.repairCode = (STTTAgentRepairCode*)[self entityByClass:[STTTAgentRepairCode class] andXid:[self xidWithString:properties[@"repairxid"]]];
             
             [self taskRelationshipInitForRelationshipObject:repair andTask:task];
             
@@ -829,8 +833,8 @@
 - (void)newRepairCodeWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties {
     
     STTTAgentRepairCode *repairCode = (STTTAgentRepairCode*)[self entityByClass:[STTTAgentRepairCode class] andXid:xidData];
-    repairCode.repairName = [properties valueForKey:@"repair_name"];
-    repairCode.active = [NSNumber numberWithBool:[[properties valueForKey:@"active"] boolValue]];
+    repairCode.repairName = properties[@"repair_name"];
+    repairCode.active = @([properties[@"active"] boolValue]);
     repairCode.lts = [NSDate date];
     
     NSLog(@"get repair_code.xid %@", repairCode.xid);
@@ -905,14 +909,14 @@
         
     } else {
 
-        task.terminalBarcode = [properties valueForKey:@"terminalBarcode"];
-        task.terminalBreakName = [properties valueForKey:@"terminal_break_name"];
-        task.commentText = [properties valueForKey:@"techinfo"];
-        id routePriority = [properties valueForKey:@"route_priority"];
+        task.terminalBarcode = properties[@"terminalBarcode"];
+        task.terminalBreakName = properties[@"terminal_break_name"];
+        task.commentText = properties[@"techinfo"];
+        id routePriority = properties[@"route_priority"];
         task.routePriority = [routePriority respondsToSelector:@selector(integerValue)] ? [NSNumber numberWithInteger:[routePriority integerValue]] : @0;
         
-        id servstatus = [properties valueForKey:@"servstatus"];
-        task.servstatus = task.recentlyVisited ? [NSNumber numberWithBool:YES] : [NSNumber numberWithBool:[servstatus boolValue]];
+        id servstatus = properties[@"servstatus"];
+        task.servstatus = task.recentlyVisited ? @(YES) : @([servstatus boolValue]);
         
         NSDate *doBeforeDate = [self extractDateFrom:properties forKey:@"do-before"];
         task.doBefore = doBeforeDate;
@@ -920,8 +924,8 @@
         NSDate *servstatusDate = [self extractDateFrom:properties forKey:@"servstatus_date"];
         task.servstatusDate = servstatusDate;
         
-        NSDictionary *terminalData = [properties valueForKey:@"terminal"];
-        NSData *terminalXid = [self dataFromString:[[terminalData valueForKey:@"xid"] stringByReplacingOccurrencesOfString:@"-" withString:@""]];
+        NSDictionary *terminalData = properties[@"terminal"];
+        NSData *terminalXid = [self dataFromString:[terminalData[@"xid"] stringByReplacingOccurrencesOfString:@"-" withString:@""]];
         
         STTTAgentTerminal *terminal = (STTTAgentTerminal*)[self entityByClass:[STTTAgentTerminal class] andXid:terminalXid];
         task.terminal = terminal;
@@ -939,10 +943,10 @@
 - (void)newBarcodeTypeWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties {
     
     STTTAgentBarcodeType *barcodeType = (STTTAgentBarcodeType *)[self entityByClass:[STTTAgentBarcodeType class] andXid:xidData];
-    barcodeType.name = [properties valueForKey:@"name"];
-    barcodeType.type = [properties valueForKey:@"type"];
-    barcodeType.mask = [properties valueForKey:@"mask"];
-    barcodeType.symbology = [properties valueForKey:@"symbology"];
+    barcodeType.name = properties[@"name"];
+    barcodeType.type = properties[@"type"];
+    barcodeType.mask = properties[@"mask"];
+    barcodeType.symbology = properties[@"symbology"];
 
     barcodeType.lts = [NSDate date];
     
@@ -951,14 +955,16 @@
 }
 
 
-- (NSDate*)extractDateFrom:(NSDictionary*)properties forKey:(NSString*)key{
+- (NSDate *)extractDateFrom:(NSDictionary *)properties forKey:(NSString *)key {
+    
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss.SSS Z"];
-    NSString *dateString = [NSString stringWithFormat:@"%@ %@", [properties valueForKey:key], [[[self.session settingsController] currentSettingsForGroup:@"general"] valueForKey:@"Timezone"]];
+    NSString *dateString = [NSString stringWithFormat:@"%@ %@", properties[key], [[self.session settingsController] currentSettingsForGroup:@"general"][@"Timezone"]];
     return [dateFormatter dateFromString:dateString];
+    
 }
 
-- (void) showNewTaskNotification:(STTTAgentTask *) task {
+- (void)showNewTaskNotification:(STTTAgentTask *) task {
     if (self.newTasksCount == 0) {
         return;
     }
