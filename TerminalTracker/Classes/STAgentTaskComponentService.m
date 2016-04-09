@@ -103,36 +103,83 @@
 
 /*
  
-    remained    — remained unused with technician
+    remained    — remained unused with technician                               — isBroken == NO && isInstalled == NO
     installed   — was initially installed on terminal
-    removed     — was removed from terminal by technician during task
-    used        — was used and installed on terminal by technician during task
+    removed     — was removed from terminal by technician during task           — isBroken == YES
+    used        — was used and installed on terminal by technician during task  — isInstalled == YES
  
 */
     
-    NSArray *allComponents = [@[installedComponents, removedComponents, remainedComponents, usedComponents] valueForKeyPath:@"@unionOfArrays.self"];
+//    NSArray *allComponents = [@[installedComponents, removedComponents, remainedComponents, usedComponents] valueForKeyPath:@"@unionOfArrays.self"];
+//    
+//    for (STTTAgentComponent *component in allComponents) {
+//
+//        STTTAgentTerminalComponent *terminalComponent = [component actualTerminalComponent];
+//        if (terminalComponent) terminalComponent.isdeleted = @(YES);
+//
+//    }
     
-    for (STTTAgentComponent *component in allComponents) {
-
+    for (STTTAgentComponent *component in remainedComponents) {
+        
         STTTAgentTerminalComponent *terminalComponent = [component actualTerminalComponent];
         if (terminalComponent) terminalComponent.isdeleted = @(YES);
 
-    }
-    
-//    for (STTTAgentComponent *component in remainedComponents) {
 //        do not create taskComponent to comply STTTAgentComponent.m:31 (BOOL)isInstalled method
-//    }
+        
+    }
 
     for (STTTAgentComponent *component in installedComponents) {
-        [self taskComponentForTask:task terminal:task.terminal andComponent:component];
+        
+        STTTAgentTerminalComponent *terminalComponent = [component actualTerminalComponent];
+        
+        if (terminalComponent) {
+            
+            if (terminalComponent.isBroken.boolValue) {
+                
+                terminalComponent.isdeleted = @(YES);
+                [self taskComponentForTask:task terminal:task.terminal andComponent:component];
+
+            }
+            
+        } else {
+
+            [self taskComponentForTask:task terminal:task.terminal andComponent:component];
+
+        }
+        
     }
 
     for (STTTAgentComponent *component in removedComponents) {
-        [self taskComponentForTask:task terminal:task.terminal andComponent:component].isBroken = @(YES);
+        
+        STTTAgentTerminalComponent *terminalComponent = [component actualTerminalComponent];
+        
+        if (terminalComponent) {
+            
+            if (!terminalComponent.isBroken.boolValue) {
+                
+                terminalComponent.isdeleted = @(YES);
+                [self taskComponentForTask:task terminal:task.terminal andComponent:component].isBroken = @(YES);
+                
+            }
+            
+        } else {
+            
+            [self taskComponentForTask:task terminal:task.terminal andComponent:component].isBroken = @(YES);
+            
+        }
+
     }
     
     for (STTTAgentComponent *component in usedComponents) {
-        [self taskComponentForTask:task terminal:task.terminal andComponent:component];
+        
+        STTTAgentTerminalComponent *terminalComponent = [component actualTerminalComponent];
+        
+        if (!terminalComponent) {
+
+            [self taskComponentForTask:task terminal:task.terminal andComponent:component];
+            
+        }
+        
     }
     
     task.ts = [NSDate date];
