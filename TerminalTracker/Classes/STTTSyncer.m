@@ -605,9 +605,13 @@
         
         [self newTaskDefectWithXid:xidData andProperties:properties];
         
-    } else if ([@[@"megaport.iAgentComponent", @"megaport.iAgentComponentPreinstalled"] containsObject:name]) {
+    } else if ([name isEqualToString:@"megaport.iAgentComponent"]) {
         
-        [self newComponentWithXid:xidData andProperties:properties];
+        [self newComponentWithXid:xidData andProperties:properties preInstalled:NO];
+        
+    } else if ([name isEqualToString:@"megaport.iAgentComponentPreinstalled"]) {
+        
+        [self newComponentWithXid:xidData andProperties:properties preInstalled:YES];
 
     } else if ([name isEqualToString:@"megaport.iAgentTaskComponent"]) {
         
@@ -721,8 +725,12 @@
             
         } else {
             
-            taskComponent.component = (STTTAgentComponent *)[self entityByClass:[STTTAgentComponent class]
-                                                                         andXid:[self xidWithString:properties[@"componentxid"]]];
+            STTTAgentComponent *component = (STTTAgentComponent *)[self entityByClass:[STTTAgentComponent class]
+                                                                               andXid:[self xidWithString:properties[@"componentxid"]]];
+
+//            component.wasInitiallyInstalled = @(component.wasInitiallyInstalled.boolValue || taskComponent.isBroken.boolValue);
+            
+            taskComponent.component = component;
             
             taskComponent.terminal = (STTTAgentTerminal *)[self entityByClass:[STTTAgentTerminal class]
                                                                        andXid:[self xidWithString:properties[@"terminalxid"]]];
@@ -781,7 +789,7 @@
     
 }
 
-- (void)newComponentWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties {
+- (void)newComponentWithXid:(NSData *)xidData andProperties:(NSDictionary *)properties preInstalled:(BOOL)preInstalled {
     
     STTTAgentComponent *component = (STTTAgentComponent *)[self entityByClass:[STTTAgentComponent class] andXid:xidData];
     component.shortName = properties[@"short_name"];
@@ -791,6 +799,8 @@
     NSString *groupXidString = [groupXid stringByReplacingOccurrencesOfString:@"-" withString:@""];
     NSData *groupXidData = [self dataFromString:groupXidString];
     component.componentGroup = (STTTAgentComponentGroup *)[self entityByClass:[STTTAgentComponentGroup class] andXid:groupXidData];
+    
+    if (preInstalled) component.wasInitiallyInstalled = @(YES);
     
     component.lts = [NSDate date];
 
