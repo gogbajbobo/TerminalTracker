@@ -103,6 +103,7 @@
     
     if (!lastClearDatabaseTimestamp) {
         
+        NSLog(@"clear database by time");
         [self prepareForClearDatabase];
         
     } else {
@@ -117,7 +118,10 @@
         NSComparisonResult comparisonResult = [clearDatabaseTime compare:lastClearDatabaseTimestamp];
         
         if (comparisonResult == NSOrderedDescending) {
+
+            NSLog(@"clear database by time");
             [self prepareForClearDatabase];
+            
         }
         
     }
