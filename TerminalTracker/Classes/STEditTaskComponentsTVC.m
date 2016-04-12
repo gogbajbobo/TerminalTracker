@@ -381,6 +381,12 @@
         [self.removedComponents removeObject:component];
         
     }
+    
+    if (!self.componentGroup.isManualReplacement.boolValue) {
+        
+        [self putBackUsedComponents];
+        
+    }
 
 }
 
