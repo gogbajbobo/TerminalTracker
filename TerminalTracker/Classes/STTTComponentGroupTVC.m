@@ -126,7 +126,19 @@
     
     cell.textLabel.numberOfLines = 0;
     cell.textLabel.text = group.name;
-//    cell.textLabel.text = [NSString stringWithFormat:@"%@ / %@ / %@", group.name, @(group.components.count), group.isManualReplacement];
+    
+    NSArray *currentComponents = tableDatum[@"currentComponents"];
+    
+    if ([self haveChangesInComponents:currentComponents]) {
+
+        UIColor *ligthGreenColor = [UIColor colorWithHue:130.0/360 saturation:0.25 brightness:0.95 alpha:1];
+        cell.backgroundColor = ligthGreenColor;
+
+    } else {
+    
+        cell.backgroundColor = [UIColor clearColor];
+
+    }
     
     NSMutableArray *detailTextStrings = @[].mutableCopy;
     
@@ -154,6 +166,15 @@
     }
     
     return cell;
+    
+}
+
+- (BOOL)haveChangesInComponents:(NSArray *)components {
+    
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"wasInitiallyInstalled != isInstalled"];
+    NSArray *filteredComponents = [components filteredArrayUsingPredicate:predicate];
+
+    return (filteredComponents.count > 0);
     
 }
 
