@@ -31,7 +31,7 @@
 	<key>UIMainStoryboardFile</key>
 	<string>STTTMainStoryboard_iPhone</string>
 	<key>UIMainStoryboardFile~ipad</key>
-	<string>STTTMainStoryboard_iPad</string>
+	<string>STTTMainStoryboard_iPhone</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>

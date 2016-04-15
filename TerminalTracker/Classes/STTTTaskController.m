@@ -342,9 +342,9 @@
     NSDictionary *attributes = @{NSFontAttributeName:font};
     CGSize size = [infoText sizeWithAttributes:attributes];
 
-    CGFloat paddingX = 0;
+    CGFloat paddingX = 5;
     CGFloat paddingY = 0;
-    CGFloat marginX = 10;
+    CGFloat marginX = 5;
     
     CGFloat x = cell.contentView.frame.size.width - size.width - 2 * paddingX - marginX;
     CGFloat y = cell.textLabel.bounds.origin.y;
